@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - '**/webhook.js'
+      - '**/functions/index.js'
 
 jobs:
   firebase-deploy:

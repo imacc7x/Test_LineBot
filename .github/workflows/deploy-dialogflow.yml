@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - '**/dialogflow.js'
+      - '**/functions/index.js'
 
 jobs:
   firebase-deploy:
