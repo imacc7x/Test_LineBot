@@ -16,8 +16,8 @@
     "actions-on-google": "^2.12.0",
     "dialogflow": "^1.2.0",
     "dialogflow-fulfillment": "^0.6.1",
-    "firebase-admin": "^8.10.0",
-    "firebase-functions": "@lastest",
+    "firebase-admin": "^8.11.0",
+    "firebase-functions": "^3.6.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.5"
   },
