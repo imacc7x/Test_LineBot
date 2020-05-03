@@ -16,6 +16,6 @@ jobs:
         working-directory: ./functions
       - uses: w9jds/firebase-action@master
         with:
-          args: deploy-webhook
+          args: deploy --only functions:webhook
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
