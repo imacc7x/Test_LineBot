@@ -5,7 +5,7 @@ on:
     branches: 
       - master
     paths:
-      - '**/webhook.js'
+      - '**/dialogflow.js'
 
 jobs:
   firebase-deploy:
