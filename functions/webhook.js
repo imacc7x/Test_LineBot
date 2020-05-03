@@ -1,110 +1,47 @@
+//test by Earth
+
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     "Content-Type": "application/json",
-    "Authorization": "Bearer Pp6phRvvrfzI5GGPZ+ByKEq/ypv5edDTfh8du1Ij0SCl9if21h0VyCcGRwurc6bCjCshMnMqZ2F+oxfSfiSXKHpDewSloJZloS8WOjhfgnctfwvc/nDLiJc/RED3FXj/ufaL/L84qllM51lv3ZcBewdB04t89/1O/w1cDnyilFU="
+    Authorization: "Bearer Pp6phRvvrfzI5GGPZ+ByKEq/ypv5edDTfh8du1Ij0SCl9if21h0VyCcGRwurc6bCjCshMnMqZ2F+oxfSfiSXKHpDewSloJZloS8WOjhfgnctfwvc/nDLiJc/RED3FXj/ufaL/L84qllM51lv3ZcBewdB04t89/1O/w1cDnyilFU="
 };
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
-        const eventType = req.body.events[0].type;
-        const replyToken = req.body.events[0].replyToken;
-        const userId = req.body.events[0].source.userId;
-        const messageType = req.body.events[0].message.type;
-
-
-        if (eventType === "follow")
-            follow(db, userId)
-        else if (eventType === "unfollow") {
-            db.collection("Users").doc(userId).update({
-                follow: false
+        console.log("This is UID", req.body.events[0].source.userId);
+        let event = req.body.events[0]
+        if (event.type === "follow") {
+            db.collection("Users").doc(event.source.userId).set({
+                userId: event.source.userId,
+                activation: 'false'
             });
+            activation(req, res);
         }
-
-        else if (eventType === "message" && messageType === "text")
+        else if (event.type === "message" && event.message.type === "text") {
             postToDialogflow(req);
-
-        else {
-            reply(replyToken,
-                [
-                    {
-                        type: "text",
-                        text: JSON.stringify(req.body)
-                    }
-                ]
-            );
+        } else {
+            reply(req);
         }
     }
     return res.status(200).send(req.method);
 };
 
-const reply = (replyToken, messages) => {
+const reply = req => {
     return request.post({
         uri: `${LINE_MESSAGING_API}/reply`,
         headers: LINE_HEADER,
         body: JSON.stringify({
-            replyToken: replyToken,
-            messages: messages
+            replyToken: req.body.events[0].replyToken,
+            messages: [
+                {
+                    type: "text",
+                    text: JSON.stringify(req.body)
+                }
+            ]
         })
     });
-};
-const push = (userId, messages) => {
-    return request.post({
-        uri: `${LINE_MESSAGING_API}/push`,
-        headers: LINE_HEADER,
-        body: JSON.stringify({
-            to: userId,
-            messages: messages
-        })
-    });
-};
-
-const follow = (db, userId) => {
-    const messages = [];
-    const document = db.collection("Users").doc(userId);
-    document.get()
-        .then(docSnapshot => {
-            if (!docSnapshot.exists) {
-                document.set({
-                    follow: true
-                });
-                messages.push({
-                    type: "text",
-                    text: "คุณจะอนุญาตได้ไหมคะ",
-                    quickReply: {
-                        items: [
-                            {
-                                type: "action",
-                                action: {
-                                    type: "message",
-                                    label: "อนุญาต",
-                                    text: "ยืนยันการใช้งาน"
-                                }
-                            },
-                            {
-                                type: "action",
-                                action: {
-                                    type: "message",
-                                    label: "ไม่อนุญาต",
-                                    text: "ปฏิเสธการใช้งาน"
-                                }
-                            }
-                        ]
-                    }
-                });
-            } else {
-                document.update({
-                    follow: true
-                });
-                messages.push({
-                    type: "text",
-                    text: "ดีใจที่คุณกลับมา"
-                });
-            }
-        })
-        .catch(e => console.log(e))
-    push(userId, messages);
 };
 
 const postToDialogflow = req => {
@@ -115,3 +52,46 @@ const postToDialogflow = req => {
         body: JSON.stringify(req.body)
     });
 };
+
+const activation = ((req, res) => {
+    return request({
+        method: "POST",
+        uri: `${LINE_MESSAGING_API}/push`,
+        headers: LINE_HEADER,
+        body: JSON.stringify({
+            to: req.body.events[0].source.userId,
+            messages: [
+                {
+                    type: "text",
+                    text: "คุณจะอนุญาตได้ไหมคะ",
+                    quickReply: {
+                        items: [
+                            {
+                                type: "action",
+                                action: {
+                                    type: "message",
+                                    label: "ได้",
+                                    text: "ยืนยันการใช้งาน"
+                                }
+                            },
+                            {
+                                type: "action",
+                                action: {
+                                    type: "message",
+                                    label: "ไม่ได้",
+                                    text: "ปฏิเสธการใช้งาน"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        })
+    }).then(() => {
+        return res.status(200).send("Done");
+    }).catch(error => {
+        return Promise.reject(error);
+    });
+});
+
+
