@@ -18,11 +18,9 @@ exports.handler = (req, res, db) => {
                 follow(db, userId)
                 break;
 
-            case "message":
-                if (messageType === "text") {
-                    postToDialogflow(req);
-                    break;
-                }
+            case "message" && messageType === "text":
+                postToDialogflow(req);
+                break;
 
             case "unfollow":
                 db.collection("Users").doc(userId).update({
