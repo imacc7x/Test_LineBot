@@ -18,9 +18,9 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
-exports.Test_Chatbot = functions.region(region).runWith(runtimeOpts).https.onRequest((req, res) => {
+exports.webhook = functions.region(region).runWith(runtimeOpts).https.onRequest((req, res) => {
     webhook.handler(req, res, db);
 });
-exports.dialogflowFirebaseFulfillment = functions.region(region).runWith(runtimeOpts).https.onRequest((req, res) => {
+exports.dialogflow = functions.region(region).runWith(runtimeOpts).https.onRequest((req, res) => {
     dialogflow.handler(req, res, db);
 });
