@@ -1,9 +1,11 @@
-name: CI
+name: Deploy Web-hook
 
 on:
   push:
     branches: 
       - master
+    paths:
+      - 'web-hook/**'
 
 jobs:
   firebase-deploy:
@@ -11,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: npm ci
-        working-directory: ./functions
+        working-directory: ./web-hook/functions
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only functions
