@@ -29,13 +29,14 @@ exports.handler = (req, res, db) => {
                 break;
 
             default:
-                const messages = [
-                    {
-                        type: "text",
-                        text: JSON.stringify(req.body)
-                    }
-                ];
-                reply(replyToken, messages);
+                reply(replyToken,
+                    [
+                        {
+                            type: "text",
+                            text: JSON.stringify(req.body)
+                        }
+                    ]
+                );
                 break;
         }
     }
@@ -66,45 +67,47 @@ const push = (userId, messages) => {
 const follow = (db, userId) => {
     const messages = [];
     const document = db.collection("Users").doc(userId);
-    document.get().then(docSnapshot => {
-        if (!docSnapshot.exists) {
-            document.set({
-                follow: true
-            });
-            messages.push({
-                type: "text",
-                text: "คุณจะอนุญาตได้ไหมคะ",
-                quickReply: {
-                    items: [
-                        {
-                            type: "action",
-                            action: {
-                                type: "message",
-                                label: "อนุญาต",
-                                text: "ยืนยันการใช้งาน"
+    document.get()
+        .then(docSnapshot => {
+            if (!docSnapshot.exists) {
+                document.set({
+                    follow: true
+                });
+                messages.push({
+                    type: "text",
+                    text: "คุณจะอนุญาตได้ไหมคะ",
+                    quickReply: {
+                        items: [
+                            {
+                                type: "action",
+                                action: {
+                                    type: "message",
+                                    label: "อนุญาต",
+                                    text: "ยืนยันการใช้งาน"
+                                }
+                            },
+                            {
+                                type: "action",
+                                action: {
+                                    type: "message",
+                                    label: "ไม่อนุญาต",
+                                    text: "ปฏิเสธการใช้งาน"
+                                }
                             }
-                        },
-                        {
-                            type: "action",
-                            action: {
-                                type: "message",
-                                label: "ไม่อนุญาต",
-                                text: "ปฏิเสธการใช้งาน"
-                            }
-                        }
-                    ]
-                }
-            });
-        } else {
-            document.update({
-                follow: true
-            });
-            messages.push({
-                type: "text",
-                text: "ดีใจที่คุณกลับมา"
-            });
-        }
-    });
+                        ]
+                    }
+                });
+            } else {
+                document.update({
+                    follow: true
+                });
+                messages.push({
+                    type: "text",
+                    text: "ดีใจที่คุณกลับมา"
+                });
+            }
+        })
+        .catch(e => console.log(e))
     push(userId, messages);
 };
 
