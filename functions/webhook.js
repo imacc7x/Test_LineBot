@@ -8,36 +8,32 @@ const LINE_HEADER = {
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
-        const event = req.body.events[0];
+        const eventType = req.body.events[0].type;
         const replyToken = req.body.events[0].replyToken;
         const userId = req.body.events[0].source.userId;
         const messageType = req.body.events[0].message.type;
 
-        switch (event.type) {
-            case "follow":
-                follow(db, userId)
-                break;
 
-            case "message" && messageType === "text":
-                postToDialogflow(req);
-                break;
+        if (eventType === "follow")
+            follow(db, userId)
+        else if (eventType === "unfollow") {
+            db.collection("Users").doc(userId).update({
+                follow: false
+            });
+        }
 
-            case "unfollow":
-                db.collection("Users").doc(userId).update({
-                    follow: false
-                });
-                break;
+        else if (eventType === "message" && messageType === "text")
+            postToDialogflow(req);
 
-            default:
-                reply(replyToken,
-                    [
-                        {
-                            type: "text",
-                            text: JSON.stringify(req.body)
-                        }
-                    ]
-                );
-                break;
+        else {
+            reply(replyToken,
+                [
+                    {
+                        type: "text",
+                        text: JSON.stringify(req.body)
+                    }
+                ]
+            );
         }
     }
     return res.status(200).send(req.method);
