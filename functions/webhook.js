@@ -1,11 +1,11 @@
-//test by Earth
+'use strict';
 
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     "Content-Type": "application/json",
-    Authorization: "Bearer Pp6phRvvrfzI5GGPZ+ByKEq/ypv5edDTfh8du1Ij0SCl9if21h0VyCcGRwurc6bCjCshMnMqZ2F+oxfSfiSXKHpDewSloJZloS8WOjhfgnctfwvc/nDLiJc/RED3FXj/ufaL/L84qllM51lv3ZcBewdB04t89/1O/w1cDnyilFU="
+    "Authorization": "Bearer Pp6phRvvrfzI5GGPZ+ByKEq/ypv5edDTfh8du1Ij0SCl9if21h0VyCcGRwurc6bCjCshMnMqZ2F+oxfSfiSXKHpDewSloJZloS8WOjhfgnctfwvc/nDLiJc/RED3FXj/ufaL/L84qllM51lv3ZcBewdB04t89/1O/w1cDnyilFU="
 };
 
 exports.handler = (req, res, db) => {
