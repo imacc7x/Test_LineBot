@@ -30,6 +30,7 @@ exports.handler = (req, res, db) => {
                 db.collection("Users").doc(userId).update({
                     follow: false
                 });
+                break;
 
             default:
                 const messages = [
