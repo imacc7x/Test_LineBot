@@ -6,7 +6,8 @@
     "serve": "firebase emulators:start --only functions",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy-webhook": "firebase deploy --only functions:webhook",
+    "deploy-dialogflow": "firebase deploy --only functions:dialogflow",
     "logs": "firebase functions:log"
   },
   "engines": {
