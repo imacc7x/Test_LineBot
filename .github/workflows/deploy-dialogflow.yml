@@ -16,6 +16,6 @@ jobs:
         working-directory: ./functions
       - uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions
+          args: deploy --only functions:dialogflow
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }} 
