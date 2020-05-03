@@ -5,7 +5,7 @@ on:
     branches: 
       - master
     paths:
-      - 'web-hook/**'
+      - '**/webhook.js'
 
 jobs:
   firebase-deploy:
