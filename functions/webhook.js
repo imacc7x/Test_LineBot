@@ -36,11 +36,13 @@ exports.handler = (req, res, db) => {
             }
         }
         else if (type === "postback") {
-            const newEvent = { ...event };
-            newEvent.type = "messages";
-            newEvent.message = {
-                type: "text",
-                text: event.postback.data
+            const newEvent = {
+                ...event,
+                type: "messages",
+                message: {
+                    type: "text",
+                    text: event.postback.data
+                }
             };
             delete newEvent.postback;
             const newReq = {...req};
