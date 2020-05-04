@@ -66,7 +66,8 @@ const push = (userId, messages) => {
 };
 
 const follow = async (documentUser, replyToken) => {
-    const user = await documentUser.get()
+    const user = await documentUser.get();
+    console.log(user);
     if (!user.exists) {
         await documentUser.set({ active: true });
     }
@@ -107,7 +108,7 @@ const unfollow = async (documentUser, userId) => {
     await documentUser.update({
         active: false
     })
-    console.log(userId + ": unfollow")
+    console.log(userId + ": unfollow");
 }
 
 const postToDialogflow = req => {
