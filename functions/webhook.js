@@ -1,9 +1,10 @@
+require('dotenv').config()
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${environment.LINE_HEADER_AUTH}`
+    "Authorization": `Bearer ${process.env.LINE_HEADER_AUTH}`
 };
 
 exports.handler = (req, res, db) => {
@@ -15,6 +16,7 @@ exports.handler = (req, res, db) => {
         const docUser = db.collection("Users").doc(source.userId);
 
         if (type === "follow") {
+            console.log(LINE_HEADER);
             follow(docUser, event.replyToken)
                 .then(() => res.status(200).send("Follow is ok."))
                 .catch((err) => console.error("Follow Error: ", err))
