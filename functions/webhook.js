@@ -5,21 +5,25 @@ const request = require('request-promise');
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     "Content-Type": "application/json",
-    Authorization: "Bearer Pp6phRvvrfzI5GGPZ+ByKEq/ypv5edDTfh8du1Ij0SCl9if21h0VyCcGRwurc6bCjCshMnMqZ2F+oxfSfiSXKHpDewSloJZloS8WOjhfgnctfwvc/nDLiJc/RED3FXj/ufaL/L84qllM51lv3ZcBewdB04t89/1O/w1cDnyilFU="
+    "Authorization": "Bearer Pp6phRvvrfzI5GGPZ+ByKEq/ypv5edDTfh8du1Ij0SCl9if21h0VyCcGRwurc6bCjCshMnMqZ2F+oxfSfiSXKHpDewSloJZloS8WOjhfgnctfwvc/nDLiJc/RED3FXj/ufaL/L84qllM51lv3ZcBewdB04t89/1O/w1cDnyilFU="
 };
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
-        console.log("This is UID", req.body.events[0].source.userId);
+        const eventType = req.body.events[0].type;
+        const userId = req.body.events[0].source.userId
+        const messageType = event.message.type
+
+        console.log("This is UID", userId);
         let event = req.body.events[0]
-        if (event.type === "follow") {
-            db.collection("Users").doc(event.source.userId).set({
-                userId: event.source.userId,
+        if (eventType === "follow") {
+            db.collection("Users").doc(userId).set({
+                userId: userId,
                 activation: 'false'
             });
             activation(req, res);
         }
-        else if (event.type === "message" && event.message.type === "text") {
+        else if (eventType === "message" && messageType === "text") {
             postToDialogflow(req);
         } else {
             reply(req);
