@@ -48,6 +48,7 @@ const reply = (replyToken, messages) => {
         })
     });
 };
+
 const push = (userId, messages) => {
     return request.post({
         uri: `${LINE_MESSAGING_API}/push`,
@@ -59,46 +60,76 @@ const push = (userId, messages) => {
     });
 };
 
-const follow = async (docUser, replyToken) => {
-    const user = await docUser.get();
-    if (!user.exists) {
-        await docUser.set({ active: true });
-    }
-    else {
-        await docUser.update({ active: true });
-    }
-    const messages = [
-        {
-            type: "text",
-            text: "คุณจะอนุญาตได้ไหมคะ",
-            quickReply: {
-                items: [
+const follow = (documentUser, userId) => {
+    return documentUser.get()
+        .then(docSnapshot => {
+            if (!docSnapshot.exists) {
+                return documentUser.set({
+                    active: true
+                });
+            }
+            else {
+                return documentUser.update({
+                    active: true
+                });
+            }
+        })
+        .then(() => {
+            return push(
+                userId,
+                [
                     {
-                        type: "action",
-                        action: {
-                            type: "postback",
-                            label: "อนุญาติ",
-                            text: "ACTIVATING_CONFIRM"
-                        }
+                        type: "text",
+                        text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
                     },
                     {
-                        type: "action",
-                        action: {
-                            type: "postback",
-                            label: "ไม่อนุญาติ",
-                            text: "ACTIVATING_NOT_CONFIRM"
+                        type: "text",
+                        text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+                    },
+                    {
+                        type: "text",
+                        text: "แต่ดิฉันก็จะช่วยสรุปข้อมูลที่สำคัญทั้งหมดและส่งต่อให้แก่นักให้คำปรึกษาค่ะดิฉันมั่นใจว่านักให้คำปรึกษาจะช่วยคุณได้แน่นอน"
+                    },
+                    {
+                        type: "text",
+                        text: "โดยข้อมูลที่ได้จากการสนทนาที่จะสามารถระบุตัวตนของคุณได้จะไม่มีการเผยแพร่ ดิฉันจึงอยากขอให้คุณอนุญาตให้พวกเขาทำเช่นนั้นก่อน"
+                    },
+                    {
+                        type: "text",
+                        text: "คุณจะอนุญาตได้ไหมคะ",
+                        quickReply: {
+                            items: [
+                                {
+                                    type: "action",
+                                    action: {
+                                        type: "postback",
+                                        label: "อนุญาติ",
+                                        data: "ACTIVATING_CONFIRM"
+                                    }
+                                },
+                                {
+                                    type: "action",
+                                    action: {
+                                        type: "postback",
+                                        label: "ไม่อนุญาติ",
+                                        data: "ACTIVATING_NOT_CONFIRM"
+                                    }
+                                }
+                            ]
                         }
                     }
                 ]
-            }
-        }
-    ];
-    console.log("Reply token from Follow: ", replyToken);
-    await reply(replyToken, messages);
-    return new Promise((resolve, reject) => {
-        resolve();
-    });
+            );
+        })
 };
+
+const unfollow = (documentUser, userId) => {
+    documentUser.update({
+        active: false
+    })
+        .then(() => console.log(userId + ": unfollow"))
+        .catch((err) => console.error("Unfollow error: ", err))
+}
 
 const postToDialogflow = req => {
     req.headers.host = "bots.dialogflow.com";

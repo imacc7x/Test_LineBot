@@ -1,7 +1,7 @@
 'use strict';
 
 const { WebhookClient } = require('dialogflow-fulfillment');
-const { Card, Suggestion } = require('dialogflow-fulfillment');
+const { Card, Suggestion, Payload } = require('dialogflow-fulfillment');
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
@@ -33,7 +33,16 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-        agent.add("คุณทำงานอะไรเป็นอาชีพหลักคะ");
+        reply(careerJson);
+        agent.add(reply);
+        
+        reply(alcoholTimeJson);
+        agent.add(reply);
+
+        reply(alocoholTypeJson);
+        agent.add(reply);
+
+        agent.add(" ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ");
     }
 
 
@@ -56,6 +65,124 @@ exports.handler = (request, response, db) => {
             });
     }
 
+    let reply = new Payload("Line" , Json);
+
+    const careerJson = {
+        type: "text",
+        text: "คุณทำงานอะไรเป็นอาชีพหลักคะ",
+        quickReply: {
+            items: [
+                {
+                    type: "action",
+                    action: {
+                        type: "postback",
+                        label: "ตำรวจ",
+                        data: "police"
+                    }
+                },
+                {
+                    type: "action", 
+                    action: {
+                        type: "postback",
+                        label: "ทหาร",
+                        data: "soldier"
+                    }
+                }
+            ]
+        }
+    }
+
+    const alcoholTimeJson = {
+        type: "text",
+        text: "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
+        quickReply: {
+            items: [
+                {
+                    type: "action",
+                    action: {
+                        type: "postback",
+                        label: "ไม่เคย",
+                        data: "Never"
+                    }
+                },
+                {
+                    type: "action", 
+                    action: {
+                        type: "postback",
+                        label: "ไม่เกินเดือนละครั้ง",
+                        data: "Not more than once a month"
+                    }
+                },
+                {
+                    type: "action", 
+                    action: {
+                        type: "postback",
+                        label: "เดือนละ 2 - 4 ครั้ง",
+                        data: "2-4 times a month"
+                    }
+                },
+                {
+                    type: "action", 
+                    action: {
+                        type: "postback",
+                        label: "สัปดาห์ละ 2 - 3 ครั้ง",
+                        data: "2-3 times a week"
+                    }
+                },
+                {
+                    type: "action", 
+                    action: {
+                        type: "postback",
+                        label: "มากกว่า 3 ครั้งต่อสัปดาห์",
+                        data: "More than 3 times a week"
+                    }
+                }
+            ]
+        }
+    }
+
+    const alocoholTypeJson = {
+        type: "text",
+        text: "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
+        quickReply: {
+            items: [
+                {
+                    type: "action",
+                    action: {
+                        type: "postback",
+                        label: "เบียร์",
+                        data: "Beer"
+                    }
+                },
+                {
+                    type: "action", 
+                    action: {
+                        type: "postback",
+                        label: "ไวน์",
+                        data: "wine"
+                    }
+                },
+                {
+                    type: "action", 
+                    action: {
+                        type: "postback",
+                        label: "สุรา",
+                        data: "spirits"
+                    }
+                },
+                {
+                    type: "action", 
+                    action: {
+                        type: "postback",
+                        label: "วอดก้า",
+                        data: "vodka"
+                    }
+                },
+            ]
+        }
+    }
+
+    
 
 
     // // Uncomment and edit to make your own intent handler
