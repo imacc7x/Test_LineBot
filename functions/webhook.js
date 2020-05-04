@@ -15,6 +15,7 @@ exports.handler = (req, res, db) => {
         const docUser = db.collection("Users").doc(source.userId);
 
         if (type === "follow") {
+            console.log("LineHeader: ", LINE_HEADER);
             follow(docUser, event.replyToken)
                 .then( () => res.status(200).send("Follow is ok.") )
                 .catch((err) => console.error("Follow Error: ", err))
