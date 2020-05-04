@@ -47,6 +47,7 @@ const reply = (replyToken, messages) => {
         })
     });
 };
+
 const push = (userId, messages) => {
     return request.post({
         uri: `${LINE_MESSAGING_API}/push`,
@@ -120,6 +121,7 @@ const follow = (documentUser, userId) => {
             );
         })
 };
+
 const unfollow = (documentUser, userId) => {
     documentUser.update({
         active: false
