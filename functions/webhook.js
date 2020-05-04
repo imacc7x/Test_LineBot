@@ -1,5 +1,3 @@
-//test by Earth
-
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
@@ -10,6 +8,7 @@ const LINE_HEADER = {
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
+<<<<<<< HEAD
         const event = req.body.events[0];
         const eventType = event.type; 
         const userId = event.source.userId;
@@ -30,9 +29,35 @@ exports.handler = (req, res, db) => {
                 event.replyToken,
                 [{ type: "text", text: JSON.stringify(req.body) }]
             );
+=======
+        console.log("Reqest body: ", req.body);
+
+        const event = req.body.events[0];
+        const { type, source } = event;
+        const docUser = db.collection("Users").doc(source.userId);
+
+        if (type === "follow") {
+            console.log("LineHeader: ", LINE_HEADER);
+            follow(docUser, event.replyToken)
+                .then( () => res.status(200).send("Follow is ok.") )
+                .catch((err) => console.error("Follow Error: ", err))
+        }
+        else if (type === "unfollow") {
+            docUser.update({ active: false })
+                .then( () => res.status(200).send("Unfollow is ok.") )
+                .catch((err) => console.error("Unfollow Error: ", err))
+        }
+        else if (type === "message") {
+            const message = event.message;
+            if (message.type === "text") {
+                postToDialogflow(req);
+            }
+            else {
+                reply(event.replyToken, [{ type: "text", text: req.body }]);
+            }
+>>>>>>> e952c8d545d21a8a7bace24f5ff6ded3ec046b92
         }
     }
-    return res.status(200).send(req.method);
 };
 
 const reply = (replyToken, messages) => {
@@ -56,6 +81,7 @@ const push = (userId, messages) => {
     });
 };
 
+<<<<<<< HEAD
 const follow = (documentUser, userId) => {
     return documentUser.get()
         .then(docSnapshot => {
@@ -125,6 +151,48 @@ const unfollow = (documentUser, userId) => {
         .then(() => console.log(userId + ": unfollow"))
         .catch((err) => console.error("Unfollow error: ", err))
 }
+=======
+const follow = async (docUser, replyToken) => {
+    const user = await docUser.get();
+    if (!user.exists) {
+        await docUser.set({ active: true });
+    }
+    else {
+        await docUser.update({ active: true });
+    }
+    const messages = [
+        {
+            type: "text",
+            text: "คุณจะอนุญาตได้ไหมคะ",
+            quickReply: {
+                items: [
+                    {
+                        type: "action",
+                        action: {
+                            type: "postback",
+                            label: "อนุญาติ",
+                            text: "ACTIVATING_CONFIRM"
+                        }
+                    },
+                    {
+                        type: "action",
+                        action: {
+                            type: "postback",
+                            label: "ไม่อนุญาติ",
+                            text: "ACTIVATING_NOT_CONFIRM"
+                        }
+                    }
+                ]
+            }
+        }
+    ];
+    console.log("Reply token from Follow: ", replyToken);
+    await reply(replyToken, messages);
+    return new Promise((resolve, reject) => {
+        resolve();
+    });
+};
+>>>>>>> e952c8d545d21a8a7bace24f5ff6ded3ec046b92
 
 const postToDialogflow = req => {
     req.headers.host = "bots.dialogflow.com";
