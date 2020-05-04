@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - run: echo "export const environment = \{ LINE_HEADER_AUTH :: "${{secret.LINE_HEADER_AUTH}}"\}" > env/env.ts
+      - run: echo "export const environment = { LINE_HEADER_AUTH :" ${{secrets.LINE_HEADER_AUTH}} " }" > env/env.ts
       - run: npm ci
         working-directory: ./functions
       - uses: w9jds/firebase-action@master
