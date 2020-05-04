@@ -1,10 +1,9 @@
-require('dotenv').config();
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${process.env.LINE_HEADER_AUTH}`
+    "Authorization": `Bearer ${environment.LINE_HEADER_AUTH}`
 };
 
 exports.handler = (req, res, db) => {
@@ -62,55 +61,56 @@ const follow = async (documentUser, replyToken) => {
     const user = await documentUser.get()
     if (!user.exists) {
         await documentUser.set({ active: true });
+        reply(
+            replyToken,
+            [
+                {
+                    type: "text",
+                    text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+                },
+                {
+                    type: "text",
+                    text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+                },
+                {
+                    type: "text",
+                    text: "แต่ดิฉันก็จะช่วยสรุปข้อมูลที่สำคัญทั้งหมดและส่งต่อให้แก่นักให้คำปรึกษาค่ะดิฉันมั่นใจว่านักให้คำปรึกษาจะช่วยคุณได้แน่นอน"
+                },
+                {
+                    type: "text",
+                    text: "โดยข้อมูลที่ได้จากการสนทนาที่จะสามารถระบุตัวตนของคุณได้จะไม่มีการเผยแพร่ ดิฉันจึงอยากขอให้คุณอนุญาตให้พวกเขาทำเช่นนั้นก่อน"
+                },
+                {
+                    type: "text",
+                    text: "คุณจะอนุญาตได้ไหมคะ",
+                    quickReply: {
+                        items: [
+                            {
+                                type: "action",
+                                action: {
+                                    type: "postback",
+                                    label: "อนุญาติ",
+                                    data: "ACTIVATING_CONFIRM"
+                                }
+                            },
+                            {
+                                type: "action",
+                                action: {
+                                    type: "postback",
+                                    label: "ไม่อนุญาติ",
+                                    data: "ACTIVATING_NOT_CONFIRM"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        );
     }
     else {
         await documentUser.update({ active: true });
     }
-    reply(
-        replyToken,
-        [
-            {
-                type: "text",
-                text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-            },
-            {
-                type: "text",
-                text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-            },
-            {
-                type: "text",
-                text: "แต่ดิฉันก็จะช่วยสรุปข้อมูลที่สำคัญทั้งหมดและส่งต่อให้แก่นักให้คำปรึกษาค่ะดิฉันมั่นใจว่านักให้คำปรึกษาจะช่วยคุณได้แน่นอน"
-            },
-            {
-                type: "text",
-                text: "โดยข้อมูลที่ได้จากการสนทนาที่จะสามารถระบุตัวตนของคุณได้จะไม่มีการเผยแพร่ ดิฉันจึงอยากขอให้คุณอนุญาตให้พวกเขาทำเช่นนั้นก่อน"
-            },
-            {
-                type: "text",
-                text: "คุณจะอนุญาตได้ไหมคะ",
-                quickReply: {
-                    items: [
-                        {
-                            type: "action",
-                            action: {
-                                type: "postback",
-                                label: "อนุญาติ",
-                                data: "ACTIVATING_CONFIRM"
-                            }
-                        },
-                        {
-                            type: "action",
-                            action: {
-                                type: "postback",
-                                label: "ไม่อนุญาติ",
-                                data: "ACTIVATING_NOT_CONFIRM"
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    );
+
     return new Promise((resolve, reject) => resolve());
 };
 const unfollow = async (documentUser, userId) => {
