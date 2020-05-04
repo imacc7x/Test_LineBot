@@ -11,25 +11,33 @@ const LINE_HEADER = {
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
         const event = req.body.events[0];
-        const eventType = event.type; 
-        const userId = event.source.userId;
-        const messageType = event.message.type;
-        const documentUser = db.collection("Users").doc(userId);
 
-        if (eventType === "follow") {
-            follow(documentUser, userId)
+        const type = event.type;
+        const source = event.source;
+
+        const documentUser = db.collection("Users").doc(source.userId);
+
+        console.log("Request body: ", req.body);
+
+        if (type === "follow") {
+            const replyToken = event.replyToken;
+            follow(documentUser, replyToken)
         }
-        else if (eventType === "unfollow") {
-            unfollow(documentUser, userId)
+        else if (type === "unfollow") {
+            unfollow(documentUser, source.userId)
         }
-        else if (eventType === "message" && messageType === "text") {
-            postToDialogflow(req);
-        }
-        else {
-            reply(
-                event.replyToken,
-                [{ type: "text", text: JSON.stringify(req.body) }]
-            );
+        else if (type === "message") {
+            const message = event.message;
+            const replyToken = event.replyToken;
+
+            if (message.type === "text")
+                postToDialogflow(req);
+            else {
+                reply(
+                    replyToken,
+                    [{ type: "text", text: JSON.stringify(req.body) }]
+                );
+            }
         }
     }
     return res.status(200).send(req.method);
@@ -56,7 +64,7 @@ const push = (userId, messages) => {
     });
 };
 
-const follow = (documentUser, userId) => {
+const follow = (documentUser, replyToken) => {
     return documentUser.get()
         .then(docSnapshot => {
             if (!docSnapshot.exists) {
@@ -71,8 +79,8 @@ const follow = (documentUser, userId) => {
             }
         })
         .then(() => {
-            return push(
-                userId,
+            return reply(
+                replyToken,
                 [
                     {
                         type: "text",
