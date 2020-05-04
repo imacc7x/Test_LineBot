@@ -1,10 +1,9 @@
-require('dotenv').config()
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${process.env.LINE_HEADER_AUTH}`
+    "Authorization": `Bearer ${LINE_HEADER_AUTH}`
 };
 
 exports.handler = (req, res, db) => {
