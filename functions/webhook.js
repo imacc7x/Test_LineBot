@@ -1,9 +1,10 @@
+const functions = require('firebase-functions');
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${LINE_HEADER_AUTH}`
+    "Authorization": `Bearer ${functions.config().webhook.line_header_auth}`
 };
 
 exports.handler = (req, res, db) => {
