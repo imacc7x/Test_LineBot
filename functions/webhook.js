@@ -91,7 +91,8 @@ const follow = async (docUser, replyToken) => {
             }
         }
     ];
-    reply(replyToken, messages);
+    console.log("Reply token from Follow: ", replyToken);
+    await reply(replyToken, messages);
     return new Promise((resolve, reject) => {
         resolve();
     });
