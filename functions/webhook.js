@@ -11,7 +11,7 @@ const LINE_HEADER = {
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
         const event = req.body.events[0];
-        const eventType = event.type;
+        const eventType = event.type; 
         const userId = event.source.userId;
         const messageType = event.message.type;
         const documentUser = db.collection("Users").doc(userId);
