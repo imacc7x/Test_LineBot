@@ -1,5 +1,3 @@
-//test by Earth
-
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
@@ -14,7 +12,7 @@ exports.handler = (req, res, db) => {
 
         const event = req.body.events[0];
         const { type, source } = event;
-        const docUser = db.collection("Users").doc(source.userId)
+        const docUser = db.collection("Users").doc(source.userId);
 
         if (type === "follow") {
             follow(docUser, event.replyToken)
@@ -36,7 +34,6 @@ exports.handler = (req, res, db) => {
             }
         }
     }
-    return res.status(200).send(req.method);
 };
 
 const reply = (replyToken, messages) => {
@@ -57,16 +54,16 @@ const push = (userId, messages) => {
             to: userId,
             messages: messages
         })
-    })
-}
+    });
+};
 
 const follow = async (docUser, replyToken) => {
-    const user = await docUser.get()
+    const user = await docUser.get();
     if (!user.exists) {
-        await docUser.set({ active: true })
+        await docUser.set({ active: true });
     }
     else {
-        await docUser.update({ active: true })
+        await docUser.update({ active: true });
     }
     const messages = [
         {
@@ -94,11 +91,11 @@ const follow = async (docUser, replyToken) => {
             }
         }
     ];
-    reply(replyToken, messages)
+    reply(replyToken, messages);
     return new Promise((resolve, reject) => {
-        resolve()
+        resolve();
     });
-}
+};
 
 const postToDialogflow = req => {
     req.headers.host = "bots.dialogflow.com";
