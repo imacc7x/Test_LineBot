@@ -5,48 +5,110 @@ const request = require('request-promise');
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     "Content-Type": "application/json",
-    "Authorization": "Bearer Pp6phRvvrfzI5GGPZ+ByKEq/ypv5edDTfh8du1Ij0SCl9if21h0VyCcGRwurc6bCjCshMnMqZ2F+oxfSfiSXKHpDewSloJZloS8WOjhfgnctfwvc/nDLiJc/RED3FXj/ufaL/L84qllM51lv3ZcBewdB04t89/1O/w1cDnyilFU="
+    "Authorization": `Bearer ${process.env.LINE_HEADER_AUTH}`
 };
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
-        const eventType = req.body.events[0].type;
-        const userId = req.body.events[0].source.userId
-        const messageType = event.message.type
+        const event = req.body.events[0];
+        const eventType = event.type;
+        const userId = event.source.userId;
+        const messageType = event.message.type;
+        const documentUser = db.collection("Users").doc(userId);
 
-        console.log("This is UID", userId);
-        let event = req.body.events[0]
         if (eventType === "follow") {
-            db.collection("Users").doc(userId).set({
-                userId: userId,
-                activation: 'false'
-            });
-            activation(req, res);
+            follow(documentUser, userId)
+        }
+        else if (eventType === "unfollow") {
+            unfollow(documentUser, userId)
         }
         else if (eventType === "message" && messageType === "text") {
             postToDialogflow(req);
-        } else {
-            reply(req);
+        }
+        else {
+            reply(
+                event.replyToken,
+                [{ type: "text", text: JSON.stringify(req.body) }]
+            );
         }
     }
     return res.status(200).send(req.method);
 };
 
-const reply = req => {
+const reply = (replyToken, messages) => {
     return request.post({
         uri: `${LINE_MESSAGING_API}/reply`,
         headers: LINE_HEADER,
         body: JSON.stringify({
-            replyToken: req.body.events[0].replyToken,
-            messages: [
-                {
-                    type: "text",
-                    text: JSON.stringify(req.body)
-                }
-            ]
+            replyToken: replyToken,
+            messages: messages
         })
     });
 };
+const push = (userId, messages) => {
+    return request.post({
+        uri: `${LINE_MESSAGING_API}/push`,
+        headers: LINE_HEADER,
+        body: JSON.stringify({
+            to: userId,
+            messages: messages
+        })
+    });
+};
+
+const follow = (documentUser, userId) => {
+    return documentUser.get()
+        .then(docSnapshot => {
+            if (!docSnapshot.exists) {
+                return documentUser.set({
+                    active: true
+                });
+            }
+            else {
+                return documentUser.update({
+                    active: true
+                });
+            }
+        })
+        .then(() => {
+            return push(
+                userId,
+                [
+                    {
+                        type: "text",
+                        text: "คุณจะอนุญาตได้ไหมคะ",
+                        quickReply: {
+                            items: [
+                                {
+                                    type: "action",
+                                    action: {
+                                        type: "postback",
+                                        label: "อนุญาติ",
+                                        data: "ACTIVATING_CONFIRM"
+                                    }
+                                },
+                                {
+                                    type: "action",
+                                    action: {
+                                        type: "postback",
+                                        label: "ไม่อนุญาติ",
+                                        data: "ACTIVATING_NOT_CONFIRM"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            );
+        })
+};
+const unfollow = (documentUser, userId) => {
+    documentUser.update({
+        active: false
+    })
+        .then(() => console.log(userId + ": unfollow"))
+        .catch((err) => console.error("Unfollow error: ", err))
+}
 
 const postToDialogflow = req => {
     req.headers.host = "bots.dialogflow.com";
@@ -56,46 +118,3 @@ const postToDialogflow = req => {
         body: JSON.stringify(req.body)
     });
 };
-
-const activation = ((req, res) => {
-    return request({
-        method: "POST",
-        uri: `${LINE_MESSAGING_API}/push`,
-        headers: LINE_HEADER,
-        body: JSON.stringify({
-            to: req.body.events[0].source.userId,
-            messages: [
-                {
-                    type: "text",
-                    text: "คุณจะอนุญาตได้ไหมคะ",
-                    quickReply: {
-                        items: [
-                            {
-                                type: "action",
-                                action: {
-                                    type: "message",
-                                    label: "ได้",
-                                    text: "ยืนยันการใช้งาน"
-                                }
-                            },
-                            {
-                                type: "action",
-                                action: {
-                                    type: "message",
-                                    label: "ไม่ได้",
-                                    text: "ปฏิเสธการใช้งาน"
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        })
-    }).then(() => {
-        return res.status(200).send("Done");
-    }).catch(error => {
-        return Promise.reject(error);
-    });
-});
-
-
