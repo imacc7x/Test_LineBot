@@ -67,7 +67,7 @@ const push = (userId, messages) => {
 
 const follow = async (documentUser, replyToken) => {
     const user = await documentUser.get()
-    if (user.exists) {
+    if (!user.exists) {
         await documentUser.set({ active: true });
     }
     else {
