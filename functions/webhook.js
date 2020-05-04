@@ -34,6 +34,7 @@ exports.handler = (req, res, db) => {
             else {
                 reply(event.replyToken, [{ type: "text", text: req.body }]);
             }
+            res.status(200).send("post to dialogflow is OK")
         }
         else if (type === "postback") {
             const newEvent = {
@@ -47,7 +48,8 @@ exports.handler = (req, res, db) => {
             delete newEvent.postback;
             const newReq = {...req};
             newReq.body.events[0] = newEvent;
-            postToDialogflow(newReq)
+            postToDialogflow(newReq);
+            res.status(200).send("post to dialogflow is OK")
         }
     }
 };
