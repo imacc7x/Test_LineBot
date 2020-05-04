@@ -103,12 +103,11 @@ const follow = async (documentUser, replyToken) => {
         ]
     );
 };
-const unfollow = (documentUser, userId) => {
-    documentUser.update({
+const unfollow = async (documentUser, userId) => {
+    await documentUser.update({
         active: false
     })
-        .then(() => console.log(userId + ": unfollow"))
-        .catch((err) => console.error("Unfollow error: ", err))
+    console.log(userId + ": unfollow")
 }
 
 const postToDialogflow = req => {
