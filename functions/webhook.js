@@ -16,12 +16,12 @@ exports.handler = (req, res, db) => {
 
         if (type === "follow") {
             follow(docUser, event.replyToken)
-                .then( res.status(200).send("Follow is ok.") )
+                .then( () => res.status(200).send("Follow is ok.") )
                 .catch((err) => console.error("Follow Error: ", err))
         }
         else if (type === "unfollow") {
             docUser.update({ active: false })
-                .then( res.status(200).send("Unfollow is ok.") )
+                .then( () => res.status(200).send("Unfollow is ok.") )
                 .catch((err) => console.error("Unfollow Error: ", err))
         }
         else if (type === "message") {
