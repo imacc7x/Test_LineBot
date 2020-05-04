@@ -5,7 +5,7 @@ const LINE_HEADER = {
     "Content-Type": "application/json",
     "Authorization": `Bearer ${environment.LINE_HEADER_AUTH}`
 };
- 
+
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
         console.log("Reqest body: ", req.body);
