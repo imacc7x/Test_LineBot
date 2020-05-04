@@ -23,9 +23,14 @@ exports.handler = (req, res, db) => {
             console.log("FOLLOW!!")
             const replyToken = event.replyToken;
             follow(documentUser, replyToken)
+                .then((user) => {
+                    console.log(user);
+                    res.status(200).send("follow OK")
+                })
         }
         else if (type === "unfollow") {
             unfollow(documentUser, source.userId)
+                .then(() => res.status(200).send("unfollow OK"))
         }
         else if (type === "message") {
             const message = event.message;
@@ -41,7 +46,7 @@ exports.handler = (req, res, db) => {
             }
         }
     }
-    return res.status(200).send(req.method);
+    // return res.status(200).send(req.method);
 };
 
 const reply = (replyToken, messages) => {
@@ -65,53 +70,53 @@ const push = (userId, messages) => {
     });
 };
 
-const follow = (documentUser, replyToken) => {
-    documentUser.get()
-        .then(docSnapshot => {
-            if (!docSnapshot.exists) {
-                documentUser.set({ active: true })
-                    .then(
-                        reply(
-                            replyToken,
-                            [
-                                {
-                                    type: "text",
-                                    text: "คุณจะอนุญาตได้ไหมคะ",
-                                    quickReply: {
-                                        items: [
-                                            {
-                                                type: "action",
-                                                action: {
-                                                    type: "postback",
-                                                    label: "อนุญาติ",
-                                                    data: "ACTIVATING_CONFIRM"
-                                                }
-                                            },
-                                            {
-                                                type: "action",
-                                                action: {
-                                                    type: "postback",
-                                                    label: "ไม่อนุญาติ",
-                                                    data: "ACTIVATING_NOT_CONFIRM"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        )
-                    )
-            }
-            else {
-                documentUser.update({ active: true });
-            }
-        });
+const follow = async (documentUser, replyToken) => {
+    return documentUser.get()
+        // .then(docSnapshot => {
+        //     if (!docSnapshot.exists) {
+        //         documentUser.set({ active: true })
+        //             .then(() => {
+        //                 reply(
+        //                     replyToken,
+        //                     [
+        //                         {
+        //                             type: "text",
+        //                             text: "คุณจะอนุญาตได้ไหมคะ",
+        //                             quickReply: {
+        //                                 items: [
+        //                                     {
+        //                                         type: "action",
+        //                                         action: {
+        //                                             type: "postback",
+        //                                             label: "อนุญาติ",
+        //                                             data: "ACTIVATING_CONFIRM"
+        //                                         }
+        //                                     },
+        //                                     {
+        //                                         type: "action",
+        //                                         action: {
+        //                                             type: "postback",
+        //                                             label: "ไม่อนุญาติ",
+        //                                             data: "ACTIVATING_NOT_CONFIRM"
+        //                                         }
+        //                                     }
+        //                                 ]
+        //                             }
+        //                         }
+        //                     ]
+        //                 )
+        //             })
+        //     }
+        //     else {
+        //         documentUser.update({ active: true });
+        //     }
+        // });
 }
-const unfollow = (documentUser, userId) => {
+const unfollow = async (documentUser, userId) => {
     console.log(userId + ": unfollow");
-    documentUser.update({
+    return documentUser.update({
         active: false
-    })
+    });
 }
 
 const postToDialogflow = req => {
