@@ -20,6 +20,7 @@ exports.handler = (req, res, db) => {
         console.log("Request body: ", req.body);
 
         if (type === "follow") {
+            console.log("FOLLOW!!")
             const replyToken = event.replyToken;
             follow(documentUser, replyToken)
         }
