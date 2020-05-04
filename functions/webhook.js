@@ -67,46 +67,46 @@ const push = (userId, messages) => {
 
 const follow = (documentUser, replyToken) => {
     documentUser.get()
-        .then( docSnapshot => {
+        .then(docSnapshot => {
             if (!docSnapshot.exists) {
-                return documentUser.set({ active: true });
-            }
-            else {
-                return documentUser.update({ active: true });
-            }
-        })
-        .then( () => {
-            return reply(
-                replyToken,
-                [
-                    {
-                        type: "text",
-                        text: "คุณจะอนุญาตได้ไหมคะ",
-                        quickReply: {
-                            items: [
+                documentUser.set({ active: true })
+                    .then(
+                        reply(
+                            replyToken,
+                            [
                                 {
-                                    type: "action",
-                                    action: {
-                                        type: "postback",
-                                        label: "อนุญาติ",
-                                        data: "ACTIVATING_CONFIRM"
-                                    }
-                                },
-                                {
-                                    type: "action",
-                                    action: {
-                                        type: "postback",
-                                        label: "ไม่อนุญาติ",
-                                        data: "ACTIVATING_NOT_CONFIRM"
+                                    type: "text",
+                                    text: "คุณจะอนุญาตได้ไหมคะ",
+                                    quickReply: {
+                                        items: [
+                                            {
+                                                type: "action",
+                                                action: {
+                                                    type: "postback",
+                                                    label: "อนุญาติ",
+                                                    data: "ACTIVATING_CONFIRM"
+                                                }
+                                            },
+                                            {
+                                                type: "action",
+                                                action: {
+                                                    type: "postback",
+                                                    label: "ไม่อนุญาติ",
+                                                    data: "ACTIVATING_NOT_CONFIRM"
+                                                }
+                                            }
+                                        ]
                                     }
                                 }
                             ]
-                        }
-                    }
-                ]
-            );
-        })
-};
+                        )
+                    )
+            }
+            else {
+                documentUser.update({ active: true });
+            }
+        });
+}
 const unfollow = (documentUser, userId) => {
     console.log(userId + ": unfollow");
     documentUser.update({
