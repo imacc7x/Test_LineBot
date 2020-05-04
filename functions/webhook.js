@@ -1,3 +1,4 @@
+require('dotenv').config();
 const request = require('request-promise');
 
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
