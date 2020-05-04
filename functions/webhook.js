@@ -65,50 +65,53 @@ const push = (userId, messages) => {
     });
 };
 
-const follow = async (documentUser, replyToken) => {
-    const user = await documentUser.get();
-    console.log(user);
-    if (!user.exists) {
-        await documentUser.set({ active: true });
-    }
-    else {
-        await documentUser.update({ active: true })
-    }
-    return reply(
-        replyToken,
-        [
-            {
-                type: "text",
-                text: "คุณจะอนุญาตได้ไหมคะ",
-                quickReply: {
-                    items: [
-                        {
-                            type: "action",
-                            action: {
-                                type: "postback",
-                                label: "อนุญาติ",
-                                data: "ACTIVATING_CONFIRM"
-                            }
-                        },
-                        {
-                            type: "action",
-                            action: {
-                                type: "postback",
-                                label: "ไม่อนุญาติ",
-                                data: "ACTIVATING_NOT_CONFIRM"
-                            }
-                        }
-                    ]
-                }
+const follow = (documentUser, replyToken) => {
+    documentUser.get()
+        .then( docSnapshot => {
+            if (!docSnapshot.exists) {
+                return documentUser.set({ active: true });
             }
-        ]
-    );
+            else {
+                return documentUser.update({ active: true });
+            }
+        })
+        .then( () => {
+            return reply(
+                replyToken,
+                [
+                    {
+                        type: "text",
+                        text: "คุณจะอนุญาตได้ไหมคะ",
+                        quickReply: {
+                            items: [
+                                {
+                                    type: "action",
+                                    action: {
+                                        type: "postback",
+                                        label: "อนุญาติ",
+                                        data: "ACTIVATING_CONFIRM"
+                                    }
+                                },
+                                {
+                                    type: "action",
+                                    action: {
+                                        type: "postback",
+                                        label: "ไม่อนุญาติ",
+                                        data: "ACTIVATING_NOT_CONFIRM"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            );
+        })
 };
-const unfollow = async (documentUser, userId) => {
-    await documentUser.update({
+const unfollow = (documentUser, userId) => {
+    console.log(userId + ": unfollow");
+    documentUser.update({
         active: false
     })
-    console.log(userId + ": unfollow");
 }
 
 const postToDialogflow = req => {
