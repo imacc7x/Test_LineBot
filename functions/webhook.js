@@ -10,43 +10,33 @@ const LINE_HEADER = {
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
+        console.log("Reqest body: ", req.body);
+
         const event = req.body.events[0];
-
-        const type = event.type;
-        const source = event.source;
-
-        const documentUser = db.collection("Users").doc(source.userId);
-
-        console.log("Request body: ", req.body);
+        const { type, source } = event;
+        const docUser = db.collection("Users").doc(source.userId)
 
         if (type === "follow") {
-            console.log("FOLLOW!!")
-            const replyToken = event.replyToken;
-            follow(documentUser, replyToken)
-                .then((user) => {
-                    console.log(user);
-                    res.status(200).send("follow OK")
-                })
+            follow(docUser, event.replyToken)
+                .then( res.status(200).send("Follow is ok.") )
+                .catch((err) => console.error("Follow Error: ", err))
         }
         else if (type === "unfollow") {
-            unfollow(documentUser, source.userId)
-                .then(() => res.status(200).send("unfollow OK"))
+            docUser.update({ active: false })
+                .then( res.status(200).send("Unfollow is ok.") )
+                .catch((err) => console.error("Unfollow Error: ", err))
         }
         else if (type === "message") {
             const message = event.message;
-            const replyToken = event.replyToken;
-
-            if (message.type === "text")
+            if (message.type === "text") {
                 postToDialogflow(req);
+            }
             else {
-                reply(
-                    replyToken,
-                    [{ type: "text", text: JSON.stringify(req.body) }]
-                );
+                reply(event.replyToken, [{ type: "text", text: req.body }]);
             }
         }
     }
-    // return res.status(200).send(req.method);
+    return res.status(200).send(req.method);
 };
 
 const reply = (replyToken, messages) => {
@@ -67,55 +57,46 @@ const push = (userId, messages) => {
             to: userId,
             messages: messages
         })
-    });
-};
-
-const follow = async (documentUser, replyToken) => {
-    return documentUser.get()
-        // .then(docSnapshot => {
-        //     if (!docSnapshot.exists) {
-        //         documentUser.set({ active: true })
-        //             .then(() => {
-        //                 reply(
-        //                     replyToken,
-        //                     [
-        //                         {
-        //                             type: "text",
-        //                             text: "คุณจะอนุญาตได้ไหมคะ",
-        //                             quickReply: {
-        //                                 items: [
-        //                                     {
-        //                                         type: "action",
-        //                                         action: {
-        //                                             type: "postback",
-        //                                             label: "อนุญาติ",
-        //                                             data: "ACTIVATING_CONFIRM"
-        //                                         }
-        //                                     },
-        //                                     {
-        //                                         type: "action",
-        //                                         action: {
-        //                                             type: "postback",
-        //                                             label: "ไม่อนุญาติ",
-        //                                             data: "ACTIVATING_NOT_CONFIRM"
-        //                                         }
-        //                                     }
-        //                                 ]
-        //                             }
-        //                         }
-        //                     ]
-        //                 )
-        //             })
-        //     }
-        //     else {
-        //         documentUser.update({ active: true });
-        //     }
-        // });
+    })
 }
-const unfollow = async (documentUser, userId) => {
-    console.log(userId + ": unfollow");
-    return documentUser.update({
-        active: false
+
+const follow = async (docUser, replyToken) => {
+    const user = await docUser.get()
+    if (!user.exists) {
+        await docUser.set({ active: true })
+    }
+    else {
+        await docUser.update({ active: true })
+    }
+    const messages = [
+        {
+            type: "text",
+            text: "คุณจะอนุญาตได้ไหมคะ",
+            quickReply: {
+                items: [
+                    {
+                        type: "action",
+                        action: {
+                            type: "postback",
+                            label: "อนุญาติ",
+                            text: "ACTIVATING_CONFIRM"
+                        }
+                    },
+                    {
+                        type: "action",
+                        action: {
+                            type: "postback",
+                            label: "ไม่อนุญาติ",
+                            text: "ACTIVATING_NOT_CONFIRM"
+                        }
+                    }
+                ]
+            }
+        }
+    ];
+    reply(replyToken, messages)
+    return new Promise((resolve, reject) => {
+        resolve()
     });
 }
 
