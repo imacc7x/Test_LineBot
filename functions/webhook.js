@@ -27,7 +27,6 @@ exports.handler = (req, res, db) => {
         }
         else if (type === "message") {
             const message = event.message;
-            console.log("message", message);
             if (message.type === "text") {
                 postToDialogflow(req);
             }
@@ -37,19 +36,7 @@ exports.handler = (req, res, db) => {
             res.status(200).send("post to dialogflow is OK");
         }
         else if (type === "postback") {
-            const newEvent = {
-                ...event,
-                type: "messages",
-                message: {
-                    type: "text",
-                    text: event.postback.data
-                }
-            };
-            delete newEvent.postback;
-            const newReq = {...req};
-            newReq.body.events[0] = newEvent;
-            console.log("New req.body: ", newReq.body);
-            postToDialogflow(newReq);
+            postToDialogflow(req);
             res.status(200).send("post to dialogflow is OK");
         }
     }
