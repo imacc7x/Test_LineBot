@@ -15,7 +15,6 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 
-
 exports.webhook = functions.region(region).runWith(runtimeOpts).https.onRequest((req, res) => {
     require('./webhook').handler(req, res, db);
 });
