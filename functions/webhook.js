@@ -9,7 +9,6 @@ const LINE_HEADER = {
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
-        console.log("Webhook Reqest headers: ", JSON.stringify(req.headers));
         console.log("Webhook Reqest body: ", JSON.stringify(req.body));
 
         const event = req.body.events[0];
@@ -98,7 +97,7 @@ const follow = async (documentUser, replyToken) => {
                                     type: "postback",
                                     label: "อนุญาติ",
                                     data: "ACTIVATING_CONFIRM",
-                                    displayText: "อนุญาติ"
+                                    text: "อนุญาติ"
                                 }
                             },
                             {
@@ -107,7 +106,7 @@ const follow = async (documentUser, replyToken) => {
                                     type: "postback",
                                     label: "ไม่อนุญาติ",
                                     data: "ACTIVATING_NOT_CONFIRM",
-                                    displayText: "ไม่อนุญาติ"
+                                    text: "ไม่อนุญาติ"
                                 }
                             }
                         ]
