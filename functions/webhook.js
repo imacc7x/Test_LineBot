@@ -47,7 +47,7 @@ exports.handler = (req, res, db) => {
             delete newEvent.postback;
             const newReq = {...req}; 
             newReq.body.events[0] = newEvent;
-            console.log(newReq);
+            console.log("New req.body: ", newReq.body);
             postToDialogflow(newReq);
             res.status(200).send("post to dialogflow is OK");
         }
@@ -109,7 +109,7 @@ const follow = async (documentUser, replyToken) => {
                                     type: "postback",
                                     label: "อนุญาติ",
                                     data: "ACTIVATING_CONFIRM",
-                                    text: "อนุญาติ"
+                                    displayText: "อนุญาติ"
                                 }
                             },
                             {
@@ -118,7 +118,7 @@ const follow = async (documentUser, replyToken) => {
                                     type: "postback",
                                     label: "ไม่อนุญาติ",
                                     data: "ACTIVATING_NOT_CONFIRM",
-                                    text: "ไม่อนุญาติ"
+                                    displayText: "ไม่อนุญาติ"
                                 }
                             }
                         ]
