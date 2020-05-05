@@ -218,7 +218,7 @@ exports.handler = (request, response, db) => {
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
-    intentMap.set('Activation-yes', activation);
+    intentMap.set('Activation-confirm', activation);
     intentMap.set('Set Age', setAge);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);

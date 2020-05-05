@@ -36,6 +36,7 @@ exports.handler = (req, res, db) => {
             res.status(200).send("post to dialogflow is OK");
         }
         else if (type === "postback") {
+            console.log("Postback obj: ", event.postback)
             const newEvent = {
                 ...event,
                 type: "messages",
