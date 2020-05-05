@@ -9,7 +9,8 @@ const LINE_HEADER = {
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
-        console.log("Reqest: ", JSON.stringify(req));
+        console.log("Webhook Reqest headers: ", JSON.stringify(req.headers));
+        console.log("Webhook Reqest body: ", JSON.stringify(req.body));
 
         const event = req.body.events[0];
         const { type, source } = event;
