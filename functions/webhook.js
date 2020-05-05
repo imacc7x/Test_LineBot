@@ -45,7 +45,7 @@ exports.handler = (req, res, db) => {
                 }
             };
             delete newEvent.postback;
-            const newReq = {...req};
+            const newReq = {...req}; 
             newReq.body.events[0] = newEvent;
             console.log(newReq);
             postToDialogflow(newReq);
