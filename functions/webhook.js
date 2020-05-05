@@ -16,7 +16,6 @@ exports.handler = (req, res, db) => {
         const docUser = db.collection("Users").doc(source.userId);
 
         if (type === "follow") {
-            console.log(LINE_HEADER);
             follow(docUser, event.replyToken)
                 .then(() => res.status(200).send("Follow is ok."))
                 .catch((err) => console.error("Follow Error: ", err))
@@ -48,6 +47,7 @@ exports.handler = (req, res, db) => {
             delete newEvent.postback;
             const newReq = {...req};
             newReq.body.events[0] = newEvent;
+            console.log(newReq);
             postToDialogflow(newReq);
             res.status(200).send("post to dialogflow is OK");
         }
