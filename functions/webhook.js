@@ -108,7 +108,8 @@ const follow = async (documentUser, replyToken) => {
                                 action: {
                                     type: "postback",
                                     label: "อนุญาติ",
-                                    data: "ACTIVATING_CONFIRM"
+                                    data: "ACTIVATING_CONFIRM",
+                                    text: "อนุญาติ"
                                 }
                             },
                             {
@@ -116,7 +117,8 @@ const follow = async (documentUser, replyToken) => {
                                 action: {
                                     type: "postback",
                                     label: "ไม่อนุญาติ",
-                                    data: "ACTIVATING_NOT_CONFIRM"
+                                    data: "ACTIVATING_NOT_CONFIRM",
+                                    text: "ไม่อนุญาติ"
                                 }
                             }
                         ]
