@@ -9,7 +9,7 @@ const LINE_HEADER = {
 
 exports.handler = (req, res, db) => {
     if (req.method === "POST") {
-        console.log("Reqest body: ", req.body);
+        console.log("Reqest: ", JSON.stringify(req));
 
         const event = req.body.events[0];
         const { type, source } = event;
