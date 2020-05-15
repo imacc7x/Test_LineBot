@@ -24,7 +24,7 @@ exports.handler = (request, response, db) => {
         agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
     }
 
-    function setAge(agent) {
+    function setProfile(agent) {
         console.log("This is setage function");
         const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         agent.add("Your userID: " + userId);
@@ -218,8 +218,8 @@ exports.handler = (request, response, db) => {
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
-    intentMap.set('Activation-confirm', activation);
-    intentMap.set('Set Age', setAge);
+    intentMap.set('Activating-confirm', activation);
+    intentMap.set('Set Profile', setProfile);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);

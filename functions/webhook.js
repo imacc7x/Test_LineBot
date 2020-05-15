@@ -121,6 +121,7 @@ const follow = async (documentUser, replyToken) => {
 
     return new Promise((resolve, reject) => resolve());
 };
+
 const unfollow = async (documentUser, userId) => {
     await documentUser.update({
         active: false
