@@ -66,7 +66,7 @@ exports.handler = (request, response, db) => {
             });
     }
 
-    // let reply = new Payload("Line" , Json);
+    let reply = new Payload("Line" , Json);
 
     const careerJson = {
         type: "text",
