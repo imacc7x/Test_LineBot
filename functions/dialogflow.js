@@ -25,8 +25,9 @@ exports.handler = (request, response, db) => {
     }
 
     function setProfile(agent) {
-        console.log("This is setage function");
+        console.log("This is setProfile function");
         const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
+        console.log("userId: " + userId);
         agent.add("Your userID: " + userId);
         let age = agent.parameters.age;
         agent.add("Your age: " + age);
