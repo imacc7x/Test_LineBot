@@ -34,16 +34,16 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-        reply(careerJson);
-        agent.add(reply);
+        // reply(careerJson);
+        // agent.add(reply);
         
-        reply(alcoholTimeJson);
-        agent.add(reply);
+        // reply(alcoholTimeJson);
+        // agent.add(reply);
 
-        reply(alocoholTypeJson);
-        agent.add(reply);
+        // reply(alocoholTypeJson);
+        // agent.add(reply);
 
-        agent.add(" ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ");
+        // agent.add(" ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ");
     }
 
 
@@ -66,7 +66,7 @@ exports.handler = (request, response, db) => {
             });
     }
 
-    let reply = new Payload("Line" , Json);
+    // let reply = new Payload("Line" , Json);
 
     const careerJson = {
         type: "text",
