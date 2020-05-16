@@ -34,9 +34,9 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-        agent.add(new Suggestion(`Quick Reply`));
-        agent.add(new Suggestion(`Suggestion`));
-        agent.setContext({ name: 'weather', lifespan: 2, parameters: { city: 'Rome' }});
+        agent.add(new Suggestion(`1`,'2'));
+       
+       
         // reply(careerJson);
         // agent.add(reply);
 
