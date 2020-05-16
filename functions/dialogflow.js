@@ -34,7 +34,7 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-        agent.add(new Suggestion(`1`,'2'));
+        agent.add(new Suggestion(`1`),("2"));
        
        
         // reply(careerJson);
