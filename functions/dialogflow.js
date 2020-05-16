@@ -34,27 +34,8 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-        agent.add(
-            [
-                {
-                    quickReplies: {
-                        title: "test quick replies",
-                        quickReplies: [
-                            "1",
-                            "2"
-                        ]
-                    },
-                    platform: "LINE"
-                },
-                {
-                    text: {
-                        text: [
-                            ""
-                        ]
-                    }
-                }
-            ]        
-        );
+
+        let payload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
 
 
         // reply(careerJson);
