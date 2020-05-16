@@ -38,8 +38,8 @@ exports.handler = (request, response, db) => {
         let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
         agent.add(careerPayload);
 
-        let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
-        agent.add(alcoholTimePayLoad);
+        // let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
+        // agent.add(alcoholTimePayLoad);
 
         // reply(careerJson);
         // agent.add(reply);
