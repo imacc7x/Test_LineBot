@@ -36,7 +36,7 @@ exports.handler = (request, response, db) => {
         });
 
         let payload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
-
+        agent.add(payload);
 
         // reply(careerJson);
         // agent.add(reply);
