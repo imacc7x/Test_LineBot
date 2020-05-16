@@ -35,6 +35,8 @@ exports.handler = (request, response, db) => {
             age: age
         });
         agent.add(new Suggestion(`Quick Reply`));
+        agent.add(new Suggestion(`Suggestion`));
+        agent.setContext({ name: 'weather', lifespan: 2, parameters: { city: 'Rome' }});
         // reply(careerJson);
         // agent.add(reply);
 
