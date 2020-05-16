@@ -34,9 +34,29 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-        agent.add(new Suggestion(`1`),("2"));
-       
-       
+        agent.add(
+            [
+                {
+                    "quickReplies": {
+                        "title": "test quick replies",
+                        "quickReplies": [
+                            "1",
+                            "2"
+                        ]
+                    },
+                    "platform": "LINE"
+                },
+                {
+                    "text": {
+                        "text": [
+                            ""
+                        ]
+                    }
+                }
+            ]        
+        );
+
+
         // reply(careerJson);
         // agent.add(reply);
 
@@ -230,24 +250,23 @@ exports.handler = (request, response, db) => {
     agent.handleRequest(intentMap);
 };
 
-// {
-//     "fulfillmentMessages": [
-//         {
-//             "quickReplies": {
-//                 "title": "test quick replies",
-//                 "quickReplies": [
-//                     "1",
-//                     "2"
-//                 ]
-//             },
-//             "platform": "LINE"
-//         },
-//         {
-//             "text": {
-//                 "text": [
-//                     ""
-//                 ]
-//             }
-//         }
-//     ]
-// }
+    // [
+    //     {
+    //         "quickReplies": {
+    //             "title": "test quick replies",
+    //             "quickReplies": [
+    //                 "1",
+    //                 "2"
+    //             ]
+    //         },
+    //         "platform": "LINE"
+    //     },
+    //     {
+    //         "text": {
+    //             "text": [
+    //                 ""
+    //             ]
+    //         }
+    //     }
+    // ]
+
