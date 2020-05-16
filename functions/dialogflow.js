@@ -35,11 +35,14 @@ exports.handler = (request, response, db) => {
             age: age
         });
 
-        const careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
-        agent.add(careerPayload);
+        // const careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
+        // agent.add(careerPayload);
 
-        const alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
-        agent.add(alcoholTimePayLoad);
+        // let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
+        // agent.add(alcoholTimePayLoad);
+
+        agent.add(new Payload(`LINE`, careerJson, { sendAsMessage: true }));
+        agent.add(new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true }));
 
         // reply(careerJson);
         // agent.add(reply);
