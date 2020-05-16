@@ -37,18 +37,18 @@ exports.handler = (request, response, db) => {
         agent.add(
             [
                 {
-                    "quickReplies": {
-                        "title": "test quick replies",
-                        "quickReplies": [
+                    quickReplies: {
+                        title: "test quick replies",
+                        quickReplies: [
                             "1",
                             "2"
                         ]
                     },
-                    "platform": "LINE"
+                    platform: "LINE"
                 },
                 {
-                    "text": {
-                        "text": [
+                    text: {
+                        text: [
                             ""
                         ]
                     }
