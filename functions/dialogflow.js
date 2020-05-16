@@ -35,8 +35,11 @@ exports.handler = (request, response, db) => {
             age: age
         });
 
-        let payload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
-        agent.add(payload);
+        let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
+        agent.add(careerPayload);
+
+        let alcoholTimePayLoad = new Payload('LINE', alocoholTypeJson, {sendAsMessage: true});
+        agent.add(alcoholTimePayLoad);
 
         // reply(careerJson);
         // agent.add(reply);
@@ -80,17 +83,17 @@ exports.handler = (request, response, db) => {
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "ตำรวจ",
-                        data: "police"
+                        text: "police"
                     }
                 },
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "ทหาร",
-                        data: "soldier"
+                        text: "soldier"
                     }
                 }
             ]
