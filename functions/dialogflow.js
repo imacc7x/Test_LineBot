@@ -38,7 +38,7 @@ exports.handler = (request, response, db) => {
         let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
         agent.add(careerPayload);
 
-        let alcoholTimePayLoad = new Payload('LINE', alocoholTypeJson, {sendAsMessage: true});
+        let alcoholTimePayLoad = new Payload('LINE', alcoholTimeJson , {sendAsMessage: true});
         agent.add(alcoholTimePayLoad);
 
         // reply(careerJson);
@@ -108,41 +108,41 @@ exports.handler = (request, response, db) => {
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "ไม่เคย",
-                        data: "Never"
+                        text: "Never"
                     }
                 },
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "ไม่เกินเดือนละครั้ง",
-                        data: "Not more than once a month"
+                        text: "Not more than once a month"
                     }
                 },
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "เดือนละ 2 - 4 ครั้ง",
-                        data: "2-4 times a month"
+                        text: "2-4 times a month"
                     }
                 },
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "สัปดาห์ละ 2 - 3 ครั้ง",
-                        data: "2-3 times a week"
+                        text: "2-3 times a week"
                     }
                 },
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "มากกว่า 3 ครั้งต่อสัปดาห์",
-                        data: "More than 3 times a week"
+                        text: "More than 3 times a week"
                     }
                 }
             ]
