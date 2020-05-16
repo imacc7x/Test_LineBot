@@ -28,9 +28,9 @@ exports.handler = (request, response, db) => {
         console.log("This is setProfile function");
         const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         console.log("userId: " + userId);
-        agent.add("Your userID: " , userId);
+        agent.add("Your userID: " + userId);
         let age = agent.parameters.age;
-        agent.add("Your age: " , age);
+        agent.add("Your age: " + age);
         db.collection("Users").doc(userId).update({
             age: age
         });
