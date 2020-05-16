@@ -1,5 +1,5 @@
 'use strict';
- 
+
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Card, Suggestion, Payload } = require('dialogflow-fulfillment');
 
@@ -34,9 +34,10 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
+        agent.add(new Suggestion(`Quick Reply`));
         // reply(careerJson);
         // agent.add(reply);
-        
+
         // reply(alcoholTimeJson);
         // agent.add(reply);
 
@@ -82,7 +83,7 @@ exports.handler = (request, response, db) => {
                     }
                 },
                 {
-                    type: "action", 
+                    type: "action",
                     action: {
                         type: "postback",
                         label: "ทหาร",
@@ -107,7 +108,7 @@ exports.handler = (request, response, db) => {
                     }
                 },
                 {
-                    type: "action", 
+                    type: "action",
                     action: {
                         type: "postback",
                         label: "ไม่เกินเดือนละครั้ง",
@@ -115,7 +116,7 @@ exports.handler = (request, response, db) => {
                     }
                 },
                 {
-                    type: "action", 
+                    type: "action",
                     action: {
                         type: "postback",
                         label: "เดือนละ 2 - 4 ครั้ง",
@@ -123,7 +124,7 @@ exports.handler = (request, response, db) => {
                     }
                 },
                 {
-                    type: "action", 
+                    type: "action",
                     action: {
                         type: "postback",
                         label: "สัปดาห์ละ 2 - 3 ครั้ง",
@@ -131,7 +132,7 @@ exports.handler = (request, response, db) => {
                     }
                 },
                 {
-                    type: "action", 
+                    type: "action",
                     action: {
                         type: "postback",
                         label: "มากกว่า 3 ครั้งต่อสัปดาห์",
@@ -156,7 +157,7 @@ exports.handler = (request, response, db) => {
                     }
                 },
                 {
-                    type: "action", 
+                    type: "action",
                     action: {
                         type: "postback",
                         label: "ไวน์",
@@ -164,7 +165,7 @@ exports.handler = (request, response, db) => {
                     }
                 },
                 {
-                    type: "action", 
+                    type: "action",
                     action: {
                         type: "postback",
                         label: "สุรา",
@@ -172,7 +173,7 @@ exports.handler = (request, response, db) => {
                     }
                 },
                 {
-                    type: "action", 
+                    type: "action",
                     action: {
                         type: "postback",
                         label: "วอดก้า",
@@ -183,7 +184,7 @@ exports.handler = (request, response, db) => {
         }
     }
 
-    
+
 
 
     // // Uncomment and edit to make your own intent handler
@@ -226,3 +227,25 @@ exports.handler = (request, response, db) => {
     // intentMap.set('your intent name here', googleAssistantHandler);
     agent.handleRequest(intentMap);
 };
+
+// {
+//     "fulfillmentMessages": [
+//         {
+//             "quickReplies": {
+//                 "title": "test quick replies",
+//                 "quickReplies": [
+//                     "1",
+//                     "2"
+//                 ]
+//             },
+//             "platform": "LINE"
+//         },
+//         {
+//             "text": {
+//                 "text": [
+//                     ""
+//                 ]
+//             }
+//         }
+//     ]
+// }
