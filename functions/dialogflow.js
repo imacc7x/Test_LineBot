@@ -59,6 +59,19 @@ exports.handler = (request, response, db) => {
         agent.add(alcoholTimePayLoad);
     }
 
+    function setAlcoholTime(agent){
+        console.log("This is setAlcoholTime function");
+        let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
+        const time = agent.parameters.alcohol_time;
+        agent.add("Time: " + time);
+        db.collection("Users").doc(userId).update({
+            alcohol_time : time
+        });
+
+        let alcoholTypePayLoad = new Payload(`LINE`, alocoholTypeJson, { sendAsMessage: true });
+        agent.add(alcoholTypePayLoad);
+    }
+
 
     function test(agent) {
         agent.add('success');
@@ -233,6 +246,7 @@ exports.handler = (request, response, db) => {
     intentMap.set('Activating-confirm', activation);
     intentMap.set('Set Age', setAge);
     intentMap.set('Set Career', setCareer);
+    intentMap.set('Set Alcohol Time', setAlcoholTime);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
