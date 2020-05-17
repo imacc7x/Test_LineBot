@@ -230,7 +230,7 @@ exports.handler = (request, response, db) => {
     intentMap.set('Default Fallback Intent', fallback);
     intentMap.set('Activating-confirm', activation);
     intentMap.set('Set Age', setAge);
-    intentMap.Map('Set Career', setCareer);
+    intentMap.set('Set Career', setCareer);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
