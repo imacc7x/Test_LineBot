@@ -24,7 +24,7 @@ exports.handler = (request, response, db) => {
         agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
     }
 
-    function setProfile(agent) {
+    function setAge(agent) {
         console.log("This is setProfile function");
         const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         console.log("userId: " + userId);
@@ -35,25 +35,26 @@ exports.handler = (request, response, db) => {
             age: age
         });
 
-        // const careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
-        // agent.add(careerPayload);
+        let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
+        agent.add(careerPayload);
 
         // let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
         // agent.add(alcoholTimePayLoad);
 
-        agent.add(new Payload(`LINE`, careerJson, { sendAsMessage: true }));
-        agent.add(new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true }));
-
-        // reply(careerJson);
-        // agent.add(reply);
-
-        // reply(alcoholTimeJson);
-        // agent.add(reply);
-
-        // reply(alocoholTypeJson);
-        // agent.add(reply);
+        // agent.add(new Payload(`LINE`, careerJson, { sendAsMessage: true }));
+        // agent.add(new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true }));
 
         // agent.add(" ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ");
+    }
+
+    function setCareer(agent){
+        console.log("This is setCareer function");
+        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
+        const career = agent.parameters.career;
+        agent.add("Your career: " + career);
+        db.collection("Users").doc(userId).update({
+            career: career
+        });
     }
 
 
@@ -75,8 +76,6 @@ exports.handler = (request, response, db) => {
                 }
             });
     }
-
-    // let reply = new Payload("Line" , Json);
 
     const careerJson = {
         type: "text",
@@ -230,7 +229,8 @@ exports.handler = (request, response, db) => {
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
     intentMap.set('Activating-confirm', activation);
-    intentMap.set('Set Profile', setProfile);
+    intentMap.set('Set Age', setAge);
+    intentMap.Map('Set Career', setCareer);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
