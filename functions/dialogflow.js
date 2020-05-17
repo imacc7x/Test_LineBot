@@ -38,8 +38,7 @@ exports.handler = (request, response, db) => {
         let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
         agent.add(careerPayload);
 
-        // let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
-        // agent.add(alcoholTimePayLoad);
+       
 
         // agent.add(new Payload(`LINE`, careerJson, { sendAsMessage: true }));
         // agent.add(new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true }));
@@ -55,6 +54,9 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             career: career
         });
+
+        let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
+        agent.add(alcoholTimePayLoad);
     }
 
 
@@ -237,23 +239,4 @@ exports.handler = (request, response, db) => {
     agent.handleRequest(intentMap);
 };
 
-    // [
-    //     {
-    //         "quickReplies": {
-    //             "title": "test quick replies",
-    //             "quickReplies": [
-    //                 "1",
-    //                 "2"
-    //             ]
-    //         },
-    //         "platform": "LINE"
-    //     },
-    //     {
-    //         "text": {
-    //             "text": [
-    //                 ""
-    //             ]
-    //         }
-    //     }
-    // ]
-
+ 
