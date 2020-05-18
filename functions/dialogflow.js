@@ -10,6 +10,8 @@ exports.handler = (request, response, db) => {
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
+    const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
+
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
     }
@@ -26,7 +28,6 @@ exports.handler = (request, response, db) => {
 
     function setAge(agent) {
         console.log("This is setProfile function");
-        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         console.log("userId: " + userId);
         agent.add("Your userID: " + userId);
         const age = agent.parameters.age;
@@ -41,7 +42,6 @@ exports.handler = (request, response, db) => {
 
     function setCareer(agent){
         console.log("This is setCareer function");
-        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const career = agent.parameters.career;
         agent.add("Your career: " + career);
         db.collection("Users").doc(userId).update({
@@ -54,7 +54,6 @@ exports.handler = (request, response, db) => {
 
     function setAlcoholTime(agent){
         console.log("This is setAlcoholTime function");
-        let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const time = agent.parameters.alcohol_time;
         agent.add("Time: " + time);
         db.collection("Users").doc(userId).update({
@@ -67,7 +66,6 @@ exports.handler = (request, response, db) => {
 
     function setAlcoholType(agent){
         console.log("This is setAlcoholTime function");
-        let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const type = agent.parameters.alcohol_type;
         agent.add("Time: " + type);
         db.collection("Users").doc(userId).update({
@@ -79,7 +77,6 @@ exports.handler = (request, response, db) => {
     function test(agent) {
         agent.add('success');
         //agent.add(JSON.stringify(request.body.originalDetectIntentRequest.payload.data.source.userId));
-        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         agent.add('userId ' + userId);
         console.log("console log ", userId);
         const users = db.collection("Users");

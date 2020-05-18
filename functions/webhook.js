@@ -94,19 +94,17 @@ const follow = async (documentUser, replyToken) => {
                             {
                                 type: "action",
                                 action: {
-                                    type: "postback",
-                                    label: "อนุญาติ",
-                                    data: "ACTIVATING_CONFIRM",
-                                    text: "อนุญาติ"
+                                    type: "message",
+                                    label: "อนุญาต",
+                                    text: "อนุญาต"
                                 }
                             },
                             {
                                 type: "action",
                                 action: {
-                                    type: "postback",
-                                    label: "ไม่อนุญาติ",
-                                    data: "ACTIVATING_NOT_CONFIRM",
-                                    text: "ไม่อนุญาติ"
+                                    type: "message",
+                                    label: "ไม่อนุญาต",
+                                    text: "ไม่อนุญาต"
                                 }
                             }
                         ]
