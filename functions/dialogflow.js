@@ -68,8 +68,8 @@ exports.handler = (request, response, db) => {
     function setAlcoholType(agent){
         console.log("This is setAlcoholTime function");
         let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
-        const type = agent.parameters.alcohol_type;
-        agent.add("Type: " + type);
+        const type = agent.parameters.alcohol_time;
+        agent.add("Time: " + type);
         db.collection("Users").doc(userId).update({
             alcohol_type : type
         });
@@ -210,22 +210,22 @@ exports.handler = (request, response, db) => {
         }
     }
 
-    const alocoholPackaging ={
-        type: "template",
-        altText: "Test image carousel",
-        template: {
-            type: "image_carousel",
-            columns: [{
-                imageUrl:"fgg",
-                action: {
-                    type: "message",
-                    label: "ขวด",
-                    text : "bottle"
-                }
-            }]
+    // const alocoholPackaging ={
+    //     type: "template",
+    //     altText: "Test image carousel",
+    //     template: {
+    //         type: "image_carousel",
+    //         columns: [{
+    //             imageUrl:"fgg",
+    //             action: {
+    //                 type: "message",
+    //                 label: "ขวด",
+    //                 text : "bottle"
+    //             }
+    //         }]
 
-        }
-    }
+    //     }
+    // }
 
 
 
