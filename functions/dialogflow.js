@@ -37,13 +37,6 @@ exports.handler = (request, response, db) => {
 
         let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
         agent.add(careerPayload);
-
-       
-
-        // agent.add(new Payload(`LINE`, careerJson, { sendAsMessage: true }));
-        // agent.add(new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true }));
-
-        // agent.add(" ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ");
     }
 
     function setCareer(agent){
@@ -70,6 +63,16 @@ exports.handler = (request, response, db) => {
 
         let alcoholTypePayLoad = new Payload(`LINE`, alocoholTypeJson, { sendAsMessage: true });
         agent.add(alcoholTypePayLoad);
+    }
+
+    function setAlcoholType(agent){
+        console.log("This is setAlcoholTime function");
+        let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
+        let type = agent.parameters.alcohol_type;
+        agent.add("Type: " + type);
+        db.collection("Users").doc(userId).update({
+            alcohol_type : type
+        });
     }
 
 
@@ -174,36 +177,52 @@ exports.handler = (request, response, db) => {
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "เบียร์",
-                        data: "Beer"
+                        text: "Beer"
                     }
                 },
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "ไวน์",
-                        data: "wine"
+                        text: "wine"
                     }
                 },
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "สุรา",
-                        data: "spirits"
+                        text: "spirits"
                     }
                 },
                 {
                     type: "action",
                     action: {
-                        type: "postback",
+                        type: "message",
                         label: "วอดก้า",
-                        data: "vodka"
+                        text: "vodka"
                     }
                 },
             ]
+        }
+    }
+
+    const alocoholPackaging ={
+        type: "template",
+        altText: "Test image carousel",
+        template: {
+            type: "image_carousel",
+            columns: [{
+                imageUrl:"fgg",
+                action: {
+                    type: "message",
+                    label: "ขวด",
+                    text : "bottle"
+                }
+            }]
         }
     }
 
@@ -247,6 +266,7 @@ exports.handler = (request, response, db) => {
     intentMap.set('Set Age', setAge);
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol Time', setAlcoholTime);
+    intentMap.set('Set Alcohol Type', setAlcoholType);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
