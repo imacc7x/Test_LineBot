@@ -68,7 +68,7 @@ exports.handler = (request, response, db) => {
     function setAlcoholType(agent){
         console.log("This is setAlcoholTime function");
         let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
-        const type = agent.parameters.alcohol_time;
+        const type = agent.parameters.alcohol_type;
         agent.add("Time: " + type);
         db.collection("Users").doc(userId).update({
             alcohol_type : type
@@ -179,7 +179,7 @@ exports.handler = (request, response, db) => {
                     action: {
                         type: "message",
                         label: "เบียร์",
-                        text: "Beer"
+                        text: "beer"
                     }
                 },
                 {
