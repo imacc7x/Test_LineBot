@@ -99,7 +99,7 @@ exports.handler = (request, response, db) => {
 
     function createQuickReply(text, ...options) {
         if (options.length) {
-            let items = options.map(option => ({ type: "action", action: { type: "message", ...option } }))
+            let items = options.map( (option) => ({ type: "action", action: { type: "message", ...option } }))
             console.log(JSON.stringify(items))
             return new Payload(
                 `LINE`,
