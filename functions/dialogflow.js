@@ -10,6 +10,9 @@ exports.handler = (request, response, db) => {
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
+
+    const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
+
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
     }
@@ -26,7 +29,6 @@ exports.handler = (request, response, db) => {
 
     function setAge(agent) {
         console.log("This is setProfile function");
-        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         console.log("userId: " + userId);
         agent.add("Your userID: " + userId);
         const age = agent.parameters.age;
@@ -34,14 +36,17 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-
-        let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
-        agent.add(careerPayload);
+        
+        agent.add(
+            createQuickReply(
+                "คุณทำงานอะไรเป็นอาชีพหลักคะ",
+                [{ label: "ตำรวจ", text: "police" }, { label: "ทหาร", text: "soldier" }]
+            )
+        );
     }
 
-    function setCareer(agent){
+    function setCareer(agent) {
         console.log("This is setCareer function");
-        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const career = agent.parameters.career;
         agent.add("Your career: " + career);
         db.collection("Users").doc(userId).update({
@@ -52,26 +57,24 @@ exports.handler = (request, response, db) => {
         agent.add(alcoholTimePayLoad);
     }
 
-    function setAlcoholTime(agent){
+    function setAlcoholTime(agent) {
         console.log("This is setAlcoholTime function");
-        let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const time = agent.parameters.alcohol_time;
         agent.add("Time: " + time);
         db.collection("Users").doc(userId).update({
-            alcohol_time : time
+            alcohol_time: time
         });
 
         let alcoholTypePayLoad = new Payload(`LINE`, alocoholTypeJson, { sendAsMessage: true });
         agent.add(alcoholTypePayLoad);
     }
 
-    function setAlcoholType(agent){
+    function setAlcoholType(agent) {
         console.log("This is setAlcoholTime function");
-        let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const type = agent.parameters.alcohol_type;
         agent.add("Time: " + type);
         db.collection("Users").doc(userId).update({
-            alcohol_type : type
+            alcohol_type: type
         });
     }
 
@@ -79,7 +82,6 @@ exports.handler = (request, response, db) => {
     function test(agent) {
         agent.add('success');
         //agent.add(JSON.stringify(request.body.originalDetectIntentRequest.payload.data.source.userId));
-        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         agent.add('userId ' + userId);
         console.log("console log ", userId);
         const users = db.collection("Users");
@@ -95,28 +97,21 @@ exports.handler = (request, response, db) => {
             });
     }
 
-    const careerJson = {
-        type: "text",
-        text: "คุณทำงานอะไรเป็นอาชีพหลักคะ",
-        quickReply: {
-            items: [
+    function createQuickReply(text, ...options) {
+        if (options.length) {
+            let items = options.map(option => ({ type: "action", action: { type: "message", ...option } }))
+            console.log(items)
+            return new Payload(
+                `LINE`,
                 {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ตำรวจ",
-                        text: "police"
+                    type: "text",
+                    text: text,
+                    quickReply: {
+                        items: [...items]
                     }
                 },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ทหาร",
-                        text: "soldier"
-                    }
-                }
-            ]
+                { sendAsMessage: true }
+            );
         }
     }
 
@@ -273,3 +268,5 @@ exports.handler = (request, response, db) => {
     // intentMap.set('your intent name here', googleAssistantHandler);
     agent.handleRequest(intentMap);
 };
+
+
