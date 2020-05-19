@@ -36,7 +36,7 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-        
+
         agent.add(
             createQuickReply(
                 "คุณทำงานอะไรเป็นอาชีพหลักคะ",
@@ -100,7 +100,7 @@ exports.handler = (request, response, db) => {
     function createQuickReply(text, ...options) {
         if (options.length) {
             let items = options.map(option => ({ type: "action", action: { type: "message", ...option } }))
-            console.log(items)
+            console.log(items.toString())
             return new Payload(
                 `LINE`,
                 {
