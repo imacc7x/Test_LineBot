@@ -10,9 +10,6 @@ exports.handler = (request, response, db) => {
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
-
-    const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
-
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
     }
@@ -29,6 +26,7 @@ exports.handler = (request, response, db) => {
 
     function setAge(agent) {
         console.log("This is setProfile function");
+        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         console.log("userId: " + userId);
         agent.add("Your userID: " + userId);
         const age = agent.parameters.age;
@@ -36,17 +34,14 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-        
-        agent.add(
-            createQuickReply(
-                "คุณทำงานอะไรเป็นอาชีพหลักคะ",
-                [{ label: "ตำรวจ", text: "police" }, { label: "ทหาร", text: "soldier" }]
-            )
-        );
+
+        let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
+        agent.add(careerPayload);
     }
 
-    function setCareer(agent) {
+    function setCareer(agent){
         console.log("This is setCareer function");
+        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const career = agent.parameters.career;
         agent.add("Your career: " + career);
         db.collection("Users").doc(userId).update({
@@ -54,48 +49,29 @@ exports.handler = (request, response, db) => {
         });
 
         let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
-        agent.add(
-            createQuickReply(
-                "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
-                [
-                    { label: "ไม่เคย", text: "Never" },
-                    { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
-                    { label: "เดือนละ 2 - 4 ครั้ง", text: "2-4 times a month" },
-                    { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "2-3 times a week"},
-                    { lebel: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "More than 3 times a week"}
-                ]
-            )
-        );
+        agent.add(alcoholTimePayLoad);
     }
 
-    function setAlcoholTime(agent) {
+    function setAlcoholTime(agent){
         console.log("This is setAlcoholTime function");
+        let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const time = agent.parameters.alcohol_time;
         agent.add("Time: " + time);
         db.collection("Users").doc(userId).update({
-            alcohol_time: time
+            alcohol_time : time
         });
 
         let alcoholTypePayLoad = new Payload(`LINE`, alocoholTypeJson, { sendAsMessage: true });
-        agent.add(
-            createQuickReply(
-                "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
-                [
-                    { label: "เบียร์", text: "beer" },
-                    { label: "ไวน์", text: "wine" },
-                    { label: "สุรา", text: "spirits" },
-                    { label: "วอดก้า", text: "vodka" },
-                ]
-            )
-        );
+        agent.add(alcoholTypePayLoad);
     }
 
-    function setAlcoholType(agent) {
+    function setAlcoholType(agent){
         console.log("This is setAlcoholTime function");
+        let userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         const type = agent.parameters.alcohol_type;
         agent.add("Time: " + type);
         db.collection("Users").doc(userId).update({
-            alcohol_type: type
+            alcohol_type : type
         });
     }
 
@@ -103,6 +79,7 @@ exports.handler = (request, response, db) => {
     function test(agent) {
         agent.add('success');
         //agent.add(JSON.stringify(request.body.originalDetectIntentRequest.payload.data.source.userId));
+        const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
         agent.add('userId ' + userId);
         console.log("console log ", userId);
         const users = db.collection("Users");
@@ -118,20 +95,118 @@ exports.handler = (request, response, db) => {
             });
     }
 
-    function createQuickReply(text, ...options) {
-        if (options.length) {
-            let items = options.map(option => ({ type: "action", action: { type: "message", ...option } }))
-            return new Payload(
-                `LINE`,
+    const careerJson = {
+        type: "text",
+        text: "คุณทำงานอะไรเป็นอาชีพหลักคะ",
+        quickReply: {
+            items: [
                 {
-                    type: "text",
-                    text: text,
-                    quickReply: {
-                        items: [...items]
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "ตำรวจ",
+                        text: "police"
                     }
                 },
-                { sendAsMessage: true }
-            );
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "ทหาร",
+                        text: "soldier"
+                    }
+                }
+            ]
+        }
+    }
+
+    const alcoholTimeJson = {
+        type: "text",
+        text: "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
+        quickReply: {
+            items: [
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "ไม่เคย",
+                        text: "Never"
+                    }
+                },
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "ไม่เกินเดือนละครั้ง",
+                        text: "Not more than once a month"
+                    }
+                },
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "เดือนละ 2 - 4 ครั้ง",
+                        text: "2-4 times a month"
+                    }
+                },
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "สัปดาห์ละ 2 - 3 ครั้ง",
+                        text: "2-3 times a week"
+                    }
+                },
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "มากกว่า 3 ครั้งต่อสัปดาห์",
+                        text: "More than 3 times a week"
+                    }
+                }
+            ]
+        }
+    }
+
+    const alocoholTypeJson = {
+        type: "text",
+        text: "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
+        quickReply: {
+            items: [
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "เบียร์",
+                        text: "beer"
+                    }
+                },
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "ไวน์",
+                        text: "wine"
+                    }
+                },
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "สุรา",
+                        text: "spirits"
+                    }
+                },
+                {
+                    type: "action",
+                    action: {
+                        type: "message",
+                        label: "วอดก้า",
+                        text: "vodka"
+                    }
+                },
+            ]
         }
     }
 
@@ -198,5 +273,3 @@ exports.handler = (request, response, db) => {
     // intentMap.set('your intent name here', googleAssistantHandler);
     agent.handleRequest(intentMap);
 };
-
-
