@@ -53,8 +53,18 @@ exports.handler = (request, response, db) => {
             career: career
         });
 
-        let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
-        agent.add(alcoholTimePayLoad);
+        agent.add(
+            createQuickReply(
+                "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
+                [
+                    { label: "ไม่เคย", text: "Never" },
+                    { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
+                    { label: "เดือนละ 2 - 4 ครั้ง", text: "2-4 times a month" },
+                    { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "2-3 times a week" },
+                    { label: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "More than 3 times a week" }
+                ]
+            )
+        );
     }
 
     function setAlcoholTime(agent) {
@@ -65,8 +75,17 @@ exports.handler = (request, response, db) => {
             alcohol_time: time
         });
 
-        let alcoholTypePayLoad = new Payload(`LINE`, alocoholTypeJson, { sendAsMessage: true });
-        agent.add(alcoholTypePayLoad);
+        agent.add(
+            createQuickReply(
+                "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
+                [
+                    { label: "เบียร์", text: "beer" },
+                    { label: "ไวน์", text: "wine" },
+                    { label: "สุรา", text: "spirits" },
+                    { label: "วอดก้า", text: "vodka" }
+                ]
+            )
+        );
     }
 
     function setAlcoholType(agent) {
@@ -99,9 +118,7 @@ exports.handler = (request, response, db) => {
 
     function createQuickReply(text, options) {
         if (options.length) {
-            
             let items = options.map( (option) => ( { type: "action", action: { type: "message", ...option} } ) )
-            console.log(JSON.stringify(items))
             return new Payload(
                 `LINE`,
                 {
@@ -116,95 +133,7 @@ exports.handler = (request, response, db) => {
         }
     }
 
-    const alcoholTimeJson = {
-        type: "text",
-        text: "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
-        quickReply: {
-            items: [
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ไม่เคย",
-                        text: "Never"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ไม่เกินเดือนละครั้ง",
-                        text: "Not more than once a month"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "เดือนละ 2 - 4 ครั้ง",
-                        text: "2-4 times a month"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "สัปดาห์ละ 2 - 3 ครั้ง",
-                        text: "2-3 times a week"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "มากกว่า 3 ครั้งต่อสัปดาห์",
-                        text: "More than 3 times a week"
-                    }
-                }
-            ]
-        }
-    }
-
-    const alocoholTypeJson = {
-        type: "text",
-        text: "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
-        quickReply: {
-            items: [
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "เบียร์",
-                        text: "beer"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ไวน์",
-                        text: "wine"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "สุรา",
-                        text: "spirits"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "วอดก้า",
-                        text: "vodka"
-                    }
-                },
-            ]
-        }
-    }
+   
 
     // const alocoholPackaging ={
     //     type: "template",
