@@ -101,7 +101,7 @@ exports.handler = (request, response, db) => {
         if (options.length) {
             let items = []
             for (const option of options) {
-                items.push( { type: "action", action: { type: "message", ...option } } )
+                items.push( { type: "action", action: { type: "message", option } } )
             }
             console.log(JSON.stringify(items))
             return new Payload(
