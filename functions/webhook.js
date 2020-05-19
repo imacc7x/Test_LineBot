@@ -35,10 +35,6 @@ exports.handler = (req, res, db) => {
             }
             res.status(200).send("post to dialogflow is OK");
         }
-        else if (type === "postback") {
-            postToDialogflow(req);
-            res.status(200).send("post to dialogflow is OK");
-        }
     }
 };
 

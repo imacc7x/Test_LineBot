@@ -10,6 +10,7 @@ exports.handler = (request, response, db) => {
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
+
     const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
 
     function welcome(agent) {
@@ -21,7 +22,7 @@ exports.handler = (request, response, db) => {
         agent.add(`I'm sorry, can you try again?`);
     }
 
-    function activation(agent) {
+    function activatingConfirm(agent) {
         agent.add('ขอบคุณมากค่ะ ดิฉันมั่นใจว่าข้อมูลที่คุณให้จะเป็นประโยชน์แก่ทีมผู้สรัางดิฉัน ในการพัฒนาการดูแลผู้ดื่มเหล้าต่อไปแน่นอนค่ะ');
         agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
     }
@@ -35,12 +36,16 @@ exports.handler = (request, response, db) => {
         db.collection("Users").doc(userId).update({
             age: age
         });
-
-        let careerPayload = new Payload(`LINE`, careerJson, { sendAsMessage: true });
-        agent.add(careerPayload);
+        
+        agent.add(
+            createQuickReply(
+                "คุณทำงานอะไรเป็นอาชีพหลักคะ",
+                [{ label: "ตำรวจ", text: "police" }, { label: "ทหาร", text: "soldier" }]
+            )
+        );
     }
 
-    function setCareer(agent){
+    function setCareer(agent) {
         console.log("This is setCareer function");
         const career = agent.parameters.career;
         agent.add("Your career: " + career);
@@ -49,27 +54,48 @@ exports.handler = (request, response, db) => {
         });
 
         let alcoholTimePayLoad = new Payload(`LINE`, alcoholTimeJson, { sendAsMessage: true });
-        agent.add(alcoholTimePayLoad);
+        agent.add(
+            createQuickReply(
+                "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
+                [
+                    { label: "ไม่เคย", text: "Never" },
+                    { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
+                    { label: "เดือนละ 2 - 4 ครั้ง", text: "2-4 times a month" },
+                    { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "2-3 times a week"},
+                    { lebel: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "More than 3 times a week"}
+                ]
+            )
+        );
     }
 
-    function setAlcoholTime(agent){
+    function setAlcoholTime(agent) {
         console.log("This is setAlcoholTime function");
         const time = agent.parameters.alcohol_time;
         agent.add("Time: " + time);
         db.collection("Users").doc(userId).update({
-            alcohol_time : time
+            alcohol_time: time
         });
 
         let alcoholTypePayLoad = new Payload(`LINE`, alocoholTypeJson, { sendAsMessage: true });
-        agent.add(alcoholTypePayLoad);
+        agent.add(
+            createQuickReply(
+                "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
+                [
+                    { label: "เบียร์", text: "beer" },
+                    { label: "ไวน์", text: "wine" },
+                    { label: "สุรา", text: "spirits" },
+                    { label: "วอดก้า", text: "vodka" },
+                ]
+            )
+        );
     }
 
-    function setAlcoholType(agent){
+    function setAlcoholType(agent) {
         console.log("This is setAlcoholTime function");
         const type = agent.parameters.alcohol_type;
         agent.add("Time: " + type);
         db.collection("Users").doc(userId).update({
-            alcohol_type : type
+            alcohol_type: type
         });
     }
 
@@ -92,118 +118,20 @@ exports.handler = (request, response, db) => {
             });
     }
 
-    const careerJson = {
-        type: "text",
-        text: "คุณทำงานอะไรเป็นอาชีพหลักคะ",
-        quickReply: {
-            items: [
+    function createQuickReply(text, ...options) {
+        if (options.length) {
+            let items = options.map(option => ({ type: "action", action: { type: "message", ...option } }))
+            return new Payload(
+                `LINE`,
                 {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ตำรวจ",
-                        text: "police"
+                    type: "text",
+                    text: text,
+                    quickReply: {
+                        items: [...items]
                     }
                 },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ทหาร",
-                        text: "soldier"
-                    }
-                }
-            ]
-        }
-    }
-
-    const alcoholTimeJson = {
-        type: "text",
-        text: "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
-        quickReply: {
-            items: [
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ไม่เคย",
-                        text: "Never"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ไม่เกินเดือนละครั้ง",
-                        text: "Not more than once a month"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "เดือนละ 2 - 4 ครั้ง",
-                        text: "2-4 times a month"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "สัปดาห์ละ 2 - 3 ครั้ง",
-                        text: "2-3 times a week"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "มากกว่า 3 ครั้งต่อสัปดาห์",
-                        text: "More than 3 times a week"
-                    }
-                }
-            ]
-        }
-    }
-
-    const alocoholTypeJson = {
-        type: "text",
-        text: "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
-        quickReply: {
-            items: [
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "เบียร์",
-                        text: "beer"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "ไวน์",
-                        text: "wine"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "สุรา",
-                        text: "spirits"
-                    }
-                },
-                {
-                    type: "action",
-                    action: {
-                        type: "message",
-                        label: "วอดก้า",
-                        text: "vodka"
-                    }
-                },
-            ]
+                { sendAsMessage: true }
+            );
         }
     }
 
@@ -260,7 +188,7 @@ exports.handler = (request, response, db) => {
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
-    intentMap.set('Activating-confirm', activation);
+    intentMap.set('Activating-confirm', activatingConfirm);
     intentMap.set('Set Age', setAge);
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol Time', setAlcoholTime);
@@ -271,4 +199,4 @@ exports.handler = (request, response, db) => {
     agent.handleRequest(intentMap);
 };
 
- 
+
