@@ -11,7 +11,7 @@ exports.handler = (req, res, firebaseAdmin) => {
     if (req.method === "POST") {
         const event = req.body.events[0];
         const { type, source } = event;
-        const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId);
+        const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId); 
 
         if (type === "follow") {
             follow(docUser, event.replyToken)

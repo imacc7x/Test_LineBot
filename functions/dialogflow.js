@@ -109,8 +109,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
         return documentUser.get()
             .then(doc => {
-                // eslint-disable-next-line promise/always-return
-                agent.add("คุณดื่ม" + doc.data().type);
+                return agent.add("คุณดื่ม" + doc.data().type);
             })
     }
 
