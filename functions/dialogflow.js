@@ -1,3 +1,5 @@
+'use-strict';
+
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Card, Suggestion, Payload } = require('dialogflow-fulfillment');
 
@@ -107,9 +109,8 @@ exports.handler = (request, response, firebaseAdmin) => {
 
         return documentUser.get()
             .then(doc => {
-                agent.add("คุณดื่ม" + doc.data().type);
+                return agent.add("คุณดื่ม" + doc.data().type);
             })
-            .catch((err)=>{console.log(err)})
     }
 
 
