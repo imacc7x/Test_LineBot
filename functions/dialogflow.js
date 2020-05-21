@@ -96,6 +96,7 @@ exports.handler = (request, response, db) => {
             alcohol_type: type
         });
 
+        agent.add("ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ");
         agent.add(new Payload('LINE', alocoholPackaging, { sendAsMessage: true }));
     }
 
@@ -140,7 +141,6 @@ exports.handler = (request, response, db) => {
 
     const alocoholPackaging = {
         type: "template",
-        text: 'ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ',
         altText: "Test image carousel",
         template: {
             type: "image_carousel",
