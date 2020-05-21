@@ -107,8 +107,16 @@ exports.handler = (request, response, db) => {
             drink_amount: drinkAmount
         })
 
-        let type = db.collection('Users').doc(userId).get();
+    
         agent.add("คุณดื่ม" + type);
+    }
+
+    function checkStandardDrink(agent){
+        const check = agent.parameters;
+        agent.add("check: " + check);
+        db.collection("Users").doc(userId).update({
+            drink_more_than_standard :check
+        })
     }
 
 
