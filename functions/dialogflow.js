@@ -106,6 +106,9 @@ exports.handler = (request, response, firebaseAdmin) => {
         documentUser.update({
             drink_amount: drinkAmount
         })
+
+        let type = db.collection('Users').doc(userId).get();
+        agent.add("คุณดื่ม" + type);
     }
 
 
