@@ -100,6 +100,14 @@ exports.handler = (request, response, db) => {
         agent.add(new Payload('LINE', alocoholPackaging, { sendAsMessage: true }));
     }
 
+    function setDrinkAmount(agent){
+        const drinkAmount = agent.parameters.drink_amount;
+        agent.add("Amount: " + drinkAmount);
+        db.collection("Users").doc(userId).update({
+            drink_amount: drinkAmount
+        })
+    }
+
 
     function test(agent) {
         agent.add('success');
@@ -145,19 +153,35 @@ exports.handler = (request, response, db) => {
         template: {
             type: "image_carousel",
             columns: [{
-                imageUrl: "https://cdn11.bigcommerce.com/s-ucycv5vmkf/images/stencil/1024x1024/products/4869/6767/GL220LG_11__13672.1478552100.JPG?c=2",
+                imageUrl: "https://media.istockphoto.com/photos/empty-beer-mug-isolated-on-reflective-white-backdrop-picture-id466250650",
                 action: {
                     type: "message",
-                    label: "ขวด",
-                    text: "bottle"
+                    label: "1 แก้ว",
+                    text: "a glass"
                 }
             },
             {
-                imageUrl: "https://sc01.alicdn.com/kf/HTB1THeXbovrK1RjSspcq6zzSXXaO.jpg_350x350.jpg",
+                imageUrl: "https://previews.123rf.com/images/inginsh/inginsh1101/inginsh110100001/8684636-blank-soda-can-with-white-background.jpg",
                 action: {
                     type: "message",
-                    label: "วิสกี้",
-                    text: "whiskey"
+                    label: "1 กระป๋อง",
+                    text: "a can"
+                }
+            }
+                , {
+                imageUrl: "https://www.thecarycompany.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/3/0/30wlac_1.1551298042.jpg",
+                action: {
+                    type: "message",
+                    label: "1 ขวด",
+                    text: "a bottle"
+                }
+            }
+                , {
+                imageUrl: "https://cmkt-image-prd.freetls.fastly.net/0.1.0/ps/7348804/910/1164/m2/fpnw/wm1/vuf1opjg2xw9ilcutvopjcevlj6vu271lq0blhucjilbjcvk5cmr2tkcn9s4frum-.jpg?1574435212&s=d63dd26ee28560bb5c3a91fc55214ab9",
+                action: {
+                    type: "message",
+                    label: "3 ขวด",
+                    text: "3 bottles"
                 }
             }
             ]
@@ -205,6 +229,7 @@ exports.handler = (request, response, db) => {
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol Time', setAlcoholTime);
     intentMap.set('Set Alcohol Type', setAlcoholType);
+    intentMap.set('Set Drink Amount',setDrinkAmount);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
