@@ -1,5 +1,3 @@
-'use strict';
-
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Card, Suggestion, Payload } = require('dialogflow-fulfillment');
 
@@ -109,7 +107,6 @@ exports.handler = (request, response, firebaseAdmin) => {
 
         return documentUser.get()
             .then(doc => {
-                // eslint-disable-next-line promise/always-return
                 agent.add("คุณดื่ม" + doc.data().type);
             })
             .catch((err)=>{console.log(err)})
