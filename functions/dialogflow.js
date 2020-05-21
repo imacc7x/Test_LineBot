@@ -91,10 +91,12 @@ exports.handler = (request, response, db) => {
     function setAlcoholType(agent) {
         console.log("This is setAlcoholTime function");
         const type = agent.parameters.alcohol_type;
-        agent.add("Time: " + type);
+        agent.add("Type: " + type);
         db.collection("Users").doc(userId).update({
             alcohol_type: type
         });
+
+        agent.add(new Payload('LINE', alocoholPackaging,{ sendAsMessage: true } ));
     }
 
 
@@ -116,6 +118,7 @@ exports.handler = (request, response, db) => {
             });
     }
 
+    // eslint-disable-next-line consistent-return
     function createQuickReply(text, options) {
         if (options.length) {
             let items = options.map( (option) => ( { type: "action", action: { type: "message", ...option} } ) )
@@ -135,22 +138,22 @@ exports.handler = (request, response, db) => {
 
    
 
-    // const alocoholPackaging ={
-    //     type: "template",
-    //     altText: "Test image carousel",
-    //     template: {
-    //         type: "image_carousel",
-    //         columns: [{
-    //             imageUrl:"fgg",
-    //             action: {
-    //                 type: "message",
-    //                 label: "ขวด",
-    //                 text : "bottle"
-    //             }
-    //         }]
+    const alocoholPackaging ={
+        type: "template",
+        altText: "Test image carousel",
+        template: {
+            type: "image_carousel",
+            columns: [{
+                imageUrl:"https://cdn11.bigcommerce.com/s-ucycv5vmkf/images/stencil/1024x1024/products/4869/6767/GL220LG_11__13672.1478552100.JPG?c=2",
+                action: {
+                    type: "message",
+                    label: "ขวด",
+                    text : "bottle"
+                }
+            }]
 
-    //     }
-    // }
+        }
+    }
 
 
 
