@@ -31,6 +31,7 @@ exports.handler = (req, res, firebaseAdmin) => {
             else {
                 firebaseAdmin.storage().bucket().file('images').get()
                     .then((data) => console.log(data))
+                    .catch(err => console.log(err))
                 reply(event.replyToken, [{ type: "text", text: JSON.stringify(event) }]);
             }
             res.status(200).send("post to dialogflow is OK");
