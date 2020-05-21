@@ -111,6 +111,7 @@ exports.handler = (request, response, firebaseAdmin) => {
             .then(doc => {
                 agent.add("คุณดื่ม" + doc.data().type);
             })
+            .catch((err)=>{console.log(err)})
     }
 
 
