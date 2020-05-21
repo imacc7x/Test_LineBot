@@ -29,7 +29,9 @@ exports.handler = (req, res, firebaseAdmin) => {
                 postToDialogflow(req);
             }
             else {
-                console.log(JSON.stringify(firebaseAdmin.storage().bucket().file('images/bottle.png').createWriteStream()));
+                firebaseAdmin.storage().bucket().file('images/bottle.png').getMetadata()
+                    .then(data => console.log(data[0].mediaLink))
+                    .catch(err => console.log(err))
                 reply(event.replyToken, [{ type: "text", text: JSON.stringify(event) }]);
             }
             res.status(200).send("post to dialogflow is OK");
