@@ -29,8 +29,8 @@ exports.handler = (req, res, firebaseAdmin) => {
                 postToDialogflow(req);
             }
             else {
-                firebaseAdmin.storage().bucket().file('images').get()
-                    .then((data) => console.log(data))
+                firebaseAdmin.storage().bucket().getFiles()
+                    .then((files) => console.log(files[0]))
                     .catch(err => console.log(err))
                 reply(event.replyToken, [{ type: "text", text: JSON.stringify(event) }]);
             }
