@@ -7,13 +7,11 @@ const LINE_HEADER = {
     "Authorization": `Bearer ${functions.config().webhook.line_header_auth}`
 };
 
-exports.handler = (req, res, db) => {
+exports.handler = (req, res, firebaseAdmin) => {
     if (req.method === "POST") {
-        console.log("Webhook Reqest body: ", JSON.stringify(req.body));
-
         const event = req.body.events[0];
         const { type, source } = event;
-        const docUser = db.collection("Users").doc(source.userId);
+        const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId);
 
         if (type === "follow") {
             follow(docUser, event.replyToken)
@@ -31,6 +29,7 @@ exports.handler = (req, res, db) => {
                 postToDialogflow(req);
             }
             else {
+                console.log(firebaseAdmin.storage().bucket());
                 reply(event.replyToken, [{ type: "text", text: req.body }]);
             }
             res.status(200).send("post to dialogflow is OK");

@@ -5,13 +5,13 @@ const { Card, Suggestion, Payload } = require('dialogflow-fulfillment');
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
-exports.handler = (request, response, db) => {
+exports.handler = (request, response, firebaseAdmin) => {
     const agent = new WebhookClient({ request, response });
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
-
     const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
+    const documentUser = firebaseAdmin.firestore().collection('Users').doc(userId);
 
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
@@ -33,7 +33,7 @@ exports.handler = (request, response, db) => {
         agent.add("Your userID: " + userId);
         const age = agent.parameters.age;
         agent.add("Your age: " + age);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             age: age
         });
 
@@ -49,7 +49,7 @@ exports.handler = (request, response, db) => {
         console.log("This is setCareer function");
         const career = agent.parameters.career;
         agent.add("Your career: " + career);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             career: career
         });
 
@@ -71,7 +71,7 @@ exports.handler = (request, response, db) => {
         console.log("This is setAlcoholTime function");
         const time = agent.parameters.alcohol_time;
         agent.add("Time: " + time);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             alcohol_time: time
         });
 
@@ -92,7 +92,7 @@ exports.handler = (request, response, db) => {
         console.log("This is setAlcoholTime function");
         const type = agent.parameters.alcohol_type;
         agent.add("Type: " + type);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             alcohol_type: type
         });
 
@@ -103,7 +103,7 @@ exports.handler = (request, response, db) => {
     function setDrinkAmount(agent){
         const drinkAmount = agent.parameters.drink_amount;
         agent.add("Amount: " + drinkAmount);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             drink_amount: drinkAmount
         })
     }
@@ -114,15 +114,14 @@ exports.handler = (request, response, db) => {
         //agent.add(JSON.stringify(request.body.originalDetectIntentRequest.payload.data.source.userId));
         agent.add('userId ' + userId);
         console.log("console log ", userId);
-        const users = db.collection("Users");
 
-        return users.doc(userId).get()
+        return documentUser.get()
             .then(doc => {
                 // eslint-disable-next-line promise/always-return
                 if (!doc.exists) {
                     agent.add("Not Found");
                 } else {
-                    agent.add("This is User ID: " + doc.data().name);
+                    agent.add("This is User ID: " + doc.data());
                 }
             });
     }
