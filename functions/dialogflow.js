@@ -107,8 +107,10 @@ exports.handler = (request, response, firebaseAdmin) => {
             drink_amount: drinkAmount
         })
 
-        let type = documentUser.get().data().type;
-        agent.add("คุณดื่ม" + type);
+        return documentUser.get()
+            .then(doc => {
+                agent.add("คุณดื่ม" + doc.data().type);
+            })
     }
 
 
