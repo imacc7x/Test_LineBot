@@ -30,7 +30,7 @@ exports.handler = (req, res, firebaseAdmin) => {
             }
             else {
                 firebaseAdmin.storage().bucket().getFiles()
-                    .then((files) => console.log(files[0]))
+                    .then((files) => console.log(JSON.stringify(files)))
                     .catch(err => console.log(err))
                 reply(event.replyToken, [{ type: "text", text: JSON.stringify(event) }]);
             }
