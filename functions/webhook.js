@@ -29,7 +29,7 @@ exports.handler = (req, res, firebaseAdmin) => {
                 postToDialogflow(req);
             }
             else {
-                firebaseAdmin.storage().bucket('images').getFiles((err, files) => {
+                firebaseAdmin.storage().bucket().getFiles((err, files) => {
                     if(!err)
                         console.log(files);
                 });
