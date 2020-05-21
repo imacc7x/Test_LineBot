@@ -96,7 +96,7 @@ exports.handler = (request, response, db) => {
             alcohol_type: type
         });
 
-        agent.add(new Payload('LINE', alocoholPackaging,{ sendAsMessage: true } ));
+        agent.add(new Payload('LINE', alocoholPackaging, { sendAsMessage: true }));
     }
 
 
@@ -121,7 +121,7 @@ exports.handler = (request, response, db) => {
     // eslint-disable-next-line consistent-return
     function createQuickReply(text, options) {
         if (options.length) {
-            let items = options.map( (option) => ( { type: "action", action: { type: "message", ...option} } ) )
+            let items = options.map((option) => ({ type: "action", action: { type: "message", ...option } }))
             return new Payload(
                 `LINE`,
                 {
@@ -136,22 +136,31 @@ exports.handler = (request, response, db) => {
         }
     }
 
-   
 
-    const alocoholPackaging ={
+
+    const alocoholPackaging = {
         type: "template",
+        text: 'ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ',
         altText: "Test image carousel",
         template: {
             type: "image_carousel",
             columns: [{
-                imageUrl:"https://cdn11.bigcommerce.com/s-ucycv5vmkf/images/stencil/1024x1024/products/4869/6767/GL220LG_11__13672.1478552100.JPG?c=2",
+                imageUrl: "https://cdn11.bigcommerce.com/s-ucycv5vmkf/images/stencil/1024x1024/products/4869/6767/GL220LG_11__13672.1478552100.JPG?c=2",
                 action: {
                     type: "message",
                     label: "ขวด",
-                    text : "bottle"
+                    text: "bottle"
                 }
-            }]
-
+            },
+            {
+                imageUrl: "https://sc01.alicdn.com/kf/HTB1THeXbovrK1RjSspcq6zzSXXaO.jpg_350x350.jpg",
+                action: {
+                    type: "message",
+                    label: "วิสกี้",
+                    text: "whiskey"
+                }
+            }
+            ]
         }
     }
 
