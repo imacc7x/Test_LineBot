@@ -193,7 +193,15 @@ exports.handler = (request, response, firebaseAdmin) => {
         });
     }
 
-    functions
+    function askStopDrinkingYes(agent){
+        agent.add("ดีใจจังค่ะ ที่คุณเคยพยายามหยุดมัน");
+        agent.add("ตอนนั้นคุณมีอาการผิดปรกติอะไรบ้างไหมคะ");
+        agent.add(createQuickReply("คุณเคยพยายามจะหยุดหรือลดมันบ้างไหมคะ",
+            [
+                {label: "มี", text:"ไม่มี"},
+                {label:"ไม่มี",text:"ไม่มี"}
+            ]));
+    }
 
     function test(agent) {
         agent.add('success');
@@ -319,6 +327,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Day Drink', setDayDrink);
     intentMap.set('Set Drinking Time', setDrinkingTime);
     intentMap.set('Set Person Drink With', setDrinkWith);
+    intentMap.set('Ask Stop Drinking  - yes',askStopDrinkingYes);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
