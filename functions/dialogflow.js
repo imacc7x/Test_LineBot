@@ -189,7 +189,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                 if (!doc.exists) {
                     agent.add("Not Found");
                 } else {
-                    agent.add("This is User ID: " + doc.data().age);
+                    agent.add("This is type: " + doc.data().alcohol_type);
                 }
             });
     }
