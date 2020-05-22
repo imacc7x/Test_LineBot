@@ -195,12 +195,12 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function askStopDrinkingYes(agent){
         agent.add("ดีใจจังค่ะ ที่คุณเคยพยายามหยุดมัน");
-        agent.add("ตอนนั้นคุณมีอาการผิดปรกติอะไรบ้างไหมคะ");
-        agent.add(createQuickReply("คุณเคยพยายามจะหยุดหรือลดมันบ้างไหมคะ",
+        agent.add(createQuickReply("ตอนนั้นคุณมีอาการผิดปรกติอะไรบ้างไหมคะ",
             [
                 {label: "มี", text:"ไม่มี"},
                 {label:"ไม่มี",text:"ไม่มี"}
             ]));
+            test();
     }
 
     function test(agent) {
