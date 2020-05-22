@@ -11,7 +11,7 @@ exports.handler = (req, res, firebaseAdmin) => {
     if (req.method === "POST") {
         const event = req.body.events[0];
         const { type, source } = event;
-        const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId);
+        const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId); 
 
         if (type === "follow") {
             follow(docUser, event.replyToken)
@@ -29,8 +29,10 @@ exports.handler = (req, res, firebaseAdmin) => {
                 postToDialogflow(req);
             }
             else {
-                console.log(firebaseAdmin.storage().bucket());
-                reply(event.replyToken, [{ type: "text", text: req.body }]);
+                firebaseAdmin.storage().bucket().file('images/bottle.png').get()
+                    .then(data => console.log(JSON.stringify(data[1])))
+                    .catch(err => console.log(err))
+                reply(event.replyToken, [{ type: "text", text: JSON.stringify(event) }]);
             }
             res.status(200).send("post to dialogflow is OK");
         }
