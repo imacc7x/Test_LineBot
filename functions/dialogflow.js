@@ -143,7 +143,7 @@ exports.handler = (request, response, firebaseAdmin) => {
             )
         );
     }
-
+    
     function setDayDrink(agent){
         const day = agnet.parameters.days;
         db.collection("Users").doc(userId).update({
