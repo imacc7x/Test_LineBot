@@ -200,7 +200,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                 {label: "มี", text:"ไม่มี"},
                 {label:"ไม่มี",text:"ไม่มี"}
             ]));
-            test();
+            test(agent);
     }
 
     function test(agent) {
