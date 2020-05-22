@@ -109,8 +109,8 @@ exports.handler = (request, response, firebaseAdmin) => {
 
         return documentUser.get()
             .then(doc => {
-                return agent.add(createQuickReply("คุณดื่ม" + doc.data().alcohol_type
-                    + "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data().alcohol_type + "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ"),
+                return agent.add(createQuickReply("คุณดื่ม" + doc.data()
+                    + "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data()+ "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ"),
                     [
                         { label: "ไม่เคยเลย", text: "never" },
                         { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
