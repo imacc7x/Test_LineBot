@@ -166,7 +166,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     }
 
     function setDayDrink(agent) {
-        const day = agnet.parameters.days;
+        const day = agent.parameters.days;
         documentUser.update({
             day_drink: day
         })
