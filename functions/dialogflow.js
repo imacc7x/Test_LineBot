@@ -1,17 +1,17 @@
-'use strict';
+'use-strict';
 
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Card, Suggestion, Payload } = require('dialogflow-fulfillment');
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
-exports.handler = (request, response, db) => {
+exports.handler = (request, response, firebaseAdmin) => {
     const agent = new WebhookClient({ request, response });
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
-
     const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
+    const documentUser = firebaseAdmin.firestore().collection('Users').doc(userId);
 
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
@@ -33,7 +33,7 @@ exports.handler = (request, response, db) => {
         agent.add("Your userID: " + userId);
         const age = agent.parameters.age;
         agent.add("Your age: " + age);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             age: age
         });
 
@@ -49,7 +49,7 @@ exports.handler = (request, response, db) => {
         console.log("This is setCareer function");
         const career = agent.parameters.career;
         agent.add("Your career: " + career);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             career: career
         });
 
@@ -71,7 +71,7 @@ exports.handler = (request, response, db) => {
         console.log("This is setAlcoholTime function");
         const time = agent.parameters.alcohol_time;
         agent.add("Time: " + time);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             alcohol_time: time
         });
 
@@ -92,7 +92,7 @@ exports.handler = (request, response, db) => {
         console.log("This is setAlcoholTime function");
         const type = agent.parameters.alcohol_type;
         agent.add("Type: " + type);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             alcohol_type: type
         });
 
@@ -100,22 +100,78 @@ exports.handler = (request, response, db) => {
         agent.add(new Payload('LINE', alocoholPackaging, { sendAsMessage: true }));
     }
 
-    function setDrinkAmount(agent){
+    function setDrinkAmount(agent) {
         const drinkAmount = agent.parameters.drink_amount;
         agent.add("Amount: " + drinkAmount);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             drink_amount: drinkAmount
         })
 
-    
-        agent.add("คุณดื่ม" + type);
+        return documentUser.get()
+            .then(doc => {
+                return agent.add(createQuickReply("คุณดื่ม" + doc.data().alcohol_type
+                    + "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data().alcohol_type + "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ"),
+                    [
+                        { label: "ไม่เคยเลย", text: "never" },
+                        { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
+                        { label: "ทุกเดือน", text: "Every month" },
+                        { label: "ทุกสัปดาห์", text: "every week" },
+                        { label: "ทุกวันหรือเกือบทุกวัน", text: "Every day or almost every day" }
+                    ]);
+            })
     }
 
-    function checkStandardDrink(agent){
-        const check = agent.parameters;
+    function checkStandardDrink(agent) {
+        const check = agent.parameters.alcohol_time;
         agent.add("check: " + check);
         db.collection("Users").doc(userId).update({
-            drink_more_than_standard :check
+            drink_more_than_standard: check
+        })
+
+        agent.add(
+            createQuickReply("โดยส่วนใหญ่แล้วคุณมักดื่มมากเป็นพิเศษวันไหนคะ",
+                [
+                    { label: "วันอาทิตย์", text: "วันอาทิตย์" },
+                    { label: "วันจันทร์", text: "วันจันทร์" },
+                    { label: "วันอังคาร", text: "วันอังคาร" },
+                    { label: "วันพุธ", text:  "วันพุธ" },
+                    { label: "วันพฤหัสบดี", text:"วันพฤหัสบดี" },
+                    { label: "วันศุกร์", text: "วันศุกร์" },
+                    { label: "วันเสาร์", text: "วันเสาร์" },
+                    { label: "วันอาทิตย์", text:"วันอาทิตย์" }
+                ]
+            )
+        );
+    }
+
+    function setDayDrink(agent){
+        const day = agnet.parameters.days;
+        db.collection("Users").doc(userId).update({
+            day_drink: day
+        })
+        agent.add(createQuickReply(
+            "แล้วช่วงเวลาที่คุณมักจะดื่ม เป็นเวลาช่วงไหนคะ",
+            [
+                {label: "เช้า-สาย", text: "เช้า-สาย"},
+                {label: "เที่ยง-บ่าย",text: "เที่ยง-บ่าย"},
+                {label: "เย็น-ค่ำ",text: "เย็น-ค่ำ"},
+                {label: "ก่อนนอน", text: "ก่อนนอน"}
+            ]
+        ));
+    }
+
+    function setDrinkingTime(agent){
+        const Time = agent.parameters.time_period;
+        db.collection("Users").doc(userId).update({
+            time_period : time_period
+        })
+        agent.add("โดยส่วนใหญ่แล้วคุณมักจะดื่มกับใครคะ หรือดื่มคนเดียว ");
+    }
+
+    function setDrinkWith(agent){
+        const person = agent.parameters.person;
+        db.collection("Users").doc(userId).update({
+            person : person
         })
     }
 
@@ -125,15 +181,14 @@ exports.handler = (request, response, db) => {
         //agent.add(JSON.stringify(request.body.originalDetectIntentRequest.payload.data.source.userId));
         agent.add('userId ' + userId);
         console.log("console log ", userId);
-        const users = db.collection("Users");
 
-        return users.doc(userId).get()
+        return documentUser.get()
             .then(doc => {
                 // eslint-disable-next-line promise/always-return
                 if (!doc.exists) {
                     agent.add("Not Found");
                 } else {
-                    agent.add("This is User ID: " + doc.data().name);
+                    agent.add("This is User ID: " + doc.data());
                 }
             });
     }
@@ -240,7 +295,11 @@ exports.handler = (request, response, db) => {
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol Time', setAlcoholTime);
     intentMap.set('Set Alcohol Type', setAlcoholType);
-    intentMap.set('Set Drink Amount',setDrinkAmount);
+    intentMap.set('Set Drink Amount', setDrinkAmount);
+    intentMap.set('Check Standard Drink', checkStandardDrink);
+    intentMap.set('Set Day Drink', setDayDrink);
+    intentMap.set('Set Drinking Time',setDrinkingTime);
+    intentMap.set()
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);

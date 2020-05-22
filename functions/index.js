@@ -11,13 +11,13 @@ const runtimeOpts = {
 
 admin.initializeApp({
     credential: admin.credential.applicationDefault(),
-    databaseURL: "https//test-chatbot-uyotlh.firebaseio.com"
+    databaseURL: "https//test-chatbot-uyotlh.firebaseio.com",
+    storageBucket: "gs://test-chatbot-uyotlh.appspot.com"
 });
-const db = admin.firestore();
 
 exports.webhook = functions.region(region).runWith(runtimeOpts).https.onRequest((req, res) => {
-    require('./webhook').handler(req, res, db);
+    require('./webhook').handler(req, res, admin);
 });
 exports.dialogflow = functions.region(region).runWith(runtimeOpts).https.onRequest((req, res) => {
-    require('./dialogflow').handler(req, res, db);
+    require('./dialogflow').handler(req, res, admin);
 });
