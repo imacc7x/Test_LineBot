@@ -299,7 +299,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Check Standard Drink', checkStandardDrink);
     intentMap.set('Set Day Drink', setDayDrink);
     intentMap.set('Set Drinking Time',setDrinkingTime);
-    intentMap.set()
+    intentMap.set('Set Person Drink With',setDrinkWith);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
