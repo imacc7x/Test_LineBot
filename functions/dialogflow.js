@@ -107,20 +107,38 @@ exports.handler = (request, response, firebaseAdmin) => {
             drink_amount: drinkAmount
         })
 
-        
+
 
         return documentUser.get()
             .then(doc => {
-                return agent.add(createQuickReply("คุณดื่ม" + doc.data().alcohol_type),
-                    // + "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data().alcohol_type+ "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ"),
+                // eslint-disable-next-line promise/always-return
+                agent.add(createQuickReply(
+                    "คุณดื่ม" + doc.data().alcohol_type +
+                    "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data().alcohol_type + "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ",
                     [
                         { label: "ไม่เคยเลย", text: "never" },
                         { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
                         { label: "ทุกเดือน", text: "Every month" },
                         { label: "ทุกสัปดาห์", text: "every week" },
                         { label: "ทุกวันหรือเกือบทุกวัน", text: "Every day or almost every day" }
-                    ]);
-            })
+                    ]
+                )
+                );
+            });
+
+        return documentUser.get()
+            .then(doc => {
+                return agent.add(createQuickReply("คุณดื่ม" + doc.data().alcohol_type
+                    + "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data().alcohol_type + "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ",
+                    [
+                        { label: "ไม่เคยเลย", text: "never" },
+                        { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
+                        { label: "ทุกเดือน", text: "Every month" },
+                        { label: "ทุกสัปดาห์", text: "every week" },
+                        { label: "ทุกวันหรือเกือบทุกวัน", text: "Every day or almost every day" }
+                    ]
+                )
+            });
     }
 
     function checkStandardDrink(agent) {
@@ -136,17 +154,17 @@ exports.handler = (request, response, firebaseAdmin) => {
                     { label: "วันอาทิตย์", text: "วันอาทิตย์" },
                     { label: "วันจันทร์", text: "วันจันทร์" },
                     { label: "วันอังคาร", text: "วันอังคาร" },
-                    { label: "วันพุธ", text:  "วันพุธ" },
-                    { label: "วันพฤหัสบดี", text:"วันพฤหัสบดี" },
+                    { label: "วันพุธ", text: "วันพุธ" },
+                    { label: "วันพฤหัสบดี", text: "วันพฤหัสบดี" },
                     { label: "วันศุกร์", text: "วันศุกร์" },
                     { label: "วันเสาร์", text: "วันเสาร์" },
-                    { label: "วันอาทิตย์", text:"วันอาทิตย์" }
+                    { label: "วันอาทิตย์", text: "วันอาทิตย์" }
                 ]
             )
         );
     }
 
-    function setDayDrink(agent){
+    function setDayDrink(agent) {
         const day = agnet.parameters.days;
         db.collection("Users").doc(userId).update({
             day_drink: day
@@ -154,26 +172,26 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add(createQuickReply(
             "แล้วช่วงเวลาที่คุณมักจะดื่ม เป็นเวลาช่วงไหนคะ",
             [
-                {label: "เช้า-สาย", text: "เช้า-สาย"},
-                {label: "เที่ยง-บ่าย",text: "เที่ยง-บ่าย"},
-                {label: "เย็น-ค่ำ",text: "เย็น-ค่ำ"},
-                {label: "ก่อนนอน", text: "ก่อนนอน"}
+                { label: "เช้า-สาย", text: "เช้า-สาย" },
+                { label: "เที่ยง-บ่าย", text: "เที่ยง-บ่าย" },
+                { label: "เย็น-ค่ำ", text: "เย็น-ค่ำ" },
+                { label: "ก่อนนอน", text: "ก่อนนอน" }
             ]
         ));
     }
 
-    function setDrinkingTime(agent){
+    function setDrinkingTime(agent) {
         const Time = agent.parameters.time_period;
         db.collection("Users").doc(userId).update({
-            time_period : time_period
+            time_period: time_period
         })
         agent.add("โดยส่วนใหญ่แล้วคุณมักจะดื่มกับใครคะ หรือดื่มคนเดียว ");
     }
 
-    function setDrinkWith(agent){
+    function setDrinkWith(agent) {
         const person = agent.parameters.person;
         db.collection("Users").doc(userId).update({
-            person : person
+            person: person
         })
     }
 
@@ -299,8 +317,8 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Drink Amount', setDrinkAmount);
     intentMap.set('Check Standard Drink', checkStandardDrink);
     intentMap.set('Set Day Drink', setDayDrink);
-    intentMap.set('Set Drinking Time',setDrinkingTime);
-    intentMap.set('Set Person Drink With',setDrinkWith);
+    intentMap.set('Set Drinking Time', setDrinkingTime);
+    intentMap.set('Set Person Drink With', setDrinkWith);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
