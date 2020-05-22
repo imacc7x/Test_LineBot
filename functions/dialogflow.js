@@ -182,9 +182,9 @@ exports.handler = (request, response, firebaseAdmin) => {
     }
 
     function setDrinkingTime(agent) {
-        const Time = agent.parameters.time_period;
+        const time = agent.parameters.time_period;
         documentUser.update({
-            time_period: time_period
+            time_period: time
         })
         agent.add("โดยส่วนใหญ่แล้วคุณมักจะดื่มกับใครคะ หรือดื่มคนเดียว ");
     }
