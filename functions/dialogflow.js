@@ -110,6 +110,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
 
         return documentUser.get()
+            // eslint-disable-next-line promise/always-return
             .then(doc => {
                 // eslint-disable-next-line promise/always-return
                 agent.add(createQuickReply(
@@ -126,19 +127,19 @@ exports.handler = (request, response, firebaseAdmin) => {
                 );
             });
 
-        return documentUser.get()
-            .then(doc => {
-                return agent.add(createQuickReply("คุณดื่ม" + doc.data().alcohol_type
-                    + "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data().alcohol_type + "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ",
-                    [
-                        { label: "ไม่เคยเลย", text: "never" },
-                        { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
-                        { label: "ทุกเดือน", text: "Every month" },
-                        { label: "ทุกสัปดาห์", text: "every week" },
-                        { label: "ทุกวันหรือเกือบทุกวัน", text: "Every day or almost every day" }
-                    ]
-                )
-            });
+        // return documentUser.get()
+        //     .then(doc => {
+        //         return agent.add(createQuickReply("คุณดื่ม" + doc.data().alcohol_type
+        //             + "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data().alcohol_type + "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ",
+        //             [
+        //                 { label: "ไม่เคยเลย", text: "never" },
+        //                 { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
+        //                 { label: "ทุกเดือน", text: "Every month" },
+        //                 { label: "ทุกสัปดาห์", text: "every week" },
+        //                 { label: "ทุกวันหรือเกือบทุกวัน", text: "Every day or almost every day" }
+        //             ]
+        //         )
+        //     });
     }
 
     function checkStandardDrink(agent) {
