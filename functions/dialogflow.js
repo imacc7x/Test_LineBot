@@ -145,7 +145,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     function checkStandardDrink(agent) {
         const check = agent.parameters.alcohol_time;
         agent.add("check: " + check);
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             drink_more_than_standard: check
         })
 
@@ -167,7 +167,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function setDayDrink(agent) {
         const day = agnet.parameters.days;
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             day_drink: day
         })
         agent.add(createQuickReply(
@@ -183,7 +183,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function setDrinkingTime(agent) {
         const Time = agent.parameters.time_period;
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             time_period: time_period
         })
         agent.add("โดยส่วนใหญ่แล้วคุณมักจะดื่มกับใครคะ หรือดื่มคนเดียว ");
@@ -191,7 +191,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function setDrinkWith(agent) {
         const person = agent.parameters.person;
-        db.collection("Users").doc(userId).update({
+        documentUser.update({
             person: person
         })
     }
