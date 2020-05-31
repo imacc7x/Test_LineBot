@@ -116,7 +116,7 @@ const follow = async (documentUser, replyToken) => {
             // ]
         );
 
-        setTimeout((replyToken) => {
+        setTimeout(
             reply(
                 replyToken,
                 [
@@ -125,8 +125,7 @@ const follow = async (documentUser, replyToken) => {
                      text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
                     }
                 ]
-            )
-        }, 3000);
+            ),3000);
     }
     else {
         await documentUser.update({ active: true });
