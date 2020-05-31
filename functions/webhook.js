@@ -116,7 +116,7 @@ const follow = async (documentUser, replyToken) => {
             // ]
         );
 
-        setTimeout(() => {
+        setTimeout((replyToken) => {
             reply(
                 replyToken,
                 [
