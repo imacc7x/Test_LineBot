@@ -11,7 +11,7 @@ exports.handler = (req, res, firebaseAdmin) => {
     if (req.method === "POST") {
         const event = req.body.events[0];
         const { type, source } = event;
-        const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId); 
+        const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId);
 
         if (type === "follow") {
             follow(docUser, event.replyToken)
@@ -49,6 +49,7 @@ const reply = (replyToken, messages) => {
         })
     });
 };
+
 const push = (userId, messages) => {
     return request.post({
         uri: `${LINE_MESSAGING_API}/push`,
@@ -64,51 +65,24 @@ const follow = async (documentUser, replyToken) => {
     const user = await documentUser.get()
     if (!user.exists) {
         await documentUser.set({ active: true });
-        reply(
-            replyToken,
-            [
+        setTimeout(() => {
+            reply(replyToken, [
                 {
                     type: "text",
                     text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-                },
+                }
+            ]);
+        }, 3000);
+
+        setTimeout(() => {
+            reply(replyToken, [
                 {
                     type: "text",
                     text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-                },
-                {
-                    type: "text",
-                    text: "แต่ดิฉันก็จะช่วยสรุปข้อมูลที่สำคัญทั้งหมดและส่งต่อให้แก่นักให้คำปรึกษาค่ะดิฉันมั่นใจว่านักให้คำปรึกษาจะช่วยคุณได้แน่นอน"
-                },
-                {
-                    type: "text",
-                    text: "โดยข้อมูลที่ได้จากการสนทนาที่จะสามารถระบุตัวตนของคุณได้จะไม่มีการเผยแพร่ ดิฉันจึงอยากขอให้คุณอนุญาตให้พวกเขาทำเช่นนั้นก่อน"
-                },
-                {
-                    type: "text",
-                    text: "คุณจะอนุญาตได้ไหมคะ",
-                    quickReply: {
-                        items: [
-                            {
-                                type: "action",
-                                action: {
-                                    type: "message",
-                                    label: "อนุญาต",
-                                    text: "อนุญาต"
-                                }
-                            },
-                            {
-                                type: "action",
-                                action: {
-                                    type: "message",
-                                    label: "ไม่อนุญาต",
-                                    text: "ไม่อนุญาต"
-                                }
-                            }
-                        ]
-                    }
                 }
-            ]
-        );
+            ]);
+        }, 5000);
+
     }
     else {
         await documentUser.update({ active: true });
@@ -116,6 +90,63 @@ const follow = async (documentUser, replyToken) => {
 
     return new Promise((resolve, reject) => resolve());
 };
+
+// const follow = async (documentUser, replyToken) => {
+//     const user = await documentUser.get()
+//     if (!user.exists) {
+//         await documentUser.set({ active: true });
+//         reply(
+//             replyToken,
+//             [
+//                 {
+//                     type: "text",
+//                     text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+//                 },
+//                 {
+//                     type: "text",
+//                     text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+//                 },
+//                 {
+//                     type: "text",
+//                     text: "แต่ดิฉันก็จะช่วยสรุปข้อมูลที่สำคัญทั้งหมดและส่งต่อให้แก่นักให้คำปรึกษาค่ะดิฉันมั่นใจว่านักให้คำปรึกษาจะช่วยคุณได้แน่นอน"
+//                 },
+//                 {
+//                     type: "text",
+//                     text: "โดยข้อมูลที่ได้จากการสนทนาที่จะสามารถระบุตัวตนของคุณได้จะไม่มีการเผยแพร่ ดิฉันจึงอยากขอให้คุณอนุญาตให้พวกเขาทำเช่นนั้นก่อน"
+//                 },
+//                 {
+//                     type: "text",
+//                     text: "คุณจะอนุญาตได้ไหมคะ",
+//                     quickReply: {
+//                         items: [
+//                             {
+//                                 type: "action",
+//                                 action: {
+//                                     type: "message",
+//                                     label: "อนุญาต",
+//                                     text: "อนุญาต"
+//                                 }
+//                             },
+//                             {
+//                                 type: "action",
+//                                 action: {
+//                                     type: "message",
+//                                     label: "ไม่อนุญาต",
+//                                     text: "ไม่อนุญาต"
+//                                 }
+//                             }
+//                         ]
+//                     }
+//                 }
+//             ]
+//         );
+//     }
+//     else {
+//         await documentUser.update({ active: true });
+//     }
+
+//     return new Promise((resolve, reject) => resolve());
+// };
 
 const unfollow = async (documentUser, userId) => {
     await documentUser.update({
