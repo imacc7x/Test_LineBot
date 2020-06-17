@@ -65,7 +65,11 @@ const follow = async (documentUser, replyToken) => {
     const user = await documentUser.get()
     if (!user.exists) {
         await documentUser.set({ active: true });
-        setTimeout(() => {
+
+        // test = () => {
+            
+        // };
+        setTimeout((replyToken) => {
             reply(replyToken, [
                 {
                     type: "text",
@@ -74,7 +78,7 @@ const follow = async (documentUser, replyToken) => {
             ]);
         }, 3000);
 
-        setTimeout(() => {
+        setTimeout((replyToken) => {
             reply(replyToken, [
                 {
                     type: "text",
