@@ -191,22 +191,42 @@ const setAsyncTimeout = (cb, timeout = 0) => new Promise(resolve => {
 });
 
 
-const delayReply = async (replyToken) => {
-    await setAsyncTimeout(() => {
+// const delayReply = async (replyToken) => {
+//     await setAsyncTimeout(() => {
+//         reply(replyToken, [
+//             {
+//                 type: "text",
+//                 text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+//             }
+//         ]);
+//     }, 1000);
+//     await setAsyncTimeout(() => {
+//         reply(replyToken, [
+//             {
+//                 type: "text",
+//                 text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+//             }
+//         ]);
+//     }, 2000);
+// };
+
+const delayReply = (replyToken) => {
+    setTimeout(() => {
         reply(replyToken, [
             {
                 type: "text",
                 text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
             }
         ]);
+        setTimeout(() => {
+            reply(replyToken, [
+                {
+                    type: "text",
+                    text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+                }
+            ]);
+        }, 2000);
     }, 1000);
-    await setAsyncTimeout(() => {
-        reply(replyToken, [
-            {
-                type: "text",
-                text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-            }
-        ]);
-    }, 2000);
 };
+
 
