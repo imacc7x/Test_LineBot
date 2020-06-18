@@ -99,7 +99,7 @@ const follow = async (documentUser, replyToken) => {
         //         }
         //     ]);
         // }, 2000);
-        delayReply();
+        delayReply(replyToken);
     }
     else {
         await documentUser.update({ active: true });
@@ -191,7 +191,7 @@ const setAsyncTimeout = (cb, timeout = 0) => new Promise(resolve => {
 });
 
 
-const delayReply = async () => {
+const delayReply = async (replyToken) => {
     await setAsyncTimeout(() => {
         reply(replyToken, [
             {
