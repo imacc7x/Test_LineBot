@@ -50,6 +50,18 @@ const reply = (replyToken, messages) => {
     });
 };
 
+const delayReply = async (replyToken, delayTime, messages) => {
+    setTimeout(() => { }, delayTime);
+    return request.post({
+        uri: `${LINE_MESSAGING_API}/reply`,
+        headers: LINE_HEADER,
+        body: JSON.stringify({
+            replyToken: replyToken,
+            messages: messages
+        })
+    });
+}
+
 const push = (userId, messages) => {
     return request.post({
         uri: `${LINE_MESSAGING_API}/push`,
@@ -63,29 +75,31 @@ const push = (userId, messages) => {
 
 const follow = async (documentUser, replyToken) => {
     const user = await documentUser.get()
-    this.replyToken = replyToken;
     if (!user.exists) {
         await documentUser.set({ active: true });
+        await delayReply(replyToken, 1000, [
+            {
+                type: "text",
+                text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+            }
+        ]);
 
-      
-            setTimeout(() => {
-                reply(this.replyToken, [
-                    {
-                        type: "text",
-                        text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-                    }
-                ]);
-            }, 1000);
-    
-            setTimeout(() => {
-                reply(this.replyToken, [
-                    {
-                        type: "text",
-                        text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-                    }
-                ]);
-            }, 2000);
-     
+        await delayReply(replyToken, 2000, [
+            {
+                type: "text",
+                text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+            }
+        ]);
+
+        // setTimeout(() => {
+        //     reply(replyToken, [
+        //         {
+        //             type: "text",
+        //             text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+        //         }
+        //     ]);
+        // }, 2000);
+
 
     }
     else {
