@@ -50,17 +50,17 @@ const reply = (replyToken, messages) => {
     });
 };
 
-const delayReply = async (replyToken, delayTime, messages) => {
-    setTimeout(() => { }, delayTime);
-    return request.post({
-        uri: `${LINE_MESSAGING_API}/reply`,
-        headers: LINE_HEADER,
-        body: JSON.stringify({
-            replyToken: replyToken,
-            messages: messages
-        })
-    });
-}
+// const delayReply = async (replyToken, delayTime, messages) => {
+//     setTimeout(() => { }, delayTime);
+//     return request.post({
+//         uri: `${LINE_MESSAGING_API}/reply`,
+//         headers: LINE_HEADER,
+//         body: JSON.stringify({
+//             replyToken: replyToken,
+//             messages: messages
+//         })
+//     });
+// }
 
 const push = (userId, messages) => {
     return request.post({
@@ -77,19 +77,19 @@ const follow = async (documentUser, replyToken) => {
     const user = await documentUser.get()
     if (!user.exists) {
         await documentUser.set({ active: true });
-        await delayReply(replyToken, 1000, [
-            {
-                type: "text",
-                text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-            }
-        ]);
+        // await delayReply(replyToken, 1000, [
+        //     {
+        //         type: "text",
+        //         text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+        //     }
+        // ]);
 
-        await delayReply(replyToken, 2000, [
-            {
-                type: "text",
-                text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-            }
-        ]);
+        // await delayReply(replyToken, 2000, [
+        //     {
+        //         type: "text",
+        //         text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+        //     }
+        // ]);
 
         // setTimeout(() => {
         //     reply(replyToken, [
@@ -99,8 +99,7 @@ const follow = async (documentUser, replyToken) => {
         //         }
         //     ]);
         // }, 2000);
-
-
+        delayReply();
     }
     else {
         await documentUser.update({ active: true });
@@ -182,3 +181,32 @@ const postToDialogflow = req => {
         body: JSON.stringify(req.body)
     });
 };
+
+const setAsyncTimeout = (cb, timeout = 0) => new Promise(resolve => {
+    setTimeout(() => {
+        // eslint-disable-next-line callback-return
+        cb();
+        resolve();
+    }, timeout);
+});
+
+
+const delayReply = async () => {
+    await setAsyncTimeout(() => {
+        reply(replyToken, [
+            {
+                type: "text",
+                text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+            }
+        ]);
+    }, 1000);
+    await setAsyncTimeout(() => {
+        reply(replyToken, [
+            {
+                type: "text",
+                text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+            }
+        ]);
+    }, 2000);
+};
+
