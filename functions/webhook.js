@@ -91,15 +91,24 @@ const follow = async (documentUser, replyToken) => {
         //     }
         // ]);
 
-        // setTimeout(() => {
-        //     reply(replyToken, [
-        //         {
-        //             type: "text",
-        //             text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-        //         }
-        //     ]);
-        // }, 2000);
-        delayReply(replyToken);
+        setTimeout(() => {
+            reply(replyToken, [
+                {
+                    type: "text",
+                    text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+                }
+            ]);
+        }, 1000);
+
+        setTimeout(() => {
+            reply(replyToken, [
+                {
+                    type: "text",
+                    text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+                }
+            ]);
+        }, 2000);
+        // delayReply(replyToken);
     }
     else {
         await documentUser.update({ active: true });
@@ -182,13 +191,13 @@ const postToDialogflow = req => {
     });
 };
 
-const setAsyncTimeout = (cb, timeout = 0) => new Promise(resolve => {
-    setTimeout(() => {
-        // eslint-disable-next-line callback-return
-        cb();
-        resolve();
-    }, timeout);
-});
+// const setAsyncTimeout = (cb, timeout = 0) => new Promise(resolve => {
+//     setTimeout(() => {
+//         // eslint-disable-next-line callback-return
+//         cb();
+//         resolve();
+//     }, timeout);
+// });
 
 
 // const delayReply = async (replyToken) => {
@@ -210,23 +219,5 @@ const setAsyncTimeout = (cb, timeout = 0) => new Promise(resolve => {
 //     }, 2000);
 // };
 
-const delayReply = (replyToken) => {
-    setTimeout(() => {
-        reply(replyToken, [
-            {
-                type: "text",
-                text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-            }
-        ]);
-        setTimeout(() => {
-            reply(replyToken, [
-                {
-                    type: "text",
-                    text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-                }
-            ]);
-        }, 2000);
-    }, 1000);
-};
 
 
