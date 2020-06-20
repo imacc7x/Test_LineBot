@@ -50,17 +50,13 @@ const reply = (replyToken, messages) => {
     });
 };
 
-// const delayReply = async (replyToken, delayTime, messages) => {
-//     setTimeout(() => { }, delayTime);
-//     return request.post({
-//         uri: `${LINE_MESSAGING_API}/reply`,
-//         headers: LINE_HEADER,
-//         body: JSON.stringify({
-//             replyToken: replyToken,
-//             messages: messages
-//         })
-//     });
-// }
+const delayReply = (replyToken, messages, delayTime) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() =>{
+            resolve(reply(replyToken, messages))
+        }, delayTime);
+    });
+}
 
 const push = (userId, messages) => {
     return request.post({
@@ -91,25 +87,19 @@ const follow = async (documentUser, replyToken) => {
         //         text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
         //     }
         // ]);
+        reply(token, [
+            {
+                type: "text",
+                text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+            }
+        ]);
 
-        setTimeout(() => {
-            reply(token, [
-                {
-                    type: "text",
-                    text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-                }
-            ]);
-        }, 1000);
-
-        setTimeout(() => {
-            reply(token, [
-                {
-                    type: "text",
-                    text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-                }
-            ]);
-        }, 2000);
-        // delayReply(replyToken);
+        await delayReply(replyToken, [
+            {
+                type: "text",
+                text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+            }
+        ], 2000)
     }
     else {
         await documentUser.update({ active: true });
