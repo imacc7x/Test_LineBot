@@ -14,7 +14,7 @@ exports.handler = (req, res, firebaseAdmin) => {
         const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId);
 
         if (type === "follow") {
-            follow(docUser, event.replyToken)
+            follow(docUser, source.userId, event.replyToken)
                 .then(() => res.status(200).send("Follow is ok."))
                 .catch((err) => console.error("Follow Error: ", err))
         }
@@ -50,18 +50,6 @@ const reply = (replyToken, messages) => {
     });
 };
 
-// const delayReply = async (replyToken, delayTime, messages) => {
-//     setTimeout(() => { }, delayTime);
-//     return request.post({
-//         uri: `${LINE_MESSAGING_API}/reply`,
-//         headers: LINE_HEADER,
-//         body: JSON.stringify({
-//             replyToken: replyToken,
-//             messages: messages
-//         })
-//     });
-// }
-
 const push = (userId, messages) => {
     return request.post({
         uri: `${LINE_MESSAGING_API}/push`,
@@ -73,7 +61,15 @@ const push = (userId, messages) => {
     });
 };
 
-const follow = async (documentUser, replyToken) => {
+const delayPush = (userId, messages, delayTime) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() =>{
+            resolve(push(userId, messages))
+        }, delayTime);
+    });
+}
+
+const follow = async (documentUser, userId, replyToken) => {
     const user = await documentUser.get()
     if (!user.exists) {
         await documentUser.set({ active: true });
@@ -90,25 +86,28 @@ const follow = async (documentUser, replyToken) => {
         //         text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
         //     }
         // ]);
+        reply(replyToken, [
+            {
+                type: "text",
+                text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
+            }
+        ]);
 
-        setTimeout(() => {
-            reply(replyToken, [
-                {
-                    type: "text",
-                    text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-                }
-            ]);
-        }, 1000);
+        await delayPush(userId, [
+            {
+                type: "text",
+                text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
+            }
+        ], 1500)
 
-        setTimeout(() => {
-            reply(replyToken, [
-                {
-                    type: "text",
-                    text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-                }
-            ]);
-        }, 2000);
-        // delayReply(replyToken);
+        await delayPush(userId, [
+            {
+                type: "text",
+                text: "แต่ดิฉันก็จะช่วยสรุปข้อมูลที่สำคัญทั้งหมดและส่งต่อให้แก่นักให้คำปรึกษาค่ะดิฉันมั่นใจว่านักให้คำปรึกษาจะช่วยคุณได้แน่นอน"
+            }
+        ], 2000)
+
+
     }
     else {
         await documentUser.update({ active: true });
