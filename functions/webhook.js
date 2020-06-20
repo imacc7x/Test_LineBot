@@ -63,7 +63,7 @@ const push = (userId, messages) => {
 
 const delayPush = (userId, messages, delayTime) => {
     return new Promise((resolve, reject) => {
-        setTimeout(() =>{
+        setTimeout(() => {
             resolve(push(userId, messages))
         }, delayTime);
     });
@@ -73,19 +73,7 @@ const follow = async (documentUser, userId, replyToken) => {
     const user = await documentUser.get()
     if (!user.exists) {
         await documentUser.set({ active: true });
-        // await delayReply(replyToken, 1000, [
-        //     {
-        //         type: "text",
-        //         text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-        //     }
-        // ]);
 
-        // await delayReply(replyToken, 2000, [
-        //     {
-        //         type: "text",
-        //         text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-        //     }
-        // ]);
         reply(replyToken, [
             {
                 type: "text",
@@ -107,7 +95,39 @@ const follow = async (documentUser, userId, replyToken) => {
             }
         ], 3000);
 
+        await delayPush(userId, [
+            {
+                type: "text",
+                text: "โดยข้อมูลที่ได้จากการสนทนาที่จะสามารถระบุตัวตนของคุณได้จะไม่มีการเผยแพร่ ดิฉันจึงอยากขอให้คุณอนุญาตให้พวกเขาทำเช่นนั้นก่อน"
+            }
+        ], 4000);
 
+        await delayPush(userId, [
+            {
+                type: "text",
+                text: "คุณจะอนุญาตได้ไหมคะ",
+                quickReply: {
+                    items: [
+                        {
+                            type: "action",
+                            action: {
+                                type: "message",
+                                label: "อนุญาต",
+                                text: "อนุญาต"
+                            }
+                        },
+                        {
+                            type: "action",
+                            action: {
+                                type: "message",
+                                label: "ไม่อนุญาต",
+                                text: "ไม่อนุญาต"
+                            }
+                        }
+                    ]
+                }
+            }
+        ], 5000);
     }
     else {
         await documentUser.update({ active: true });
@@ -139,32 +159,32 @@ const follow = async (documentUser, userId, replyToken) => {
 //                     type: "text",
 //                     text: "โดยข้อมูลที่ได้จากการสนทนาที่จะสามารถระบุตัวตนของคุณได้จะไม่มีการเผยแพร่ ดิฉันจึงอยากขอให้คุณอนุญาตให้พวกเขาทำเช่นนั้นก่อน"
 //                 },
-//                 {
-//                     type: "text",
-//                     text: "คุณจะอนุญาตได้ไหมคะ",
-//                     quickReply: {
-//                         items: [
-//                             {
-//                                 type: "action",
-//                                 action: {
-//                                     type: "message",
-//                                     label: "อนุญาต",
-//                                     text: "อนุญาต"
-//                                 }
-//                             },
-//                             {
-//                                 type: "action",
-//                                 action: {
-//                                     type: "message",
-//                                     label: "ไม่อนุญาต",
-//                                     text: "ไม่อนุญาต"
-//                                 }
-//                             }
-//                         ]
+// {
+//     type: "text",
+//             text: "คุณจะอนุญาตได้ไหมคะ",
+//             quickReply: {
+//                 items: [
+//                     {
+//                         type: "action",
+//                         action: {
+//                             type: "message",
+//                             label: "อนุญาต",
+//                             text: "อนุญาต"
+//                         }
+//                     },
+//                     {
+//                         type: "action",
+//                         action: {
+//                             type: "message",
+//                             label: "ไม่อนุญาต",
+//                             text: "ไม่อนุญาต"
+//                         }
 //                     }
-//                 }
-//             ]
-//         );
+//                 ]
+//             }
+//         }
+//     ]
+// );
 //     }
 //     else {
 //         await documentUser.update({ active: true });
@@ -190,33 +210,6 @@ const postToDialogflow = req => {
     });
 };
 
-// const setAsyncTimeout = (cb, timeout = 0) => new Promise(resolve => {
-//     setTimeout(() => {
-//         // eslint-disable-next-line callback-return
-//         cb();
-//         resolve();
-//     }, timeout);
-// });
-
-
-// const delayReply = async (replyToken) => {
-//     await setAsyncTimeout(() => {
-//         reply(replyToken, [
-//             {
-//                 type: "text",
-//                 text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
-//             }
-//         ]);
-//     }, 1000);
-//     await setAsyncTimeout(() => {
-//         reply(replyToken, [
-//             {
-//                 type: "text",
-//                 text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
-//             }
-//         ]);
-//     }, 2000);
-// };
 
 
 
