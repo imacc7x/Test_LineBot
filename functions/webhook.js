@@ -77,7 +77,6 @@ const follow = async (documentUser, replyToken) => {
     const user = await documentUser.get()
     if (!user.exists) {
         await documentUser.set({ active: true });
-        const token = replyToken;
         // await delayReply(replyToken, 1000, [
         //     {
         //         type: "text",
@@ -93,7 +92,7 @@ const follow = async (documentUser, replyToken) => {
         // ]);
 
         setTimeout(() => {
-            reply(token, [
+            reply(replyToken, [
                 {
                     type: "text",
                     text: "สวัสดีค่ะ ดิฉันเป็นบอทผู้ช่วยนักให้คำปรึกษาของศูนย์เลิกเหล้า 1413 ยินดีที่ได้พูดคุยกับคุณในวันนี้ค่ะ"
@@ -102,7 +101,7 @@ const follow = async (documentUser, replyToken) => {
         }, 1000);
 
         setTimeout(() => {
-            reply(token, [
+            reply(replyToken, [
                 {
                     type: "text",
                     text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
