@@ -14,7 +14,7 @@ exports.handler = (req, res, firebaseAdmin) => {
         const docUser = firebaseAdmin.firestore().collection("Users").doc(source.userId);
 
         if (type === "follow") {
-            follow(docUser, event.replyToken)
+            follow(docUser, source.userId, event.replyToken)
                 .then(() => res.status(200).send("Follow is ok."))
                 .catch((err) => console.error("Follow Error: ", err))
         }
@@ -50,14 +50,6 @@ const reply = (replyToken, messages) => {
     });
 };
 
-const delayReply = (replyToken, messages, delayTime) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() =>{
-            resolve(reply(replyToken, messages))
-        }, delayTime);
-    });
-}
-
 const push = (userId, messages) => {
     return request.post({
         uri: `${LINE_MESSAGING_API}/push`,
@@ -69,7 +61,15 @@ const push = (userId, messages) => {
     });
 };
 
-const follow = async (documentUser, replyToken) => {
+const delayPush = (userId, messages, delayTime) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() =>{
+            resolve(push(userId, messages))
+        }, delayTime);
+    });
+}
+
+const follow = async (documentUser, userId, replyToken) => {
     const user = await documentUser.get()
     if (!user.exists) {
         await documentUser.set({ active: true });
@@ -94,14 +94,12 @@ const follow = async (documentUser, replyToken) => {
             }
         ]);
 
-        console.log("Yo...")
-
-        await delayReply(replyToken, [
+        await delayPush(userId, [
             {
                 type: "text",
                 text: "ฉันสามารถให้ข้อมูลเบื้องต้นเกี่ยวกับการดื่มแก่คุณได้ตลอด 24 ชั่วโมง แม้ว่าบางคำถามของคุณ ดิฉันอาจไม่สามารถเข้าใจได้"
             }
-        ], 2000)
+        ], 1500)
     }
     else {
         await documentUser.update({ active: true });
