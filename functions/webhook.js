@@ -94,6 +94,8 @@ const follow = async (documentUser, replyToken) => {
             }
         ]);
 
+        console.log("Yo...")
+
         await delayReply(replyToken, [
             {
                 type: "text",
