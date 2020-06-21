@@ -13,35 +13,18 @@ exports.handler = (request, response, firebaseAdmin) => {
     const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
     const documentUser = firebaseAdmin.firestore().collection('Users').doc(userId);
 
-    // eslint-disable-next-line consistent-return
-    function createQuickReply(text, options) {
-        if (options.length) {
-            let items = options.map((option) => ({ type: "action", action: { type: "message", ...option } }))
-            return new Payload(
-                `LINE`,
-                {
-                    type: "text",
-                    text: text,
-                    quickReply: {
-                        items: [...items]
-                    }
-                },
-                { sendAsMessage: true }
-            );
-        }
+    function welcome(agent) {
+        agent.add(`Welcome to my agent!`);
+    }
+
+    function fallback(agent) {
+        agent.add(`I didn't understand`);
+        agent.add(`I'm sorry, can you try again?`);
     }
 
     function activatingConfirm(agent) {
         agent.add('ขอบคุณมากค่ะ ดิฉันมั่นใจว่าข้อมูลที่คุณให้จะเป็นประโยชน์แก่ทีมผู้สรัางดิฉัน ในการพัฒนาการดูแลผู้ดื่มเหล้าต่อไปแน่นอนค่ะ');
         agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
-    }
-
-    function activatingNotConfirm(agent) {
-        agent.add('ขอบคุณค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
-        
-        agent.add('แต่คุณสามารถขอคำแนะนำผ่านช่องทางอื่นๆได้นะ');
-        
-        
     }
 
     function setAge(agent) {
@@ -200,24 +183,24 @@ exports.handler = (request, response, firebaseAdmin) => {
 
         // eslint-disable-next-line promise/always-return
         return documentUser.get().then(doc => {
-            agent.add("เท่าที่ดิฉันรู้จากข้อมูลที่คุณให้ ฉันอยากให้คุณดื่ม " + doc.data().alcohol_type + "วันละไม่เกิน...ค่ะ");
+            agent.add("เท่าที่ดิฉันรู้จากข้อมูลที่คุณให้ ฉันอยากให้คุณดื่ม " + doc.data().alcohol_type +"วันละไม่เกิน...ค่ะ");
             agent.add("นั่นเป็นปริมาณที่จะไม่ส่งผลเสียต่อสุขภาพมากนะคะ");
             agent.add(createQuickReply("คุณเคยพยายามจะหยุดหรือลดมันบ้างไหมคะ",
-                [
-                    { label: "เคย", text: "เคย" },
-                    { label: "ไม่เคย", text: "ไม่เคย" }
-                ]));
+            [
+                {label: "เคย", text:"เคย"},
+                {label:"ไม่เคย",text:"ไม่เคย"}
+            ]));
         });
     }
 
-    function askStopDrinkingYes(agent) {
+    function askStopDrinkingYes(agent){
         agent.add("ดีใจจังค่ะ ที่คุณเคยพยายามหยุดมัน");
         agent.add(createQuickReply("ตอนนั้นคุณมีอาการผิดปรกติอะไรบ้างไหมคะ",
             [
-                { label: "มี", text: "ไม่มี" },
-                { label: "ไม่มี", text: "ไม่มี" }
+                {label: "มี", text:"ไม่มี"},
+                {label:"ไม่มี",text:"ไม่มี"}
             ]));
-        test(agent);
+            test(agent);
     }
 
     function test(agent) {
@@ -237,7 +220,23 @@ exports.handler = (request, response, firebaseAdmin) => {
             });
     }
 
-
+    // eslint-disable-next-line consistent-return
+    function createQuickReply(text, options) {
+        if (options.length) {
+            let items = options.map((option) => ({ type: "action", action: { type: "message", ...option } }))
+            return new Payload(
+                `LINE`,
+                {
+                    type: "text",
+                    text: text,
+                    quickReply: {
+                        items: [...items]
+                    }
+                },
+                { sendAsMessage: true }
+            );
+        }
+    }
 
 
 
@@ -282,6 +281,9 @@ exports.handler = (request, response, firebaseAdmin) => {
         }
     }
 
+
+
+
     // // Uncomment and edit to make your own intent handler
     // // uncomment `intentMap.set('your intent name here', yourFunctionHandler);`
     // // below to get this function to be run when a Dialogflow intent is matched
@@ -313,8 +315,9 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     // Run the proper function handler based on the matched Dialogflow intent name
     let intentMap = new Map();
+    intentMap.set('Default Welcome Intent', welcome);
+    intentMap.set('Default Fallback Intent', fallback);
     intentMap.set('Activating-confirm', activatingConfirm);
-    intentMap.set('Activating-not-confirm', activatingNotConfirm);
     intentMap.set('Set Age', setAge);
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol Time', setAlcoholTime);
@@ -324,7 +327,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Day Drink', setDayDrink);
     intentMap.set('Set Drinking Time', setDrinkingTime);
     intentMap.set('Set Person Drink With', setDrinkWith);
-    intentMap.set('Ask Stop Drinking  - yes', askStopDrinkingYes);
+    intentMap.set('Ask Stop Drinking  - yes',askStopDrinkingYes);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
