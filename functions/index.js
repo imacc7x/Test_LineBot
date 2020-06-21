@@ -5,7 +5,7 @@ const admin = require('firebase-admin');
 
 const region = "asia-east2";
 const runtimeOpts = {
-    timeoutSeconds: 20,
+    timeoutSeconds: 10,
     memory: "2GB"
 };
 
