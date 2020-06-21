@@ -27,6 +27,10 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
     }
 
+    function activatingNotConfirm(agent){
+        agent.add('ขอบคุณมากค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
+    }
+
     function setAge(agent) {
         console.log("This is setProfile function");
         console.log("userId: " + userId);
@@ -315,6 +319,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
     intentMap.set('Activating-confirm', activatingConfirm);
+    intentMap.set('Activating-not-confirm' , activatingNotConfirm);
     intentMap.set('Set Age', setAge);
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol Time', setAlcoholTime);
