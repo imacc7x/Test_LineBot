@@ -5,7 +5,7 @@ const admin = require('firebase-admin');
 
 const region = "asia-east2";
 const runtimeOpts = {
-    timeoutSeconds: 10,
+    timeoutSeconds: 20,
     memory: "2GB"
 };
 
@@ -14,6 +14,7 @@ admin.initializeApp({
     databaseURL: "https//test-chatbot-uyotlh.firebaseio.com",
     storageBucket: "gs://test-chatbot-uyotlh.appspot.com"
 });
+
 
 exports.webhook = functions.region(region).runWith(runtimeOpts).https.onRequest((req, res) => {
     require('./webhook').handler(req, res, admin);
