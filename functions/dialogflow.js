@@ -255,56 +255,36 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     const connection = {
         "type": "imagemap",
-        "baseUrl": "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/5338051-white-background-images-1024x683.jpg?alt=media&token=ad1918e6-0d5e-4cc8-8834-c377669f27f1",
+        "baseUrl": "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/Dark%20Blue%20and%20Orange%20Moustache%20Father's%20Day%20Card.png?alt=media&token=066e2d6a-0508-4345-b547-66fd49714a50",
         "altText": "This is an imagemap",
         "baseSize": {
           "width": 1040,
-          "height": 694
+          "height": 738
         },
         "actions": [
           {
             "type": "uri",
             "area": {
-              "x": 57,
-              "y": 40,
-              "width": 400,
-              "height": 300
+              "x": 15,
+              "y": 244,
+              "width": 451,
+              "height": 251
             },
             "linkUri": "https://www.thaihealth.or.th/"
           },
           {
-            "type": "message",
-            "area": {
-              "x": 547,
-              "y": 42,
-              "width": 400,
-              "height": 300
-            },
-            "text": "ติดต่อเจ้าหน้าที่ผู้เชี่ยวชาญ 1413"
-          },
-          {
             "type": "uri",
             "area": {
-              "x": 57,
-              "y": 374,
-              "width": 400,
-              "height": 300
+              "x": 534,
+              "y": 243,
+              "width": 449,
+              "height": 254
             },
             "linkUri": "http://line.me/ti/p/@efr1869z?fbclid=IwAR36fJn196psyS8j-hK-TDa0QRkqVLQWazg9BNDLJBLNxeILkBtEeMKwZPM"
-          },
-          {
-            "type": "message",
-            "area": {
-              "x": 548,
-              "y": 372,
-              "width": 400,
-              "height": 300
-            },
-            "text": "Action 4"
           }
         ]
       }
-
+            
 
 
     const alocoholPackaging = {
