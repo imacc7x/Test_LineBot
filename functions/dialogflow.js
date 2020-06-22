@@ -29,6 +29,9 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function activatingNotConfirm(agent){
         agent.add('ขอบคุณมากค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
+        setTimeout(() => {
+            agent.add('คุณยังสามารถเลือกขอคำปรึกษาผ่านบริการอื่นๆได้ดังนี้');
+        }, 1000);
     }
 
     function setAge(agent) {
