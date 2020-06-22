@@ -32,11 +32,11 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function activatingConfirm(agent) {
         agent.add('ขอบคุณมากค่ะ ดิฉันมั่นใจว่าข้อมูลที่คุณให้จะเป็นประโยชน์แก่ทีมผู้สรัางดิฉัน ในการพัฒนาการดูแลผู้ดื่มเหล้าต่อไปแน่นอนค่ะ');
-        testSetAge(agent);
+        setAge(agent);
     }
 
     function testSetAge(agent){
-        agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
+        
     }
 
     function activatingNotConfirm(agent){
@@ -46,6 +46,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     }
 
     function setAge(agent) {
+        agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
         console.log("This is setProfile function");
         console.log("userId: " + userId);
         agent.add("Your userID: " + userId);
