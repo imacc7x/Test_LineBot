@@ -93,14 +93,14 @@ const follow = async (documentUser, userId, replyToken) => {
                 type: "text",
                 text: "แต่ดิฉันก็จะช่วยสรุปข้อมูลที่สำคัญทั้งหมดและส่งต่อให้แก่นักให้คำปรึกษาค่ะดิฉันมั่นใจว่านักให้คำปรึกษาจะช่วยคุณได้แน่นอน"
             }
-        ], 1700);
+        ], 1500);
 
         await delayPush(userId, [
             {
                 type: "text",
                 text: "โดยข้อมูลที่ได้จากการสนทนาที่จะสามารถระบุตัวตนของคุณได้จะไม่มีการเผยแพร่ ดิฉันจึงอยากขอให้คุณอนุญาตให้พวกเขาทำเช่นนั้นก่อน"
             }
-        ], 2300);
+        ], 2000);
 
         await delayPush(userId, [
             {
@@ -127,7 +127,7 @@ const follow = async (documentUser, userId, replyToken) => {
                     ]
                 }
             }
-        ], 5000);
+        ], 2500);
     }
     else {
         await documentUser.update({ active: true });
