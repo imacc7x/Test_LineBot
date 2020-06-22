@@ -37,7 +37,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     async function activatingNotConfirm(agent){
         agent.add('ขอบคุณมากค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
-        await delayReply(agent , 1000 , 'คุณยังสามารถเลือกขอคำปรึกษาผ่านบริการอื่นๆได้ดังนี้');
+        await delayReply(agent , 3000 , 'คุณยังสามารถเลือกขอคำปรึกษาผ่านบริการอื่นๆได้ดังนี้');
     }
 
     function setAge(agent) {
