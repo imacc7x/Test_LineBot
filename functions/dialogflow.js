@@ -13,6 +13,14 @@ exports.handler = (request, response, firebaseAdmin) => {
     const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
     const documentUser = firebaseAdmin.firestore().collection('Users').doc(userId);
 
+    const delayReply = (agent , delayTime , messages) =>{
+        return new Promise((resolve, reject) =>{
+            setTimeout(() => {
+                resolve(agent.add(messages));
+            }, delayTime);
+        });
+    }
+
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
     }
@@ -27,11 +35,9 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
     }
 
-    function activatingNotConfirm(agent){
+    async function activatingNotConfirm(agent){
         agent.add('ขอบคุณมากค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
-        setTimeout(() => {
-            agent.add('คุณยังสามารถเลือกขอคำปรึกษาผ่านบริการอื่นๆได้ดังนี้');
-        }, 1000);
+        await delayReply(agent , 1000 , 'คุณยังสามารถเลือกขอคำปรึกษาผ่านบริการอื่นๆได้ดังนี้');
     }
 
     function setAge(agent) {
