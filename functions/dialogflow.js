@@ -13,13 +13,13 @@ exports.handler = (request, response, firebaseAdmin) => {
     const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
     const documentUser = firebaseAdmin.firestore().collection('Users').doc(userId);
 
-    const delayReply = (agent , delayTime , messages) =>{
-        return new Promise((resolve, reject) =>{
-            setTimeout(() => {
-                resolve(agent.add(messages));
-            }, delayTime);
-        });
-    }
+    // const delayReply = (agent , delayTime , messages) =>{
+    //     return new Promise((resolve, reject) =>{
+    //         setTimeout(() => {
+    //             resolve(agent.add(messages));
+    //         }, delayTime);
+    //     });
+    // }
 
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
@@ -35,9 +35,10 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
     }
 
-    async function activatingNotConfirm(agent){
+    function activatingNotConfirm(agent){
         agent.add('ขอบคุณมากค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
-        await delayReply(agent , 3000 , 'คุณยังสามารถเลือกขอคำปรึกษาผ่านบริการอื่นๆได้ดังนี้');
+        agent.add('คุณยังสามารถเลือกขอคำปรึกษาผ่านบริการอื่นๆได้ดังนี้');
+        agent.add(new Payload('LINE', connection ,{ sendAsMessage: true }));
     }
 
     function setAge(agent) {
@@ -250,6 +251,59 @@ exports.handler = (request, response, firebaseAdmin) => {
             );
         }
     }
+
+
+    const connection = {
+        "type": "imagemap",
+        "baseUrl": "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/5338051-white-background-images-1024x683.jpg?alt=media&token=ad1918e6-0d5e-4cc8-8834-c377669f27f1",
+        "altText": "This is an imagemap",
+        "baseSize": {
+          "width": 1040,
+          "height": 694
+        },
+        "actions": [
+          {
+            "type": "uri",
+            "area": {
+              "x": 57,
+              "y": 40,
+              "width": 400,
+              "height": 300
+            },
+            "linkUri": "https://www.thaihealth.or.th/"
+          },
+          {
+            "type": "message",
+            "area": {
+              "x": 547,
+              "y": 42,
+              "width": 400,
+              "height": 300
+            },
+            "text": "ติดต่อเจ้าหน้าที่ผู้เชี่ยวชาญ 1413"
+          },
+          {
+            "type": "uri",
+            "area": {
+              "x": 57,
+              "y": 374,
+              "width": 400,
+              "height": 300
+            },
+            "linkUri": "http://line.me/ti/p/@efr1869z?fbclid=IwAR36fJn196psyS8j-hK-TDa0QRkqVLQWazg9BNDLJBLNxeILkBtEeMKwZPM"
+          },
+          {
+            "type": "message",
+            "area": {
+              "x": 548,
+              "y": 372,
+              "width": 400,
+              "height": 300
+            },
+            "text": "Action 4"
+          }
+        ]
+      }
 
 
 
