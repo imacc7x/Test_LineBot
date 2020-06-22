@@ -255,7 +255,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     const connection = {
         "type": "imagemap",
-        "baseUrl": "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/Dark%20Blue%20and%20Orange%20Moustache%20Father's%20Day%20Card.png?alt=media&token=066e2d6a-0508-4345-b547-66fd49714a50",
+        "baseUrl": "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/Dark%20Blue%20and%20Orange%20Moustache%20Father's%20Day%20Card.jpg?alt=media&token=97044696-72e5-4c7a-a6b7-6f7eba3943c0",
         "altText": "This is an imagemap",
         "baseSize": {
           "width": 1040,
@@ -284,6 +284,7 @@ exports.handler = (request, response, firebaseAdmin) => {
           }
         ]
       }
+       
             
 
 
