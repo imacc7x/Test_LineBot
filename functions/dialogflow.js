@@ -395,11 +395,11 @@ exports.handler = (request, response, firebaseAdmin) => {
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
-    intentMap.set('Activating-confirm' , activatingConfirm);
-    intentMap.set('Set-gender',setGender);
-    intentMap.set('Set-age', setAge);
-    intentMap.set('Set-career' , setCareer);
-    intentMap.set('Set-alcohol' , setAlcohol);
+    intentMap.set('Activating Confirm' , activatingConfirm);
+    intentMap.set('Set Gender',setGender);
+    intentMap.set('Set Age', setAge);
+    intentMap.set('Set Career' , setCareer);
+    intentMap.set('Set Alcohol' , setAlcohol);
     // intentMap.set('Activating-not-confirm' , activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
