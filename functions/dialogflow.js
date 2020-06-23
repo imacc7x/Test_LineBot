@@ -13,14 +13,6 @@ exports.handler = (request, response, firebaseAdmin) => {
     const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
     const documentUser = firebaseAdmin.firestore().collection('Users').doc(userId);
 
-    // const delayReply = (agent , delayTime , messages) =>{
-    //     return new Promise((resolve, reject) =>{
-    //         setTimeout(() => {
-    //             resolve(agent.add(messages));
-    //         }, delayTime);
-    //     });
-    // }
-
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
     }
@@ -32,10 +24,84 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function activatingConfirm(agent) {
         agent.add('ขอบคุณมากค่ะ ดิฉันมั่นใจว่าข้อมูลที่คุณให้จะเป็นประโยชน์แก่ทีมผู้สรัางดิฉัน ในการพัฒนาการดูแลผู้ดื่มเหล้าต่อไปแน่นอนค่ะ');
-        setAge(agent);
+        agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ โปรดเลือกเพศของคุณ');
+        agnet.add(
+            createQuickReply(
+                'ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ โปรดเลือกเพศของคุณ',
+                [{ label: "ชาย", text: "ชาย" }, { label: "หญิง", text: "หญิง" }]
+            )
+        );
     }
 
-    function testSetAge(agent){
+    function setGender(agent){
+        const gender = agent.parameters.gender;
+        documentUser.update({
+            gender: gender
+        });
+        agent.add("คุณอายุเท่าไรคะ")
+    }
+
+    function setAge(agent) {
+        const age = agent.parameters.age;
+        documentUser.update({
+            age: age
+        });
+        agent.add(
+            createQuickReply(
+                "คุณทำงานอะไรเป็นอาชีพหลักคะ",
+                [{ label: "ข้าราชการ", text: "ข้าราชการ" }, { label: "ค้าขาย", text: "ค้าขาย" }, { label: "เกษตรกร", text: "เกษตรกร" }
+                , { label: "แพทย์", text: "แพทย์" }, { label: "อื่นๆ", text: "อื่นๆ" }]
+            )
+        );
+    }
+
+    function setCareer(agent) {
+        const career = agent.parameters.career;
+        documentUser.update({
+            career: career
+        });
+        // agent.add(
+        //     createQuickReply(
+        //         "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
+        //         [
+        //             { label: "ไม่เคย", text: "Never" },
+        //             { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
+        //             { label: "เดือนละ 2 - 4 ครั้ง", text: "2-4 times a month" },
+        //             { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "2-3 times a week" },
+        //             { label: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "More than 3 times a week" }
+        //         ]
+                
+        //     )
+        // );
+        agent.add(
+            createQuickReply(
+                "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
+                [
+                    { label: "เบียร์", text: "เบียร์" },
+                    { label: "สุราสี", text: "สุราสี" },
+                    { label: "สุราขาว", text: "สุราขาว" },
+                    { label: "ไวน์", text: "ไวน์" },
+                    { label: "น้ำขาว", text: "น้ำขาว" },
+                    { label: "อุ", text: "อุ" },
+                    { label: "กระแช่", text: "กระแช่" },
+                    { label: "สาโท", text: "สาโท" },
+                    { label: "สุราแช่", text: "สุราแช่" },
+                    { label: "เหล้าปั่น", text: "เหล้าปั่น" },
+                    { label: "เหล้าถัง", text: "เหล้าถัง" },
+                ]
+            )
+        );
+    }
+
+    function setAlcohol(agent){
+        const alcohol = agent.parameters.alcohol;
+        if(alcohol === "เบียร์"){
+            agent.add("it is beer");
+        }
+        documentUser.update({
+            alcohol: alcohol
+        });
+
         
     }
 
@@ -45,46 +111,9 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add(new Payload('LINE', connection ,{ sendAsMessage: true }));
     }
 
-    function setAge(agent) {
-        agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ คุณอายุเท่าไหร่คะ');
-        console.log("This is setProfile function");
-        console.log("userId: " + userId);
-        agent.add("Your userID: " + userId);
-        const age = agent.parameters.age;
-        agent.add("Your age: " + age);
-        documentUser.update({
-            age: age
-        });
+    
 
-        agent.add(
-            createQuickReply(
-                "คุณทำงานอะไรเป็นอาชีพหลักคะ",
-                [{ label: "ตำรวจ", text: "police" }, { label: "ทหาร", text: "soldier" }]
-            )
-        );
-    }
-
-    function setCareer(agent) {
-        console.log("This is setCareer function");
-        const career = agent.parameters.career;
-        agent.add("Your career: " + career);
-        documentUser.update({
-            career: career
-        });
-
-        agent.add(
-            createQuickReply(
-                "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
-                [
-                    { label: "ไม่เคย", text: "Never" },
-                    { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
-                    { label: "เดือนละ 2 - 4 ครั้ง", text: "2-4 times a month" },
-                    { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "2-3 times a week" },
-                    { label: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "More than 3 times a week" }
-                ]
-            )
-        );
-    }
+    
 
     function setAlcoholTime(agent) {
         console.log("This is setAlcoholTime function");
@@ -368,17 +397,10 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
     intentMap.set('Activating-confirm', activatingConfirm);
+    intentMap.set('Set-gender',setGender);
+    intentMap.set('Set-age', setAge);
+    intentMap.set('Set-career' , setCareer);
     intentMap.set('Activating-not-confirm' , activatingNotConfirm);
-    intentMap.set('Set Age', setAge);
-    intentMap.set('Set Career', setCareer);
-    intentMap.set('Set Alcohol Time', setAlcoholTime);
-    intentMap.set('Set Alcohol Type', setAlcoholType);
-    intentMap.set('Set Drink Amount', setDrinkAmount);
-    intentMap.set('Check Standard Drink', checkStandardDrink);
-    intentMap.set('Set Day Drink', setDayDrink);
-    intentMap.set('Set Drinking Time', setDrinkingTime);
-    intentMap.set('Set Person Drink With', setDrinkWith);
-    intentMap.set('Ask Stop Drinking  - yes',askStopDrinkingYes);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
