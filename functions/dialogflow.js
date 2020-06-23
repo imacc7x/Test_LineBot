@@ -24,7 +24,6 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function activatingConfirm(agent) {
         agent.add('ขอบคุณมากค่ะ ดิฉันมั่นใจว่าข้อมูลที่คุณให้จะเป็นประโยชน์แก่ทีมผู้สรัางดิฉัน ในการพัฒนาการดูแลผู้ดื่มเหล้าต่อไปแน่นอนค่ะ');
-        agent.add('ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ โปรดเลือกเพศของคุณ');
         agent.add(
             createQuickReply(
                 'ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ โปรดเลือกเพศของคุณ',
@@ -323,11 +322,11 @@ exports.handler = (request, response, firebaseAdmin) => {
         template: {
             type: "image_carousel",
             columns: [{
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbeer%2Fglass%20165ml.png?alt=media&token=b30e2f90-47f5-41b0-9edf-3eef1c2719b6",
+                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbeer%2Fglass%20165ml.jpg?alt=media&token=9a6d4909-6205-42a8-a868-d3cfe48e6d3d",
                 action: {
                     type: "message",
-                    label: "แก้ว",
-                    text: "แก้ว"
+                    label: "แก้ว 165ml",
+                    text: "แก้ว 165ml"
                 }
             },
             {
