@@ -395,7 +395,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
-    intentMap.set('Activating-confirm', activatingConfirm);
+    intentMap.set('Activating-confirm' , activatingConfirm);
     // intentMap.set('Set-gender',setGender);
     // intentMap.set('Set-age', setAge);
     // intentMap.set('Set-career' , setCareer);
