@@ -400,6 +400,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set-gender',setGender);
     intentMap.set('Set-age', setAge);
     intentMap.set('Set-career' , setCareer);
+    intentMap.set('Set-alcohol' , setAlcohol);
     intentMap.set('Activating-not-confirm' , activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
