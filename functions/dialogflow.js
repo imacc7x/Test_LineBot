@@ -127,7 +127,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                     if (alcohol === "เบียร์") {
                         agent.add(
                             createQuickReply(
-                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาพขนะประเภทใด",
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาชนะประเภทใด",
                                 [
                                     { label: "แก้ว", text: "แก้ว" },
                                     { label: "กระป๋อง", text: "กระป๋อง" },
@@ -505,6 +505,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol', setAlcohol);
     intentMap.set('Set Concentrated', setConcentrated);
+    intentMap.set('Set Container',setContainer);
     // intentMap.set('Activating-not-confirm' , activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
