@@ -149,9 +149,15 @@ exports.handler = (request, response, firebaseAdmin) => {
                 agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
             agent.add(new Payload('LINE', can, { sendAsMessage: true }));
         }
+    }
 
+    function setSize(agent){
+        const capacity = agent.parameters.capacity;
+        documentUser.update({
+            capacity: capacity
+        });
         agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
-        // allOptins(agent);
+        allOptins();
     }
 
     function allOptins(agent){
@@ -166,7 +172,6 @@ exports.handler = (request, response, firebaseAdmin) => {
             )
         );
     }
-
 
     function activatingNotConfirm(agent) {
         agent.add('ขอบคุณมากค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
@@ -409,50 +414,6 @@ exports.handler = (request, response, firebaseAdmin) => {
     }
 
 
-
-
-
-    const alocoholPackaging = {
-        type: "template",
-        altText: "Test image carousel",
-        template: {
-            type: "image_carousel",
-            columns: [{
-                imageUrl: "https://media.istockphoto.com/photos/empty-beer-mug-isolated-on-reflective-white-backdrop-picture-id466250650",
-                action: {
-                    type: "message",
-                    label: "1 แก้ว",
-                    text: "a glass"
-                }
-            },
-            {
-                imageUrl: "https://previews.123rf.com/images/inginsh/inginsh1101/inginsh110100001/8684636-blank-soda-can-with-white-background.jpg",
-                action: {
-                    type: "message",
-                    label: "1 กระป๋อง",
-                    text: "a can"
-                }
-            }
-                , {
-                imageUrl: "https://www.thecarycompany.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/3/0/30wlac_1.1551298042.jpg",
-                action: {
-                    type: "message",
-                    label: "1 ขวด",
-                    text: "a bottle"
-                }
-            }
-                , {
-                imageUrl: "https://cmkt-image-prd.freetls.fastly.net/0.1.0/ps/7348804/910/1164/m2/fpnw/wm1/vuf1opjg2xw9ilcutvopjcevlj6vu271lq0blhucjilbjcvk5cmr2tkcn9s4frum-.jpg?1574435212&s=d63dd26ee28560bb5c3a91fc55214ab9",
-                action: {
-                    type: "message",
-                    label: "3 ขวด",
-                    text: "3 bottles"
-                }
-            }
-            ]
-        }
-    }
-
     // // Uncomment and edit to make your own intent handler
     // // uncomment `intentMap.set('your intent name here', yourFunctionHandler);`
     // // below to get this function to be run when a Dialogflow intent is matched
@@ -493,7 +454,8 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Alcohol', setAlcohol);
     intentMap.set('Set Concentrated', setConcentrated);
     intentMap.set('Set Container',setContainer);
-    // intentMap.set('Activating-not-confirm' , activatingNotConfirm);
+    intentMap.set('Set Size', setSize);
+    intentMap.set('Activating Not Confirm' , activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
