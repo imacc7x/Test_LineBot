@@ -158,7 +158,7 @@ exports.handler = (request, response, firebaseAdmin) => {
         });
         agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
         // เรียกใช้ function ไม่ได้
-        allOptins();
+        // allOptins(agent);
     }
 
     function allOptins(agent){
