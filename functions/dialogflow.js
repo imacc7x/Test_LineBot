@@ -150,8 +150,23 @@ exports.handler = (request, response, firebaseAdmin) => {
             agent.add(new Payload('LINE', can, { sendAsMessage: true }));
         }
 
-
+        agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
+        allOptins(agent);
     }
+
+    function allOptins(agent){
+        agent.add(
+            createQuickReply(
+                "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
+                [
+                    { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
+                    { label: "รับคำแนะนำในการลดการดื่ม", text: "รับคำแนะนำในการลดการดื่ม" },
+                    { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" }
+                ]
+            )
+        );
+    }
+
 
     function activatingNotConfirm(agent) {
         agent.add('ขอบคุณมากค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
@@ -159,6 +174,7 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add(new Payload('LINE', connection, { sendAsMessage: true }));
     }
 
+   
 
 
 
