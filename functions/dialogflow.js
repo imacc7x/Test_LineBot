@@ -157,6 +157,7 @@ exports.handler = (request, response, firebaseAdmin) => {
             capacity: capacity
         });
         agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
+        // เรียกใช้ function ไม่ได้
         allOptins();
     }
 
