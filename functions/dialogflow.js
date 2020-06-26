@@ -116,21 +116,19 @@ exports.handler = (request, response, firebaseAdmin) => {
         const percent = agent.parameters.percent;
         // const alcohol = documentUser.get().then(doc => (doc.data().alcohol));
 
-        const alcohol = documentUser.get()
+        return alcohol = documentUser.get()
             .then(doc => {
                 // eslint-disable-next-line promise/always-return
                 if (!doc.exists) {
                     agent.add("Not Found");
                 } else {
-                    doc.data().alcohol_type;
+                    const alcohol = doc.data().alcohol;
+                    agent.add("set Con" + alcohol);
+                    documentUser.update({
+                        alcohol_concentrated: percent
+                    });
                 }
             });
-        agent.add("set Con" + alcohol);
-        documentUser.update({
-            alcohol_concentrated: percent
-        });
-
-
     }
 
     function activatingNotConfirm(agent) {
