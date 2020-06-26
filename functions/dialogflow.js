@@ -151,7 +151,7 @@ exports.handler = (request, response, firebaseAdmin) => {
         }
 
         agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
-        allOptins(agent);
+        // allOptins(agent);
     }
 
     function allOptins(agent){
