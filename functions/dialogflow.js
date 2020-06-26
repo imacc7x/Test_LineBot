@@ -114,8 +114,6 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function setConcentrated(agent) {
         const percent = agent.parameters.percent;
-        // const alcohol = documentUser.get().then(doc => (doc.data().alcohol));
-
         return alcohol = documentUser.get()
             .then(doc => {
                 // eslint-disable-next-line promise/always-return
@@ -123,12 +121,36 @@ exports.handler = (request, response, firebaseAdmin) => {
                     agent.add("Not Found");
                 } else {
                     const alcohol = doc.data().alcohol;
-                    agent.add("set Con" + alcohol);
                     documentUser.update({
                         alcohol_concentrated: percent
                     });
+                    if (alcohol === "เบียร์") {
+                        agent.add(
+                            createQuickReply(
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาพขนะประเภทใด",
+                                [
+                                    { label: "แก้ว", text: "แก้ว" },
+                                    { label: "กระป๋อง", text: "กระป๋อง" },
+                                    { label: "ขวด", text: "ขวด" }
+                                ]
+                            )
+                        );
+                    }
                 }
             });
+    }
+
+    function setContainer(agent) {
+        const container = agent.parameters.container;
+        documentUser.update({
+            container: container
+        });
+        if(container === "กระป๋อง"){
+                agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
+            agent.add(new Payload('LINE', beerContainer, { sendAsMessage: true }));
+        }
+
+
     }
 
     function activatingNotConfirm(agent) {
