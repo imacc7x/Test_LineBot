@@ -114,7 +114,17 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function setConcentrated(agent) {
         const percent = agent.parameters.percent;
-        const alcohol = documentUser.get().then(doc => (doc.data().alcohol));
+        // const alcohol = documentUser.get().then(doc => (doc.data().alcohol));
+
+        const alcohol = documentUser.get()
+            .then(doc => {
+                // eslint-disable-next-line promise/always-return
+                if (!doc.exists) {
+                    agent.add("Not Found");
+                } else {
+                    doc.data().alcohol_type;
+                }
+            });
         agent.add("set Con" + alcohol);
         documentUser.update({
             alcohol_concentrated: percent
@@ -474,7 +484,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Age', setAge);
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol', setAlcohol);
-    intentMap.set('Set Concentrated',setConcentrated);
+    intentMap.set('Set Concentrated', setConcentrated);
     // intentMap.set('Activating-not-confirm' , activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
