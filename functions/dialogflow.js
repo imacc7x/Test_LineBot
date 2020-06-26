@@ -111,6 +111,12 @@ exports.handler = (request, response, firebaseAdmin) => {
             //         ]
             //     )
             // );
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [{ label: "ชาย", text: "ชาย" }, { label: "หญิง", text: "หญิง" }]
+                )
+            );
         }
     }
 
