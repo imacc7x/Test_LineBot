@@ -97,27 +97,15 @@ exports.handler = (request, response, firebaseAdmin) => {
         documentUser.update({
             alcohol: alcohol
         });
-        agent.add("this is " + alcohol);
-        // agent.add("ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่คุณใช้ในการดื่มของคุณได้ดีที่สุดนะคะ");
         if (alcohol === "เบียร์") {
-            agent.add("this is (if)" + alcohol);
-            // agent.add(
-            //     createQuickReply(
-            //         "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
-            //         [
-            //             { label: "สิงห์ไลท์", text: "0.035" },
-            //             { label: "สิงห์/ไฮเนเกน/ลีโอ/เชียร์/ไทเกอร์/ช้างดราฟ", text: "0.05" },
-            //             { label: "ช้าง", text: "0.064" },
-            //         ]
-            //     )
-            // );
             agent.add(
                 createQuickReply(
                     "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
                     [
                         { label: "สิงห์ไลท์", text: "0.035" },
                         { label: "สิงห์/ไฮเนเกน/ลีโอ", text: "0.05" },
-                        { label: "ช้าง", text: "0.064" }
+                        { label: "ช้าง", text: "0.064" },
+                        { label: "อื่นๆ", text: "0.05" }
                     ]
                 )
             );
@@ -486,6 +474,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Age', setAge);
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol', setAlcohol);
+    intentMap.set('Set Concentrated',setConcentrated);
     // intentMap.set('Activating-not-confirm' , activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
