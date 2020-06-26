@@ -97,7 +97,7 @@ exports.handler = (request, response, firebaseAdmin) => {
         documentUser.update({
             alcohol: alcohol
         });
-           agent.add("this is " + alcohol);
+        agent.add("this is " + alcohol);
         // agent.add("ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่คุณใช้ในการดื่มของคุณได้ดีที่สุดนะคะ");
         if (alcohol === "เบียร์") {
             agent.add("this is (if)" + alcohol);
@@ -114,21 +114,24 @@ exports.handler = (request, response, firebaseAdmin) => {
             agent.add(
                 createQuickReply(
                     "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
-                    [{ label: "ชาย", text: "ชาย" }, { label: "หญิง", text: "หญิง" }]
+                    [
+                        { label: "สิงห์ไลท์", text: "0.035" },
+                        { label: "ช้าง", text: "0.064" }
+                    ]
                 )
             );
         }
     }
 
-    function setConcentrated(agent){
+    function setConcentrated(agent) {
         const percent = agent.parameters.percent;
-        const alcohol = documentUser.get().then(doc =>(doc.data().alcohol));
+        const alcohol = documentUser.get().then(doc => (doc.data().alcohol));
         agent.add("set Con" + alcohol);
         documentUser.update({
-            alcohol_concentrated : percent
+            alcohol_concentrated: percent
         });
 
-        
+
     }
 
     function activatingNotConfirm(agent) {
