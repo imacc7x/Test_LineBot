@@ -147,7 +147,7 @@ exports.handler = (request, response, firebaseAdmin) => {
         });
         if(container === "กระป๋อง"){
                 agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
-            agent.add(new Payload('LINE', beerContainer, { sendAsMessage: true }));
+            agent.add(new Payload('LINE', can, { sendAsMessage: true }));
         }
 
 
@@ -366,55 +366,26 @@ exports.handler = (request, response, firebaseAdmin) => {
         ]
     }
 
-    const beerContainer = {
+    const can = {
         type: "template",
-        altText: "beerContainer",
+        altText: "can",
         template: {
             type: "image_carousel",
-            columns: [{
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbeer%2Fglass%20165ml.jpg?alt=media&token=9a6d4909-6205-42a8-a868-d3cfe48e6d3d",
-                action: {
-                    type: "message",
-                    label: "แก้ว 165ml",
-                    text: "แก้ว 165ml"
-                }
-            },
+            columns: [
             {
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbeer%2Fcan%20330ml.jpg?alt=media&token=58cd76b2-a3f7-4435-8413-743ba1fa4be4",
+                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fcan%2Fcan%20330ml.jpg?alt=media&token=cfcf2d02-eae0-4e7b-9bcc-04e6d62af8a4",
                 action: {
                     type: "message",
                     label: "กระป๋อง 330ml",
-                    text: "กระป๋อง 330ml"
+                    text: "330"
                 }
             }
                 , {
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbeer%2Fcan%20500ml.jpg?alt=media&token=d937fcb4-3da3-4b59-8dcd-522283b2e34b",
+                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fcan%2Fcan%20500ml.jpg?alt=media&token=34a34a51-d110-4019-bd99-89d238089e65",
                 action: {
                     type: "message",
                     label: "กระป๋อง 500ml",
-                    text: "กระป๋อง 500ml"
-                }
-            }
-                , {
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbeer%2Fbottle%20330ml.jpg?alt=media&token=46ec0e3d-7456-450a-8db2-6e9bfffd51e2",
-                action: {
-                    type: "message",
-                    label: "ขวด 330ml",
-                    text: "ขวด 330ml"
-                }
-            }, {
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbeer%2Fbottle%20640ml.jpg?alt=media&token=d9576709-50de-4483-a6ca-615306fe9156",
-                action: {
-                    type: "message",
-                    label: "ขวด 640ml",
-                    text: "ขวด 640ml"
-                }
-            }, {
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbeer%2Fpitcher%201000ml.jpg?alt=media&token=80eeda05-c936-426e-a1c5-2664962213e6",
-                action: {
-                    type: "message",
-                    label: "เหยือก 1000ml",
-                    text: "เหยือก 1000ml"
+                    text: "500"
                 }
             }
             ]
