@@ -157,8 +157,17 @@ exports.handler = (request, response, firebaseAdmin) => {
             capacity: capacity
         });
         agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
-        // เรียกใช้ function ไม่ได้
-        // allOptins(agent);
+        agent.add(
+            createQuickReply(
+                "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
+                [
+                    { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
+                    { label: "รับคำแนะนำในการลดการดื่ม", text: "รับคำแนะนำในการลดการดื่ม" },
+                    { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" }
+                ]
+            )
+        );
+      
     }
 
     function allOptins(agent){
