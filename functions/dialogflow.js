@@ -140,9 +140,9 @@ exports.handler = (request, response, firebaseAdmin) => {
         }
     }
 
-    function setSize(agent) {
+    async function setSize(agent) {
         const capacity = agent.parameters.capacity;
-        documentUser.update({
+        await documentUser.update({
             capacity: capacity
         });
         agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
@@ -151,7 +151,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                 "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
                 [
                     { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
-                    { label: "รับคำแนะนำในการลดการดื่ม", text: "รับคำแนะนำในการลดการดื่ม" },
+                    { label: "รับคำแนะนำการลดการดื่ม", text: "รับคำแนะนำการลดการดื่ม" },
                     { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" }
                 ]
             )
