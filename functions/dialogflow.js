@@ -32,17 +32,17 @@ exports.handler = (request, response, firebaseAdmin) => {
         );
     }
 
-    function setGender(agent) {
+    async function setGender(agent) {
         const gender = agent.parameters.gender;
-        documentUser.update({
+        await documentUser.update({
             gender: gender
         });
         agent.add("คุณอายุเท่าไรคะ")
     }
 
-    function setAge(agent) {
+    async function setAge(agent) {
         const age = agent.parameters.age;
-        documentUser.update({
+        await documentUser.update({
             age: age
         });
         agent.add(
@@ -54,24 +54,11 @@ exports.handler = (request, response, firebaseAdmin) => {
         );
     }
 
-    function setCareer(agent) {
+    async function setCareer(agent) {
         const career = agent.parameters.career;
-        documentUser.update({
+        await documentUser.update({
             career: career
         });
-        // agent.add(
-        //     createQuickReply(
-        //         "คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
-        //         [
-        //             { label: "ไม่เคย", text: "Never" },
-        //             { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
-        //             { label: "เดือนละ 2 - 4 ครั้ง", text: "2-4 times a month" },
-        //             { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "2-3 times a week" },
-        //             { label: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "More than 3 times a week" }
-        //         ]
-
-        //     )
-        // );
         agent.add(
             createQuickReply(
                 "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
@@ -92,9 +79,9 @@ exports.handler = (request, response, firebaseAdmin) => {
         );
     }
 
-    function setAlcohol(agent) {
+    async function setAlcohol(agent) {
         const alcohol = agent.parameters.alcohol;
-        documentUser.update({
+        await documentUser.update({
             alcohol: alcohol
         });
         if (alcohol === "เบียร์") {
@@ -112,15 +99,17 @@ exports.handler = (request, response, firebaseAdmin) => {
         }
     }
 
-    function setConcentrated(agent) {
+    async function setConcentrated(agent) {
         const percent = agent.parameters.percent;
-        return alcohol = documentUser.get()
+        //alcohol =
+        return documentUser.get()
             .then(doc => {
                 // eslint-disable-next-line promise/always-return
                 if (!doc.exists) {
                     agent.add("Not Found");
                 } else {
                     const alcohol = doc.data().alcohol;
+                    agent.add("this is " + alcohol);
                     documentUser.update({
                         alcohol_concentrated: percent
                     });
@@ -140,18 +129,18 @@ exports.handler = (request, response, firebaseAdmin) => {
             });
     }
 
-    function setContainer(agent) {
+    async function setContainer(agent) {
         const container = agent.parameters.container;
-        documentUser.update({
+        await documentUser.update({
             container: container
         });
-        if(container === "กระป๋อง"){
-                agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
+        if (container === "กระป๋อง") {
+            agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
             agent.add(new Payload('LINE', can, { sendAsMessage: true }));
         }
     }
 
-    function setSize(agent){
+    function setSize(agent) {
         const capacity = agent.parameters.capacity;
         documentUser.update({
             capacity: capacity
@@ -167,20 +156,54 @@ exports.handler = (request, response, firebaseAdmin) => {
                 ]
             )
         );
-      
     }
 
-    function allOptins(agent){
+    function audit_C1(agent) {
         agent.add(
             createQuickReply(
-                "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
+                "ข้อแรก คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
                 [
-                    { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
-                    { label: "รับคำแนะนำในการลดการดื่ม", text: "รับคำแนะนำในการลดการดื่ม" },
-                    { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" }
+                    { label: "ไม่เคย", text: "ไม่เคย" },
+                    { label: "ไม่เกินเดือนละครั้ง", text: "ไม่เกินเดือนละครั้ง" },
+                    { label: "เดือนละ 2 - 4 ครั้ง", text: "เดือนละ 2 - 4 ครั้ง" },
+                    { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "สัปดาห์ละ 2 - 3 ครั้ง" },
+                    { label: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "มากกว่า 3 ครั้งต่อสัปดาห์" }
                 ]
+
             )
         );
+    }
+
+    function audit_C2(agent) {
+        const frequency = agent.parameters.frequency;
+        return documentUser.get()
+            .then(doc => {
+                // eslint-disable-next-line promise/always-return
+                if (!doc.exists) {
+                    agent.add("Not Found");
+                } else {
+                    const alcohol = doc.data().alcohol;
+                    const container = doc.data().container;
+                    documentUser.update({
+                        frequency: frequency
+                    });
+
+                    agent.add(
+                        createQuickReply(
+                            "โดยทั่วไปแล้ว ถ้าคุณดื่มคุณจะดื่ม" + alcohol + "ปริมาณเท่าไร",
+                            [
+                                { label: "1 " + container, text: "1" },
+                                { label: "2 " + container, text: "2" },
+                                { label: "3 " + container, text: "3" },
+                                { label: "4 " + container, text: "4" },
+                                { label: "5 " + container, text: "5" }
+                            ]
+            
+                        )
+                    );
+                }
+            });
+
     }
 
     function activatingNotConfirm(agent) {
@@ -189,7 +212,7 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add(new Payload('LINE', connection, { sendAsMessage: true }));
     }
 
-   
+
 
 
 
@@ -403,22 +426,22 @@ exports.handler = (request, response, firebaseAdmin) => {
         template: {
             type: "image_carousel",
             columns: [
-            {
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fcan%2Fcan%20330ml.jpg?alt=media&token=cfcf2d02-eae0-4e7b-9bcc-04e6d62af8a4",
-                action: {
-                    type: "message",
-                    label: "กระป๋อง 330ml",
-                    text: "330"
+                {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fcan%2Fcan%20330ml.jpg?alt=media&token=cfcf2d02-eae0-4e7b-9bcc-04e6d62af8a4",
+                    action: {
+                        type: "message",
+                        label: "กระป๋อง 330ml",
+                        text: "330"
+                    }
                 }
-            }
                 , {
-                imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fcan%2Fcan%20500ml.jpg?alt=media&token=34a34a51-d110-4019-bd99-89d238089e65",
-                action: {
-                    type: "message",
-                    label: "กระป๋อง 500ml",
-                    text: "500"
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fcan%2Fcan%20500ml.jpg?alt=media&token=34a34a51-d110-4019-bd99-89d238089e65",
+                    action: {
+                        type: "message",
+                        label: "กระป๋อง 500ml",
+                        text: "500"
+                    }
                 }
-            }
             ]
         }
     }
@@ -463,9 +486,10 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Career', setCareer);
     intentMap.set('Set Alcohol', setAlcohol);
     intentMap.set('Set Concentrated', setConcentrated);
-    intentMap.set('Set Container',setContainer);
+    intentMap.set('Set Container', setContainer);
     intentMap.set('Set Size', setSize);
-    intentMap.set('Activating Not Confirm' , activatingNotConfirm);
+    intentMap.set('Audit_C1', audit_C1);
+    intentMap.set('Activating Not Confirm', activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
     // intentMap.set('your intent name here', googleAssistantHandler);
