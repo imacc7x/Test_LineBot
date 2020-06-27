@@ -169,7 +169,6 @@ exports.handler = (request, response, firebaseAdmin) => {
                     { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "สัปดาห์ละ 2 - 3 ครั้ง" },
                     { label: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "มากกว่า 3 ครั้งต่อสัปดาห์" }
                 ]
-
             )
         );
     }
@@ -203,7 +202,36 @@ exports.handler = (request, response, firebaseAdmin) => {
                     );
                 }
             });
+    }
 
+    function audit_C3(agent){
+        const amount = agent.parameters.amount;
+        return documentUser.get()
+            .then(doc => {
+                // eslint-disable-next-line promise/always-return
+                if (!doc.exists) {
+                    agent.add("Not Found");
+                } else {
+                    const alcohol = doc.data().alcohol;
+                    const container = doc.data().container;
+                    documentUser.update({
+                        frequency: frequency
+                    });
+
+                    agent.add(
+                        createQuickReply(
+                            "ในช่วงปีที่แล้ว บ่อยแค่ไหนที่คุณดื่ม" + alcohol + " " + amount + " " + container,
+                            [
+                                { label: "ไม่เคย", text: "ไม่เคย" },
+                                { label: "ไม่เกินเดือนละครั้ง", text: "ไม่เกินเดือนละครั้ง" },
+                                { label: "เดือนละ 2 - 4 ครั้ง", text: "เดือนละ 2 - 4 ครั้ง" },
+                                { label: "สัปดาห์ละ 2 - 3 ครั้ง", text: "สัปดาห์ละ 2 - 3 ครั้ง" },
+                                { label: "มากกว่า 3 ครั้งต่อสัปดาห์", text: "มากกว่า 3 ครั้งต่อสัปดาห์" }
+                            ]
+                        )
+                    );
+                }
+            });
     }
 
     function activatingNotConfirm(agent) {
