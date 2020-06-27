@@ -416,6 +416,7 @@ exports.handler = (request, response, firebaseAdmin) => {
         }
     }
 
+    
     const connection = {
         "type": "imagemap",
         "baseUrl": "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/Dark%20Blue%20and%20Orange%20Moustache%20Father's%20Day%20Card.jpg?alt=media&token=97044696-72e5-4c7a-a6b7-6f7eba3943c0",
@@ -518,6 +519,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Size', setSize);
     intentMap.set('Audit_C1', audit_C1);
     intentMap.set('Audit_C2', audit_C2);
+    intentMap.set('Audit_C3', audit_C3);
     intentMap.set('Activating Not Confirm', activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
