@@ -489,6 +489,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Set Container', setContainer);
     intentMap.set('Set Size', setSize);
     intentMap.set('Audit_C1', audit_C1);
+    intentMap.set('Audit_C2', audit_C2);
     intentMap.set('Activating Not Confirm', activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
