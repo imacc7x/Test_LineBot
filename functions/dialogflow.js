@@ -288,8 +288,8 @@ exports.handler = (request, response, firebaseAdmin) => {
                         let b = amount * percent * capacity * 0.79 * 0.1;
                         let c = percent * capacity * 0.79;
                         let result = b/c;
-                        agent.add("1 unit: " + alcohol1Unit);
-                        agent.add("reduce: " + reduce);
+                        agent.add("1 unit: " + a);
+                        agent.add("reduce: " + b);
                         agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง' + result);
                     }
                     agent.add(
