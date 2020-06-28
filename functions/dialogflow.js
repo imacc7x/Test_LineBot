@@ -205,7 +205,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     }
 
     function audit_C3(agent){
-        const amount = agent.parameters.amount;
+        const amount = parseFloat(agent.parameters.amount);
         return documentUser.get()
             .then(doc => {
                 // eslint-disable-next-line promise/always-return
@@ -214,8 +214,8 @@ exports.handler = (request, response, firebaseAdmin) => {
                 } else {
                     const alcohol = doc.data().alcohol;
                     const container = doc.data().container;
-                    const percent = doc.data().alcohol_concentrated;
-                    const capacity = agent.parameters.capacity;
+                    const percent = parseFloat(doc.data().alcohol_concentrated);
+                    const capacity = parseFloat(doc.data().capacity);
                     const gender = doc.data().gender;
                     let drinkingPoint = 6;
                     documentUser.update({
