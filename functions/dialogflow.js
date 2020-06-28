@@ -224,7 +224,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                     const percent = parseFloat(doc.data().alcohol_concentrated);
                     const capacity = parseFloat(doc.data().capacity);
                     const gender = doc.data().gender;
-                    const advice = doc.ata().advice;
+                    const advice = doc.data().advice;
                     let drinkingPoint = 6;
                     documentUser.update({
                         amount: amount
