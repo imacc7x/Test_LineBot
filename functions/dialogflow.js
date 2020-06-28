@@ -226,7 +226,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                         drinkingPoint = 8;
                     }
 
-                    const result = drinkingPoint/(0.79 * percent * capacity);
+                    const result = (drinkingPoint * 10) / (0.79 * percent * capacity);
                     agent.add("result: " + result);
 
                     agent.add(
