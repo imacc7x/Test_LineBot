@@ -285,7 +285,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                     // eslint-disable-next-line eqeqeq
                     if(advice == 1){
                         let alcohol1Unit = percent * capacity * 0.79;
-                        let reduce = amount * alcohol1Unit * 0.1 * 0.79;
+                        let reduce = amount * alcohol1Unit * 0.1 ;
                         agent.add("1 unit: " + alcohol1Unit);
                         agent.add("reduce: " + reduce);
                         agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง');
