@@ -35,7 +35,8 @@ exports.handler = (request, response, firebaseAdmin) => {
     async function setGender(agent) {
         const gender = agent.parameters.gender;
         await documentUser.update({
-            gender: gender
+            gender: gender,
+            advice: 0
         });
         agent.add("คุณอายุเท่าไรคะ")
     }
@@ -158,7 +159,13 @@ exports.handler = (request, response, firebaseAdmin) => {
         );
     }
 
-    function audit_C1(agent) {
+    async function audit_C1(agent) {
+        text = agent.parameters.options;
+        if(text === "รับคำแนะนำการลดการดื่ม"){
+            await documentUser.update({
+                advice: 1
+            });
+        }
         agent.add(
             createQuickReply(
                 "ข้อแรก คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
@@ -217,6 +224,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                     const percent = parseFloat(doc.data().alcohol_concentrated);
                     const capacity = parseFloat(doc.data().capacity);
                     const gender = doc.data().gender;
+                    const advice = doc.ata().advice;
                     let drinkingPoint = 6;
                     documentUser.update({
                         amount: amount
@@ -241,6 +249,10 @@ exports.handler = (request, response, firebaseAdmin) => {
                             ]
                         )
                     );
+
+                    // if(advice == 1){
+                    //     agent
+                    // }
                 }
             });
     }
@@ -268,7 +280,17 @@ exports.handler = (request, response, firebaseAdmin) => {
                     }
 
                     const result = ((drinkingPoint * 10) / (0.79 * percent * capacity)).toFixed(0);
-                    agent.add("ระดับที่คุณนั้นดื่ม" + alcohol +"นั้นได้ไม่เกิน" + " " + result + " " +container)
+                    agent.add("ระดับที่คุณดื่ม" + alcohol +"ได้นั้นไม่เกิน" + " " + result + " " +container+"นะ");
+                    agent.add(
+                        createQuickReply(
+                            "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
+                            [
+                                { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
+                                { label: "รับคำแนะนำการลดการดื่ม", text: "รับคำแนะนำการลดการดื่ม" },
+                                { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" }
+                            ]
+                        )
+                    );
                 }
             });
             
@@ -304,121 +326,6 @@ exports.handler = (request, response, firebaseAdmin) => {
                 ]
             )
         );
-    }
-
-    // function setAlcoholType(agent) {
-    //     console.log("This is setAlcoholTime function");
-    //     const type = agent.parameters.alcohol_type;
-    //     agent.add("Type: " + type);
-    //     documentUser.update({
-    //         alcohol_type: type
-    //     });
-
-    //     agent.add("ดิฉันอยากรู้ปริมาณการดื่มที่คุณดื่มบ่อยๆค่ะ ช่วยเลือกรูปที่อธิบายปริมาณการดื่มของคุณได้ดีที่สุดนะคะ");
-    //     agent.add(new Payload('LINE', alocoholPackaging, { sendAsMessage: true }));
-    // }
-
-    function setDrinkAmount(agent) {
-        const drinkAmount = agent.parameters.drink_amount;
-        agent.add("Amount: " + drinkAmount);
-        documentUser.update({
-            drink_amount: drinkAmount
-        })
-
-
-
-        return documentUser.get()
-            // eslint-disable-next-line promise/always-return
-            .then(doc => {
-                // eslint-disable-next-line promise/always-return
-                agent.add(createQuickReply(
-                    "คุณดื่ม" + doc.data().alcohol_type +
-                    "ในครั้งเดียวมากกว่าปริมาณของ" + doc.data().alcohol_type + "จำนวน 6 ดื่มมาตรฐานบ่อยแค่ไหนคะ",
-                    [
-                        { label: "ไม่เคยเลย", text: "never" },
-                        { label: "ไม่เกินเดือนละครั้ง", text: "Not more than once a month" },
-                        { label: "ทุกเดือน", text: "Every month" },
-                        { label: "ทุกสัปดาห์", text: "every week" },
-                        { label: "ทุกวันหรือเกือบทุกวัน", text: "Every day or almost every day" }
-                    ]
-                )
-                );
-            });
-    }
-
-    function checkStandardDrink(agent) {
-        const check = agent.parameters.alcohol_time;
-        agent.add("check: " + check);
-        documentUser.update({
-            drink_more_than_standard: check
-        })
-
-        agent.add(
-            createQuickReply("โดยส่วนใหญ่แล้วคุณมักดื่มมากเป็นพิเศษวันไหนคะ",
-                [
-                    { label: "วันอาทิตย์", text: "วันอาทิตย์" },
-                    { label: "วันจันทร์", text: "วันจันทร์" },
-                    { label: "วันอังคาร", text: "วันอังคาร" },
-                    { label: "วันพุธ", text: "วันพุธ" },
-                    { label: "วันพฤหัสบดี", text: "วันพฤหัสบดี" },
-                    { label: "วันศุกร์", text: "วันศุกร์" },
-                    { label: "วันเสาร์", text: "วันเสาร์" },
-                    { label: "วันอาทิตย์", text: "วันอาทิตย์" }
-                ]
-            )
-        );
-    }
-
-    function setDayDrink(agent) {
-        const day = agent.parameters.days;
-        documentUser.update({
-            day_drink: day
-        })
-        agent.add(createQuickReply(
-            "แล้วช่วงเวลาที่คุณมักจะดื่ม เป็นเวลาช่วงไหนคะ",
-            [
-                { label: "เช้า-สาย", text: "เช้า-สาย" },
-                { label: "เที่ยง-บ่าย", text: "เที่ยง-บ่าย" },
-                { label: "เย็น-ค่ำ", text: "เย็น-ค่ำ" },
-                { label: "ก่อนนอน", text: "ก่อนนอน" }
-            ]
-        ));
-    }
-
-    function setDrinkingTime(agent) {
-        const time = agent.parameters.time_period;
-        documentUser.update({
-            time_period: time
-        })
-        agent.add("โดยส่วนใหญ่แล้วคุณมักจะดื่มกับใครคะ หรือดื่มคนเดียว ");
-    }
-
-    function setDrinkWith(agent) {
-        const person = agent.parameters.person;
-        documentUser.update({
-            person: person
-        })
-
-        // eslint-disable-next-line promise/always-return
-        return documentUser.get().then(doc => {
-            agent.add("เท่าที่ดิฉันรู้จากข้อมูลที่คุณให้ ฉันอยากให้คุณดื่ม " + doc.data().alcohol_type + "วันละไม่เกิน...ค่ะ");
-            agent.add("นั่นเป็นปริมาณที่จะไม่ส่งผลเสียต่อสุขภาพมากนะคะ");
-            agent.add(createQuickReply("คุณเคยพยายามจะหยุดหรือลดมันบ้างไหมคะ",
-                [
-                    { label: "เคย", text: "เคย" },
-                    { label: "ไม่เคย", text: "ไม่เคย" }
-                ]));
-        });
-    }
-
-    function askStopDrinkingYes(agent) {
-        agent.add("ดีใจจังค่ะ ที่คุณเคยพยายามหยุดมัน");
-        agent.add(createQuickReply("ตอนนั้นคุณมีอาการผิดปรกติอะไรบ้างไหมคะ",
-            [
-                { label: "มี", text: "ไม่มี" },
-                { label: "ไม่มี", text: "ไม่มี" }
-            ]));
-        test(agent);
     }
 
     function test(agent) {
