@@ -165,6 +165,10 @@ exports.handler = (request, response, firebaseAdmin) => {
             await documentUser.update({
                 advice: 1
             });
+        }else{
+            await documentUser.update({
+                advice: 0
+            });
         }
         agent.add(
             createQuickReply(
@@ -224,7 +228,6 @@ exports.handler = (request, response, firebaseAdmin) => {
                     const percent = parseFloat(doc.data().alcohol_concentrated);
                     const capacity = parseFloat(doc.data().capacity);
                     const gender = doc.data().gender;
-                    const advice = doc.data().advice;
                     let drinkingPoint = 6;
                     documentUser.update({
                         amount: amount
@@ -249,10 +252,6 @@ exports.handler = (request, response, firebaseAdmin) => {
                             ]
                         )
                     );
-
-                    // if(advice == 1){
-                    //     agent
-                    // }
                 }
             });
     }
@@ -270,6 +269,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                     const percent = parseFloat(doc.data().alcohol_concentrated);
                     const capacity = parseFloat(doc.data().capacity);
                     const gender = doc.data().gender;
+                    const advice = doc.data().advice;
                     let drinkingPoint = 6;
                     documentUser.update({
                         excess_drinking_frequency: container
@@ -281,6 +281,10 @@ exports.handler = (request, response, firebaseAdmin) => {
 
                     const result = ((drinkingPoint * 10) / (0.79 * percent * capacity)).toFixed(0);
                     agent.add("ระดับที่คุณดื่ม" + alcohol +"ได้นั้นไม่เกิน" + " " + result + " " +container+"นะ");
+                    // eslint-disable-next-line eqeqeq
+                    if(advice == 1){
+                        agent.add('this is 1');
+                    }
                     agent.add(
                         createQuickReply(
                             "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
@@ -291,6 +295,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                             ]
                         )
                     );
+                    
                 }
             });
             
@@ -300,32 +305,6 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add('ขอบคุณมากค่ะ แม้ว่าคุณจะไม่อนุญาตในตอนนี้ ดิฉันก็จะตั้งใจให้คำปรึกษาคุณอย่างเต็มที่ค่ะ และจะขอโอกาสขออนุญาตอีกครั้งหน้านะคะ ^^');
         agent.add('คุณยังสามารถเลือกขอคำปรึกษาผ่านบริการอื่นๆได้ดังนี้');
         agent.add(new Payload('LINE', connection, { sendAsMessage: true }));
-    }
-
-
-
-
-
-
-    function setAlcoholTime(agent) {
-        console.log("This is setAlcoholTime function");
-        const time = agent.parameters.alcohol_time;
-        agent.add("Time: " + time);
-        documentUser.update({
-            alcohol_time: time
-        });
-
-        agent.add(
-            createQuickReply(
-                "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
-                [
-                    { label: "เบียร์", text: "beer" },
-                    { label: "ไวน์", text: "wine" },
-                    { label: "สุรา", text: "spirits" },
-                    { label: "วอดก้า", text: "vodka" }
-                ]
-            )
-        );
     }
 
     function test(agent) {
