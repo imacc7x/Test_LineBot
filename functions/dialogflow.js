@@ -284,11 +284,13 @@ exports.handler = (request, response, firebaseAdmin) => {
                     agent.add("ระดับที่คุณดื่ม" + alcohol +"ได้นั้นไม่เกิน" + " " + result + " " +container+"นะ");
                     // eslint-disable-next-line eqeqeq
                     if(advice == 1){
-                        let alcohol1Unit = percent * capacity * 0.79;
-                        let reduce = amount * alcohol1Unit * 0.1 ;
+                        let a = amount * percent * capacity * 0.79;
+                        let b = amount * percent * capacity * 0.79 * 0.1;
+                        let c = percent * capacity * 0.79;
+                        let result = b/c;
                         agent.add("1 unit: " + alcohol1Unit);
                         agent.add("reduce: " + reduce);
-                        agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง');
+                        agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง' + result);
                     }
                     agent.add(
                         createQuickReply(
