@@ -283,7 +283,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                     agent.add("ระดับที่คุณดื่ม" + alcohol +"ได้นั้นไม่เกิน" + " " + result + " " +container+"นะ");
                     // eslint-disable-next-line eqeqeq
                     if(advice == 1){
-                        agent.add('this is 1');
+                        agent.add('ถ้าคุณอยากลดการดื่ม ในการดื่มครั้งถัดๆไป คุณควรลดการดื่ม');
                     }
                     agent.add(
                         createQuickReply(
