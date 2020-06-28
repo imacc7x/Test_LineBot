@@ -231,7 +231,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
                     agent.add(
                         createQuickReply(
-                            "ในช่วงปีที่แล้ว บ่อยแค่ไหนที่คุณดื่ม" + alcohol + "มากกว่า",
+                            "ในช่วงปีที่แล้ว บ่อยแค่ไหนที่คุณดื่ม" + alcohol + "มากกว่า " + result + " " + container,
                             [
                                 { label: "ไม่เคย", text: "ไม่เคย" },
                                 { label: "ไม่เกินเดือนละครั้ง", text: "ไม่เกินเดือนละครั้ง" },
@@ -243,6 +243,34 @@ exports.handler = (request, response, firebaseAdmin) => {
                     );
                 }
             });
+    }
+
+    function audit_C3End(agent){
+        frequency = agent.parameters.frequency;
+        return documentUser.get()
+            .then(doc => {
+                // eslint-disable-next-line promise/always-return
+                if (!doc.exists) {
+                    agent.add("Not Found");
+                } else {
+                    const alcohol = doc.data().alcohol;
+                    const container = doc.data().container;
+                    const percent = parseFloat(doc.data().alcohol_concentrated);
+                    const capacity = parseFloat(doc.data().capacity);
+                    const gender = doc.data().gender;
+                    documentUser.update({
+                        excess_drinking_frequency: container
+                    });
+
+                    if (gender === "ชาย"){
+                        drinkingPoint = 8;
+                    }
+
+                    const result = ((drinkingPoint * 10) / (0.79 * percent * capacity)).toFixed(0);
+                    agent.add("ระดับที่คุณนั้นดื่ม" + alcohol +"นั้นได้ไม่เกิน" + " " + result + " " +container)
+                }
+            });
+            
     }
 
     function activatingNotConfirm(agent) {
@@ -531,6 +559,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Audit_C1', audit_C1);
     intentMap.set('Audit_C2', audit_C2);
     intentMap.set('Audit_C3', audit_C3);
+    intentMap.set('Audit_C3 End',audit_C3End);
     intentMap.set('Activating Not Confirm', activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
