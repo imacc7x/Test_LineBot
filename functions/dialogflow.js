@@ -264,6 +264,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                 if (!doc.exists) {
                     agent.add("Not Found");
                 } else {
+                    const amount = doc.data().amount;
                     const alcohol = doc.data().alcohol;
                     const container = doc.data().container;
                     const percent = parseFloat(doc.data().alcohol_concentrated);
@@ -283,7 +284,11 @@ exports.handler = (request, response, firebaseAdmin) => {
                     agent.add("ระดับที่คุณดื่ม" + alcohol +"ได้นั้นไม่เกิน" + " " + result + " " +container+"นะ");
                     // eslint-disable-next-line eqeqeq
                     if(advice == 1){
-                        agent.add('ถ้าคุณอยากลดการดื่ม ในการดื่มครั้งถัดๆไป คุณควรลดการดื่ม');
+                        let alcohol1Unit = percent * capacity * 0.79;
+                        let reduce = (amount * alcohol1Unit * 0.1) /10;
+                        agnet.add("1 unit: " + alcohol1Unit);
+                        agnet.add("reduce: " + reduce);
+                        agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง');
                     }
                     agent.add(
                         createQuickReply(
