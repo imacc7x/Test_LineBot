@@ -290,7 +290,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                         let result = b/c;
                         agent.add("1 unit: " + a);
                         agent.add("reduce: " + b);
-                        agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง' + result);
+                        agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง' + result +" "+ container+"ต่อการดื่มทุกๆ 3-4 ครั้งคะ");
                     }
                     agent.add(
                         createQuickReply(
