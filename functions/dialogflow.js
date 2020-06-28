@@ -214,13 +214,24 @@ exports.handler = (request, response, firebaseAdmin) => {
                 } else {
                     const alcohol = doc.data().alcohol;
                     const container = doc.data().container;
+                    const percent = doc.data().alcohol_concentrated;
+                    const capacity = agent.parameters.capacity;
+                    const gender = doc.data().gender;
+                    let drinkingPoint = 6;
                     documentUser.update({
                         amount: amount
                     });
 
+                    if (gender === "ชาย"){
+                        drinkingPoint = 8;
+                    }
+
+                    const result = 0.79 * percent * capacity
+                    agent.add("result: " + result);
+
                     agent.add(
                         createQuickReply(
-                            "ในช่วงปีที่แล้ว บ่อยแค่ไหนที่คุณดื่ม" + alcohol + " " + amount + " " + container,
+                            "ในช่วงปีที่แล้ว บ่อยแค่ไหนที่คุณดื่ม" + alcohol + "มากกว่า",
                             [
                                 { label: "ไม่เคย", text: "ไม่เคย" },
                                 { label: "ไม่เกินเดือนละครั้ง", text: "ไม่เกินเดือนละครั้ง" },
