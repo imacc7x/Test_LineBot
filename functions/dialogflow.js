@@ -82,6 +82,7 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     async function setAlcohol(agent) {
         const alcohol = agent.parameters.alcohol;
+        agent.add(alcohol);
         await documentUser.update({
             alcohol: alcohol
         });
@@ -104,9 +105,9 @@ exports.handler = (request, response, firebaseAdmin) => {
                     [
                         { label: "หงส์ทอง", text: "0.35" },
                         { label: "เบลนด์ 285", text: "0.35" },
-                        { label: "คราวน์ 99/แม่โขง", text: "0.35" },
-                        { label: "สุราสี 35 ดีกรี", text: "0.35" },
-                        { label: "สุราสี 40 ดีกรี", text: "0.4" },
+                        { label: "แม่โขง", text: "0.35" },
+                        { label: "35 ดีกรี", text: "0.35" },
+                        { label: "40 ดีกรี", text: "0.4" },
                         { label: "อื่นๆ", text: "0.4" }
                     ]
                 )
@@ -116,8 +117,8 @@ exports.handler = (request, response, firebaseAdmin) => {
                 createQuickReply(
                     "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
                     [
-                        { label: "สุราขาว 35 ดีกรี", text: "0.35" },
-                        { label: "สุราขาว 40 ดีกรี", text: "0.4" },
+                        { label: "35 ดีกรี", text: "0.35" },
+                        { label: "40 ดีกรี", text: "0.4" },
                         { label: "อื่นๆ", text: "0.35" }
                     ]
                 )
