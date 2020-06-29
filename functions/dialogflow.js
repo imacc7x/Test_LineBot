@@ -102,8 +102,8 @@ exports.handler = (request, response, firebaseAdmin) => {
                 createQuickReply(
                     "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
                     [
-                        { label: "มังกรทอง/หงส์ทอง", text: "0.35" },
-                        { label: "285 ซิกเนเจอร์/เบลนด์ 285", text: "0.35" },
+                        { label: "หงส์ทอง", text: "0.35" },
+                        { label: "เบลนด์ 285", text: "0.35" },
                         { label: "คราวน์ 99/แม่โขง", text: "0.35" },
                         { label: "สุราสี 35 ดีกรี", text: "0.35" },
                         { label: "สุราสี 40 ดีกรี", text: "0.4" },
@@ -117,7 +117,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                     "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
                     [
                         { label: "สุราขาว 35 ดีกรี", text: "0.35" },
-                        { label: "สุราขาวตรา 40 ดีกรี", text: "0.4" },
+                        { label: "สุราขาว 40 ดีกรี", text: "0.4" },
                         { label: "อื่นๆ", text: "0.35" }
                     ]
                 )
