@@ -97,7 +97,75 @@ exports.handler = (request, response, firebaseAdmin) => {
                     ]
                 )
             );
+        } else if (alcohol === "สุราสี") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "มังกรทอง/หงส์ทอง", text: "0.35" },
+                        { label: "เบลนด์ 285 ซิกเนเจอร์/เบลนด์ 285", text: "0.35" },
+                        { label: "คราวน์ 99/แม่โขง", text: "0.35" },
+                        { label: "สุราสี 35 ดีกรี", text: "0.35" },
+                        { label: "สุราสี 40 ดีกรี", text: "0.4" },
+                        { label: "อื่นๆ", text: "0.4" }
+                    ]
+                )
+            );
+        }else if (alcohol === "สุราขาว") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "สุราขาว 35 ดีกรี", text: "0.35" },
+                        { label: "สุราขาวตรา 40 ดีกรี", text: "0.4" },
+                        { label: "อื่นๆ", text: "0.35" }
+                    ]
+                )
+            );
+        }else if (alcohol === "ไวน์") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "ไวน์แดง", text: "0.10" },
+                        { label: "ไวน์ขาว", text: "0.10" },
+                        { label: "ไวน์คูลเลอร์", text: "0.06" },
+                        { label: "อื่นๆ", text: "0.11" }
+                    ]
+                )
+            );
         }
+        else if (alcohol === "น้ำขาว" || alcohol === "อุ" || alcohol === "กระแช่") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "อื่นๆ", text: "0.10" }
+                    ]
+                )
+            );
+        }else if (alcohol === "สาโท" || alcohol === "สุราแช่") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "อื่นๆ", text: "0.06" }
+                    ]
+                )
+            );
+        }else if (alcohol === "เหล้าปั่น" || alcohol === "เหล้าถัง") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "สุรา 35 ดีกรี", text: "0.35" },
+                        { label: "สุรา 40 ดีกรี", text: "0.4" },
+                        { label: "อื่นๆ", text: "0.35" }
+                    ]
+                )
+            );
+        }
+        
     }
 
     async function setConcentrated(agent) {
@@ -125,6 +193,36 @@ exports.handler = (request, response, firebaseAdmin) => {
                                 ]
                             )
                         );
+                    }else if (alcohol === "สุราสี" || alcohol === "สุราขาว" ) {
+                        agent.add(
+                            createQuickReply(
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาชนะประเภทใด",
+                                [
+                                    { label: "เป๊ก", text: "เป๊ก" },
+                                    { label: "ขวด", text: "ขวด" }
+                                ]
+                            )
+                        );
+                    }else if (alcohol === "ไวน์") {
+                        agent.add(
+                            createQuickReply(
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาชนะประเภทใด",
+                                [
+                                    { label: "แก้ว", text: "แก้ว" },
+                                    { label: "ขวด", text: "ขวด" }
+                                ]
+                            )
+                        );
+                    }else {
+                        agent.add(
+                            createQuickReply(
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาชนะประเภทใด",
+                                [
+                                    { label: "เป๊ก", text: "เป๊ก" },
+                                    { label: "ตอง", text: "ตอง" }
+                                ]
+                            )
+                        );
                     }
                 }
             });
@@ -138,6 +236,13 @@ exports.handler = (request, response, firebaseAdmin) => {
         if (container === "กระป๋อง") {
             agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
             agent.add(new Payload('LINE', can, { sendAsMessage: true }));
+        }else if (container === "ขวด") {
+            agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
+            agent.add(new Payload('LINE', bottle, { sendAsMessage: true }));
+        }
+        else if (container === "แก้ว" || container === "เป๊ก" ) {
+            agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
+            agent.add(new Payload('LINE', glass, { sendAsMessage: true }));
         }
     }
 
@@ -153,7 +258,8 @@ exports.handler = (request, response, firebaseAdmin) => {
                 [
                     { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
                     { label: "รับคำแนะนำการลดการดื่ม", text: "รับคำแนะนำการลดการดื่ม" },
-                    { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" }
+                    { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" },
+                    { label: "จบการทำงาน" , text: "จบการทำงาน"}
                 ]
             )
         );
@@ -298,7 +404,8 @@ exports.handler = (request, response, firebaseAdmin) => {
                             [
                                 { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
                                 { label: "รับคำแนะนำการลดการดื่ม", text: "รับคำแนะนำการลดการดื่ม" },
-                                { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" }
+                                { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" },
+                                { label: "จบการทำงาน" , text: "จบการทำงาน"}
                             ]
                         )
                     );
@@ -382,6 +489,39 @@ exports.handler = (request, response, firebaseAdmin) => {
         ]
     }
 
+    const glass = {
+        type: "template",
+        altText: "glass",
+        template: {
+            type: "image_carousel",
+            columns: [
+                {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fglass%2Fshot%20glass%2050ml.jpg?alt=media&token=8de6c555-aacc-4407-99a6-8a5d764ec581",
+                    action: {
+                        type: "message",
+                        label: "แก้ว 50ml",
+                        text: "330"
+                    }
+                }
+                , {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fglass%2Fglass%20100ml.jpg?alt=media&token=8985bffe-a6c2-42c7-8b3a-851e649ff824",
+                    action: {
+                        type: "message",
+                        label: "แก้ว 100ml",
+                        text: "100"
+                    }
+                }, {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fglass%2Fglass%20165ml.jpg?alt=media&token=89bffe5d-3cf2-44a3-9ebe-ed179536b32c",
+                    action: {
+                        type: "message",
+                        label: "แก้ว 165ml",
+                        text: "165"
+                    }
+                }
+            ]
+        }
+    }
+
     const can = {
         type: "template",
         altText: "can",
@@ -402,6 +542,74 @@ exports.handler = (request, response, firebaseAdmin) => {
                         type: "message",
                         label: "กระป๋อง 500ml",
                         text: "500"
+                    }
+                }
+            ]
+        }
+    }
+
+    const bottle = {
+        type: "template",
+        altText: "bottle",
+        template: {
+            type: "image_carousel",
+            columns: [
+                {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbottle%2Fbottle%20275ml.jpg?alt=media&token=c292c23f-98f0-439d-a2fc-38951943a7a1",
+                    action: {
+                        type: "message",
+                        label: "ขวด 275ml",
+                        text: "275"
+                    }
+                }
+                , {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbottle%2Fbottle%20330ml.jpg?alt=media&token=9fbd4c74-83b8-442e-8aa3-ec7de5b2d170",
+                    action: {
+                        type: "message",
+                        label: "ขวด 330ml",
+                        text: "330"
+                    }
+                }, {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbottle%2Fbottle%20350%20ml.jpg?alt=media&token=a8a9606f-4112-4a92-a708-67664b5fa270",
+                    action: {
+                        type: "message",
+                        label: "ขวด 350ml",
+                        text: "350"
+                    }
+                }, {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbottle%2Fbottle%20500%20ml.jpg?alt=media&token=0a6ed76b-62ef-4141-aa6c-b56c2f5e75eb",
+                    action: {
+                        type: "message",
+                        label: "ขวด 500ml",
+                        text: "500"
+                    }
+                }, {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbottle%2Fbottle%20640ml.jpg?alt=media&token=7f643c9e-2534-46e1-9bcf-4a0143e27053",
+                    action: {
+                        type: "message",
+                        label: "ขวด 640ml",
+                        text: "640"
+                    }
+                }, {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbottle%2Fbottle%20700ml.jpg?alt=media&token=be7a2074-b0b4-4281-9c79-efd5a6ff988d",
+                    action: {
+                        type: "message",
+                        label: "ขวด 700ml",
+                        text: "700"
+                    }
+                }, {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbottle%2Fbottle%20750ml.jpg?alt=media&token=6ebd5ac4-b580-4a85-8b3f-05f13b5212cf",
+                    action: {
+                        type: "message",
+                        label: "ขวด 750ml",
+                        text: "750"
+                    }
+                }, {
+                    imageUrl: "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/container%2Fbottle%2Fbottle%201000ml.jpg?alt=media&token=3b170158-6771-4966-a3c7-3cd7be94af99",
+                    action: {
+                        type: "message",
+                        label: "ขวด 1000ml",
+                        text: "1000"
                     }
                 }
             ]
