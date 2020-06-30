@@ -409,8 +409,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                                 { label: "จบการทำงาน" , text: "จบการทำงาน"}
                             ]
                         )
-                    );
-                    
+                    );  
                 }
             });
             
@@ -418,6 +417,20 @@ exports.handler = (request, response, firebaseAdmin) => {
 
     function end(agent){
         agent.add("ขอบคุณที่ใช้งาน สามารถทักมาได้ตลอดทุกเมื่อเลยนะ");
+    }
+
+    function allOptions(agent){
+        agent.add(
+            createQuickReply(
+                "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
+                [
+                    { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
+                    { label: "รับคำแนะนำการลดการดื่ม", text: "รับคำแนะนำการลดการดื่ม" },
+                    { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" },
+                    { label: "จบการทำงาน" , text: "จบการทำงาน"}
+                ]
+            )
+        ); 
     }
 
     function activatingNotConfirm(agent) {
@@ -637,6 +650,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     intentMap.set('Audit_C3', audit_C3);
     intentMap.set('Audit_C3 End',audit_C3End);
     intentMap.set('End' , end);
+    intentMap.set('All Options', allOptions);
     intentMap.set('Activating Not Confirm', activatingNotConfirm);
     intentMap.set('test', test);
     // intentMap.set('your intent name here', yourFunctionHandler);
