@@ -461,10 +461,10 @@ exports.handler = (request, response, firebaseAdmin) => {
         }
     }
 
-    
+
     const connection = {
         "type": "imagemap",
-        "baseUrl": "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/Dark%20Blue%20and%20Orange%20Moustache%20Father's%20Day%20Card.jpg?alt=media&token=97044696-72e5-4c7a-a6b7-6f7eba3943c0",
+        "baseUrl": "https://firebasestorage.googleapis.com/v0/b/test-chatbot-uyotlh.appspot.com/o/Dark%20Blue%20and%20Orange%20Moustache%20Father's%20Day%20Card%20(1)%20(1).png?alt=media&token=ed6948ca-faf1-4b70-8e1d-ecb36f38158b",
         "altText": "This is an imagemap",
         "baseSize": {
             "width": 1040,
