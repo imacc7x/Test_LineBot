@@ -345,7 +345,7 @@ exports.handler = (request, response, firebaseAdmin) => {
                     }
 
                     const result = ((drinkingPoint * 10) / (0.79 * percent * capacity)).toFixed(0);
-                    agent.add("result: " + result);
+                    // agent.add("result: " + result);
 
                     agent.add(
                         createQuickReply(
@@ -395,8 +395,8 @@ exports.handler = (request, response, firebaseAdmin) => {
                         let b = amount * percent * capacity * 0.79 * 0.1;
                         let c = percent * capacity * 0.79;
                         let result = b/c;
-                        agent.add("1 unit: " + a);
-                        agent.add("reduce: " + b);
+                        // agent.add("1 unit: " + a);
+                        // agent.add("reduce: " + b);
                         agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง' + result +" "+ container+"ต่อการดื่มทุกๆ 3-4 ครั้งคะ");
                     }
                     agent.add(
