@@ -7,17 +7,12 @@ process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
 
 exports.handler = (request, response, firebaseAdmin) => {
     const agent = new WebhookClient({ request, response });
-
-    //TODO: Set default of RichMenu
-
-    //TODO: Delete 2 line below.
     console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
     console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
     const userId = request.body.originalDetectIntentRequest.payload.data.source.userId;
     const documentUser = firebaseAdmin.firestore().collection('Users').doc(userId);
 
-    //TODO: I guess function below not use.
     function welcome(agent) {
         agent.add(`Welcome to my agent!`);
     }
@@ -27,7 +22,8 @@ exports.handler = (request, response, firebaseAdmin) => {
         agent.add(`I'm sorry, can you try again?`);
     }
 
-    function askingGender(agent) {
+    function activatingConfirm(agent) {
+        agent.add('ขอบคุณมากค่ะ ดิฉันมั่นใจว่าข้อมูลที่คุณให้จะเป็นประโยชน์แก่ทีมผู้สรัางดิฉัน ในการพัฒนาการดูแลผู้ดื่มเหล้าต่อไปแน่นอนค่ะ');
         agent.add(
             createQuickReply(
                 'ข้อมูลเบื้องต้นที่ดิฉันจำเป็นต้องทราบ โปรดเลือกเพศของคุณ',
@@ -35,10 +31,21 @@ exports.handler = (request, response, firebaseAdmin) => {
             )
         );
     }
-    function askingAge(agent) {
+
+    async function setGender(agent) {
+        const gender = agent.parameters.gender;
+        await documentUser.update({
+            gender: gender,
+            advice: 0
+        });
         agent.add("คุณอายุเท่าไรคะ")
     }
-    function askingCareer(agent) {
+
+    async function setAge(agent) {
+        const age = agent.parameters.age;
+        await documentUser.update({
+            age: age
+        });
         agent.add(
             createQuickReply(
                 "คุณทำงานอะไรเป็นอาชีพหลักคะ",
@@ -47,7 +54,12 @@ exports.handler = (request, response, firebaseAdmin) => {
             )
         );
     }
-    function askingAlcoholType(agent) {
+
+    async function setCareer(agent) {
+        const career = agent.parameters.career;
+        await documentUser.update({
+            career: career
+        });
         agent.add(
             createQuickReply(
                 "โดยส่วนใหญ่ ถ้าคุณดื่ม คุณดื่มอะไรคะ",
@@ -67,136 +79,180 @@ exports.handler = (request, response, firebaseAdmin) => {
             )
         );
     }
-    function askingIntensity(agent, alcoholType) {
-        let messageList = [];
-        switch (alcoholType) {
-            case "เบียร์":
-                messageList.push({ label: "สิงห์ไลท์", text: "0.035" });
-                messageList.push({ label: "สิงห์/ไฮเนเกน/ลีโอ", text: "0.05" });
-                messageList.push({ label: "ช้าง", text: "0.064" });
-                messageList.push({ label: "อื่นๆ", text: "0.05" });
-                break;
 
-            case "สุราสี":
-                messageList.push({ label: "หงส์ทอง", text: "0.35" });
-                messageList.push({ label: "เบลนด์ 285", text: "0.35" });
-                messageList.push({ label: "แม่โขง", text: "0.35" });
-                messageList.push({ label: "35 ดีกรี", text: "0.35" });
-                messageList.push({ label: "40 ดีกรี", text: "0.4" });
-                messageList.push({ label: "อื่นๆ", text: "0.4" });
-                break;
-
-            case "สุราขาว":
-                messageList.push({ label: "35 ดีกรี", text: "0.35" });
-                messageList.push({ label: "40 ดีกรี", text: "0.4" });
-                messageList.push({ label: "อื่นๆ", text: "0.35" });
-                break;
-
-            case "ไวน์":
-                messageList.push({ label: "ไวน์แดง", text: "0.10" });
-                messageList.push({ label: "ไวน์ขาว", text: "0.10" });
-                messageList.push({ label: "ไวน์คูลเลอร์", text: "0.06" });
-                messageList.push({ label: "อื่นๆ", text: "0.11" });
-                break;
-
-            case "น้ำขาว":
-            case "อุ":
-            case "กระแช่":
-                messageList.push({ label: "อื่นๆ", text: "0.10" });
-                break;
-
-            case "สาโท":
-            case "สุราแช่":
-                messageList.push({ label: "อื่นๆ", text: "0.06" });
-                break;
-
-            case "เหล้าปั่น":
-            case "เหล้าถัง":
-                messageList.push({ label: "สุรา 35 ดีกรี", text: "0.35" });
-                messageList.push({ label: "สุรา 40 ดีกรี", text: "0.4" });
-                messageList.push({ label: "อื่นๆ", text: "0.35" });
-                break;
-
-            default:
-                break;
-        }
-        agent.add(
-            createQuickReply(
-                "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcoholType + "ที่คุณดื่มคะ",
-                messageList
-            )
-        );
-    }
-    async function askingContainer(agent) {
-        const doc = (await documentUser.get());
-        const alcoholType = doc.data().alcohol;
-        const messageList = [];
-        if (doc.exists) {
-            agent.add("this is " + alcohol);
-                                    
-            switch (alcoholType) {
-                case "เบียร์":
-                    messageList.push({ label: "แก้ว", text: "แก้ว" });
-                    messageList.push({ label: "กระป๋อง", text: "กระป๋อง" });
-                    messageList.push({ label: "ขวด", text: "ขวด" });
-                    break;
-    
-                case "สุราสี":
-                case "สุราขาว":
-                    messageList.push({ label: "เป๊ก", text: "เป๊ก" });
-                    messageList.push({ label: "ขวด", text: "ขวด" });
-                    break;
-                    
-                case "ไวน์":
-                    messageList.push({ label: "แก้ว", text: "แก้ว" });
-                    messageList.push({ label: "ขวด", text: "ขวด" });
-                    break;
-    
-                case "น้ำขาว":
-                case "อุ":
-                case "กระแช่":
-                case "สาโท":
-                case "สุราแช่":
-                case "เหล้าปั่น":
-                case "เหล้าถัง":
-                    messageList.push({ label: "เป๊ก", text: "เป๊ก" });
-                    messageList.push({ label: "ตอง", text: "ตอง" });
-                    break;
-    
-                default:
-                    break;
-            }
+    async function setAlcohol(agent) {
+        const alcohol = agent.parameters.alcohol;
+        agent.add(alcohol);
+        await documentUser.update({
+            alcohol: alcohol
+        });
+        if (alcohol === "เบียร์") {
             agent.add(
                 createQuickReply(
-                    "โดยปกติคุณดื่ม" + alcoholType + "ด้วยภาชนะประเภทใด",
-                    messageList
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "สิงห์ไลท์", text: "0.035" },
+                        { label: "สิงห์/ไฮเนเกน/ลีโอ", text: "0.05" },
+                        { label: "ช้าง", text: "0.064" },
+                        { label: "อื่นๆ", text: "0.05" }
+                    ]
+                )
+            );
+        } else if (alcohol === "สุราสี") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "หงส์ทอง", text: "0.35" },
+                        { label: "เบลนด์ 285", text: "0.35" },
+                        { label: "แม่โขง", text: "0.35" },
+                        { label: "35 ดีกรี", text: "0.35" },
+                        { label: "40 ดีกรี", text: "0.4" },
+                        { label: "อื่นๆ", text: "0.4" }
+                    ]
+                )
+            );
+        }else if (alcohol === "สุราขาว") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "35 ดีกรี", text: "0.35" },
+                        { label: "40 ดีกรี", text: "0.4" },
+                        { label: "อื่นๆ", text: "0.35" }
+                    ]
+                )
+            );
+        }else if (alcohol === "ไวน์") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "ไวน์แดง", text: "0.10" },
+                        { label: "ไวน์ขาว", text: "0.10" },
+                        { label: "ไวน์คูลเลอร์", text: "0.06" },
+                        { label: "อื่นๆ", text: "0.11" }
+                    ]
                 )
             );
         }
-    }
-    function askingSizeOfContainer(agent, container) {
-        switch (container) {
-            case "กระป๋อง":
-                agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
-                agent.add(new Payload('LINE', can, { sendAsMessage: true }));
-                break;
+        else if (alcohol === "น้ำขาว" || alcohol === "อุ" || alcohol === "กระแช่") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "อื่นๆ", text: "0.10" }
+                    ]
+                )
+            );
+        }else if (alcohol === "สาโท" || alcohol === "สุราแช่") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "อื่นๆ", text: "0.06" }
+                    ]
+                )
+            );
+        }else if (alcohol === "เหล้าปั่น" || alcohol === "เหล้าถัง") {
+            agent.add(
+                createQuickReply(
+                    "ฉันอยากรู้ประเภทหรือยี่ห้อของ" + alcohol + "ที่คุณดื่มคะ",
+                    [
+                        { label: "สุรา 35 ดีกรี", text: "0.35" },
+                        { label: "สุรา 40 ดีกรี", text: "0.4" },
+                        { label: "อื่นๆ", text: "0.35" }
+                    ]
+                )
+            );
+        }
         
-            case "ขวด":
-                agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
-                agent.add(new Payload('LINE', bottle, { sendAsMessage: true }));
-                break;
+    }
 
-            case "แก้ว":
-            case "เป๊ก":
-                agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
-                agent.add(new Payload('LINE', glass, { sendAsMessage: true }));
-                break;
+    async function setConcentrated(agent) {
+        const percent = agent.parameters.percent;
+        //alcohol =
+        return documentUser.get()
+            .then(doc => {
+                // eslint-disable-next-line promise/always-return
+                if (!doc.exists) {
+                    agent.add("Not Found");
+                } else {
+                    const alcohol = doc.data().alcohol;
+                    agent.add("this is " + alcohol);
+                    documentUser.update({
+                        alcohol_concentrated: percent
+                    });
+                    if (alcohol === "เบียร์") {
+                        agent.add(
+                            createQuickReply(
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาชนะประเภทใด",
+                                [
+                                    { label: "แก้ว", text: "แก้ว" },
+                                    { label: "กระป๋อง", text: "กระป๋อง" },
+                                    { label: "ขวด", text: "ขวด" }
+                                ]
+                            )
+                        );
+                    }else if (alcohol === "สุราสี" || alcohol === "สุราขาว" ) {
+                        agent.add(
+                            createQuickReply(
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาชนะประเภทใด",
+                                [
+                                    { label: "เป๊ก", text: "เป๊ก" },
+                                    { label: "ขวด", text: "ขวด" }
+                                ]
+                            )
+                        );
+                    }else if (alcohol === "ไวน์") {
+                        agent.add(
+                            createQuickReply(
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาชนะประเภทใด",
+                                [
+                                    { label: "แก้ว", text: "แก้ว" },
+                                    { label: "ขวด", text: "ขวด" }
+                                ]
+                            )
+                        );
+                    }else {
+                        agent.add(
+                            createQuickReply(
+                                "โดยปกติคุณดื่ม" + alcohol + "ด้วยภาชนะประเภทใด",
+                                [
+                                    { label: "เป๊ก", text: "เป๊ก" },
+                                    { label: "ตอง", text: "ตอง" }
+                                ]
+                            )
+                        );
+                    }
+                }
+            });
+    }
 
-            default:
-                break;
+    async function setContainer(agent) {
+        const container = agent.parameters.container;
+        await documentUser.update({
+            container: container
+        });
+        if (container === "กระป๋อง") {
+            agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
+            agent.add(new Payload('LINE', can, { sendAsMessage: true }));
+        }else if (container === "ขวด") {
+            agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
+            agent.add(new Payload('LINE', bottle, { sendAsMessage: true }));
+        }
+        else if (container === "แก้ว" || container === "เป๊ก" ) {
+            agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
+            agent.add(new Payload('LINE', glass, { sendAsMessage: true }));
         }
     }
-    function askingOperations(agent) {
+
+    async function setSize(agent) {
+        const capacity = agent.parameters.capacity;
+        await documentUser.update({
+            capacity: capacity
+        });
+        agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
         agent.add(
             createQuickReply(
                 "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
@@ -204,12 +260,23 @@ exports.handler = (request, response, firebaseAdmin) => {
                     { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
                     { label: "รับคำแนะนำการลดการดื่ม", text: "รับคำแนะนำการลดการดื่ม" },
                     { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" },
-                    { label: "จบการทำงาน", text: "จบการทำงาน" }
+                    { label: "จบการทำงาน" , text: "จบการทำงาน"}
                 ]
             )
         );
     }
-    function AuditC_Q1(agent) {
+
+    async function audit_C1(agent) {
+        text = agent.parameters.options;
+        if(text === "รับคำแนะนำการลดการดื่ม"){
+            await documentUser.update({
+                advice: 1
+            });
+        }else{
+            await documentUser.update({
+                advice: 0
+            });
+        }
         agent.add(
             createQuickReply(
                 "ข้อแรก คุณดื่มเครื่องดื่มแอลกอฮอล์บ่อยไหมคะ",
@@ -224,82 +291,7 @@ exports.handler = (request, response, firebaseAdmin) => {
         );
     }
 
-    //QUESTION: ทำไมไม่มีอัพเดทว่าอนุญาต
-    function receiveConfirmActivation(agent) {
-        agent.add('ขอบคุณมากค่ะ ดิฉันมั่นใจว่าข้อมูลที่คุณให้จะเป็นประโยชน์แก่ทีมผู้สรัางดิฉัน ในการพัฒนาการดูแลผู้ดื่มเหล้าต่อไปแน่นอนค่ะ');
-        // askingGender(agent);
-    }
-    async function receiveGender(agent) {
-        const gender = agent.parameters.gender;
-        await documentUser.update({
-            gender: gender,
-            advice: 0
-        });
-        askingAge(agent);
-    }
-    async function receiveAge(agent) {
-        const age = agent.parameters.age;
-        await documentUser.update({
-            age: age
-        });
-        askingCareer(agent)
-    }
-    async function receiveCareer(agent) {
-        const career = agent.parameters.career;
-        await documentUser.update({
-            career: career
-        });
-        askingAlcoholType(agent)
-    }
-    async function receiveAlcoholType(agent) {
-        const alcohol = agent.parameters.alcohol;
-        agent.add(alcohol);
-        await documentUser.update({
-            alcohol: alcohol
-        });
-        askingIntensity(agent, alcoholType);
-    }
-    async function receiveIntensity(agent) {
-        const percent = agent.parameters.percent;
-        await documentUser.update({
-            alcohol_concentrated: percent
-        });
-        await askingContainer(agent)
-    }
-    async function receiveContainer(agent) {
-        const container = agent.parameters.container;
-        await documentUser.update({
-            container: container
-        });
-        askingSizeOfContainer(agent, container);
-    }
-    async function receiveSizeOfContainer(agent) {
-        const capacity = agent.parameters.capacity;
-        await documentUser.update({
-            capacity: capacity
-        });
-        agent.add("ขอบคุณสำหรับข้อมูลนะคะ");
-        askingOperations(agent);
-        
-    }
-    //QUESTION: WTF of update advice
-    async function receiveGetAdviceOperation(agent) {
-        text = agent.parameters.options;
-        if (text === "รับคำแนะนำการลดการดื่ม") {
-            await documentUser.update({
-                advice: 1
-            });
-        } else {
-            await documentUser.update({
-                advice: 0
-            });
-        }
-        AuditC_Q1(agent);
-    }
-
-    //TODO: Change function name to "receiveAnswerOfAuditC_Q1"
-    //TODO: Create function "AuditC_Q2"
-    function receiveAnswerOfAuditC_Q1(agent) {
+    function audit_C2(agent) {
         const frequency = agent.parameters.frequency;
         return documentUser.get()
             .then(doc => {
@@ -323,16 +315,14 @@ exports.handler = (request, response, firebaseAdmin) => {
                                 { label: "4 " + container, text: "4" },
                                 { label: "5 " + container, text: "5" }
                             ]
-
+            
                         )
                     );
                 }
             });
     }
 
-    //TODO: Change function name to "receiveFromQ2_GetAdviceOperation"
-    //TODO: Create function "Q3_Audit_C"
-    function audit_C3(agent) {
+    function audit_C3(agent){
         const amount = parseFloat(agent.parameters.amount);
         return documentUser.get()
             .then(doc => {
@@ -350,12 +340,12 @@ exports.handler = (request, response, firebaseAdmin) => {
                         amount: amount
                     });
 
-                    if (gender === "ชาย") {
+                    if (gender === "ชาย"){
                         drinkingPoint = 8;
                     }
 
                     const result = ((drinkingPoint * 10) / (0.79 * percent * capacity)).toFixed(0);
-                    agent.add("result: " + result);
+                    // agent.add("result: " + result);
 
                     agent.add(
                         createQuickReply(
@@ -373,10 +363,7 @@ exports.handler = (request, response, firebaseAdmin) => {
             });
     }
 
-    //TODO: Change function name to "receiveFromQ3_GetAdviceOperation"
-    //TODO: Create function "calculateRecommentedDrinking"
-    //TODO: Use function "askingOperations"
-    function audit_C3End(agent) {
+    function audit_C3End(agent){
         frequency = agent.parameters.frequency;
         return documentUser.get()
             .then(doc => {
@@ -384,7 +371,6 @@ exports.handler = (request, response, firebaseAdmin) => {
                 if (!doc.exists) {
                     agent.add("Not Found");
                 } else {
-                    //TODO: Destructuring below
                     const amount = doc.data().amount;
                     const alcohol = doc.data().alcohol;
                     const container = doc.data().container;
@@ -397,21 +383,20 @@ exports.handler = (request, response, firebaseAdmin) => {
                         excess_drinking_frequency: container
                     });
 
-                    if (gender === "ชาย") {
+                    if (gender === "ชาย"){
                         drinkingPoint = 8;
                     }
 
                     const result = ((drinkingPoint * 10) / (0.79 * percent * capacity)).toFixed(0);
-                    agent.add("ระดับที่คุณดื่ม" + alcohol + "ได้นั้นไม่เกิน" + " " + result + " " + container + "นะ");
+                    agent.add("ระดับที่คุณดื่ม" + alcohol +"ได้นั้นไม่เกิน" + " " + result + " " +container+"นะ");
                     // eslint-disable-next-line eqeqeq
-                    if (advice == 1) {
+                    if(advice == 1){
                         let a = amount * percent * capacity * 0.79;
                         let b = amount * percent * capacity * 0.79 * 0.1;
                         let c = percent * capacity * 0.79;
-
                         let result = b/c;
-                        agent.add("1 unit: " + a);
-                        agent.add("reduce: " + b);
+                        // agent.add("1 unit: " + a);
+                        // agent.add("reduce: " + b);
                         agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง' + result +" "+ container+"ต่อการดื่มทุกๆ 3-4 ครั้งคะ");
                     }
                     agent.add(
@@ -421,22 +406,20 @@ exports.handler = (request, response, firebaseAdmin) => {
                                 { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
                                 { label: "รับคำแนะนำการลดการดื่ม", text: "รับคำแนะนำการลดการดื่ม" },
                                 { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" },
-                                { label: "จบการทำงาน", text: "จบการทำงาน" }
+                                { label: "จบการทำงาน" , text: "จบการทำงาน"}
                             ]
                         )
-                    );
+                    );  
                 }
             });
-
+            
     }
 
-    //TODO: Change function name to "receiveExitOperation"
-    function end(agent) {
+    function end(agent){
         agent.add("ขอบคุณที่ใช้งาน สามารถทักมาได้ตลอดทุกเมื่อเลยนะ");
     }
 
-    //TODO: Change function name to "askingOperation"
-    function allOptions(agent) {
+    function allOptions(agent){
         agent.add(
             createQuickReply(
                 "ตอนนี้คุณอยากให้ช่วยอะไรคะ",
@@ -444,10 +427,10 @@ exports.handler = (request, response, firebaseAdmin) => {
                     { label: "ประเมินความเสี่ยง", text: "ประเมินความเสี่ยง" },
                     { label: "รับคำแนะนำการลดการดื่ม", text: "รับคำแนะนำการลดการดื่ม" },
                     { label: "อัพเดตข้อมูลส่วนตัว", text: "อัพเดตข้อมูลส่วนตัว" },
-                    { label: "จบการทำงาน", text: "จบการทำงาน" }
+                    { label: "จบการทำงาน" , text: "จบการทำงาน"}
                 ]
             )
-        );
+        ); 
     }
 
     function activatingNotConfirm(agent) {
@@ -654,19 +637,19 @@ exports.handler = (request, response, firebaseAdmin) => {
     let intentMap = new Map();
     intentMap.set('Default Welcome Intent', welcome);
     intentMap.set('Default Fallback Intent', fallback);
-    intentMap.set('Activating Confirm', receiveConfirmActivation);
-    intentMap.set('Set Gender', receiveGender);
-    intentMap.set('Set Age', receiveAge);
-    intentMap.set('Set Career', receiveCareer);
-    intentMap.set('Set Alcohol', receiveAlcoholType);
-    intentMap.set('Set Concentrated', receiveIntensity);
-    intentMap.set('Set Container', receiveContainer);
-    intentMap.set('Set Size', receiveSizeOfContainer);
-    intentMap.set('Audit_C1', receiveGetAdviceOperation);
+    intentMap.set('Activating Confirm', activatingConfirm);
+    intentMap.set('Set Gender', setGender);
+    intentMap.set('Set Age', setAge);
+    intentMap.set('Set Career', setCareer);
+    intentMap.set('Set Alcohol', setAlcohol);
+    intentMap.set('Set Concentrated', setConcentrated);
+    intentMap.set('Set Container', setContainer);
+    intentMap.set('Set Size', setSize);
+    intentMap.set('Audit_C1', audit_C1);
     intentMap.set('Audit_C2', audit_C2);
     intentMap.set('Audit_C3', audit_C3);
-    intentMap.set('Audit_C3 End', audit_C3End);
-    intentMap.set('End', end);
+    intentMap.set('Audit_C3 End',audit_C3End);
+    intentMap.set('End' , end);
     intentMap.set('All Options', allOptions);
     intentMap.set('Activating Not Confirm', activatingNotConfirm);
     intentMap.set('test', test);
@@ -674,5 +657,3 @@ exports.handler = (request, response, firebaseAdmin) => {
     // intentMap.set('your intent name here', googleAssistantHandler);
     agent.handleRequest(intentMap);
 };
-
-
