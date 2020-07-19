@@ -190,6 +190,7 @@ exports.handler = (request, response, firebaseAdmin) => {
             case "เป๊ก":
                 agent.add("ฉันอยากรู้ขนาดของ" + container + "ที่คุณดื่ม");
                 agent.add(new Payload('LINE', glass, { sendAsMessage: true }));
+                break;
 
             default:
                 break;
