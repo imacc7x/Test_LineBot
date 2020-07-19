@@ -408,17 +408,11 @@ exports.handler = (request, response, firebaseAdmin) => {
                         let a = amount * percent * capacity * 0.79;
                         let b = amount * percent * capacity * 0.79 * 0.1;
                         let c = percent * capacity * 0.79;
-<<<<<<< HEAD
-                        let result = b / c;
-                        // agent.add("1 unit: " + a);
-                        // agent.add("reduce: " + b);
-                        agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง' + result + " " + container + "ต่อการดื่มทุกๆ 3-4 ครั้งคะ");
-=======
+
                         let result = b/c;
                         agent.add("1 unit: " + a);
                         agent.add("reduce: " + b);
                         agent.add('ถ้าคุณอยากลดการดื่ม คุณควรลดการดื่มลง' + result +" "+ container+"ต่อการดื่มทุกๆ 3-4 ครั้งคะ");
->>>>>>> parent of 7793e63... finish?
                     }
                     agent.add(
                         createQuickReply(
