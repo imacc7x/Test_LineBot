@@ -227,7 +227,7 @@ exports.handler = (request, response, firebaseAdmin) => {
     //QUESTION: ทำไมไม่มีอัพเดทว่าอนุญาต
     function receiveConfirmActivation(agent) {
         agent.add('ขอบคุณมากค่ะ ดิฉันมั่นใจว่าข้อมูลที่คุณให้จะเป็นประโยชน์แก่ทีมผู้สรัางดิฉัน ในการพัฒนาการดูแลผู้ดื่มเหล้าต่อไปแน่นอนค่ะ');
-        askingGender(agent);
+        // askingGender(agent);
     }
     async function receiveGender(agent) {
         const gender = agent.parameters.gender;
